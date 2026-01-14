@@ -1,0 +1,25 @@
+/* Estilo visual do site */
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #1e3c72, #2a5298); /* Degradê azul */
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.3); /* Transparência */
+}
+
+main {
+  padding: 2rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+}
