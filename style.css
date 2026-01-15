@@ -251,3 +251,28 @@ body {
     font-size: 0.9rem;
   }
 }
+/* Correção global de legibilidade */
+body {
+  color: #ffffff;
+}
+
+section, 
+.card,
+.blog-card,
+.plan-card {
+  color: #ffffff;
+}
+
+p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+h1, h2, h3, h4 {
+  color: #ffffff;
+}
+
+/* Textos secundários */
+.text-muted {
+  color: rgba(255, 255, 255, 0.75);
+}
+
