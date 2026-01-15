@@ -190,3 +190,68 @@ body {
     position: static;
   }
 }
+/* ===== MENU MOBILE ===== */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    margin: 15px auto;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .menu.open {
+    display: flex;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: static;
+    box-shadow: none;
+    margin-top: 8px;
+  }
+
+  .dropdown.open .dropdown-menu {
+    display: block;
+  }
+}
+
+/* ===== DROPDOWN DESKTOP ===== */
+@media (min-width: 769px) {
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background: #ffffff;
+    border-radius: 10px;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-menu a {
+    color: #0b1c2d;
+  }
+}
+
+/* ===== HOVER CONTRASTE INVERTIDO ===== */
+.menu-item > a:hover,
+.dropdown-menu a:hover {
+  background: #bd9617;
+  color: #0b1c2d;
+}
+
