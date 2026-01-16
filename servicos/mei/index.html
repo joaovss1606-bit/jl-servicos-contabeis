@@ -3,65 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Serviços MEI | J L Serviços Contábeis</title>
-  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
-<link rel="stylesheet" href="/jl-servicos-contabeis/servicos/mei/mei.css">
+  <title>Serviços para MEI | J L Serviços Contábeis</title>
 
+  <!-- CSS GLOBAL -->
+  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
+  <!-- CSS EXCLUSIVO MEI -->
+  <link rel="stylesheet" href="./mei.css">
 </head>
 
 <body>
 
   <!-- ===== BREADCRUMB ===== -->
   <nav class="breadcrumb container">
-    <a href="../../index.html">Início</a> ›
-    <a href="../">Serviços</a> ›
-    <span>MEI</span>
+    <a href="/jl-servicos-contabeis/">Início</a>
+    <span>›</span>
+    <a href="/jl-servicos-contabeis/servicos/">Serviços</a>
+    <span>›</span>
+    <strong>MEI</strong>
   </nav>
 
-<div class="services-layout">
+  <main class="container mei-page">
 
-  <section class="services-section card">
-    <h2>Serviços Avulsos</h2>
+    <!-- ===== TÍTULO ===== -->
+    <header class="mei-header">
+      <h1>Serviços para MEI</h1>
+      <p>Soluções completas para manter seu MEI regularizado, organizado e sem preocupações.</p>
+    </header>
 
-    <div class="services-grid">
-      <div class="service-card">Abertura de MEI</div>
-      <div class="service-card">Regularização de MEI</div>
-      <div class="service-card">Encerramento de MEI</div>
-      <div class="service-card">Emissão de DAS</div>
-      <div class="service-card">Declaração Anual</div>
-      <div class="service-card">Parcelamento</div>
-      <div class="service-card">Alteração de Dados</div>
-    </div>
-  </section>
+    <!-- ===== SERVIÇOS AVULSOS ===== -->
+    <section class="mei-section mei-servicos">
+      <h2>Serviços Avulsos</h2>
 
-  <section class="plan-card card">
-    <h3>Plano MEI Básico</h3>
-    <p class="price">R$ 79 a R$ 99 / mês</p>
-    <ul>
-      <li>✔ Emissão DAS</li>
-      <li>✔ DASN anual</li>
-      <li>✔ Suporte WhatsApp</li>
-      <li>✔ 10% off avulsos</li>
-    </ul>
-    <a href="#" class="btn">Contratar Básico</a>
-  </section>
+      <div class="services-grid">
+        <a class="service-card" data-servico="abertura-mei">Abertura de MEI</a>
+        <a class="service-card" data-servico="regularizacao-mei">Regularização de MEI</a>
+        <a class="service-card" data-servico="encerramento-mei">Encerramento de MEI</a>
+        <a class="service-card" data-servico="emissao-das">Emissão de DAS</a>
+        <a class="service-card" data-servico="dasn">Declaração Anual (DASN-SIMEI)</a>
+        <a class="service-card" data-servico="parcelamento">Parcelamento de Débitos</a>
+        <a class="service-card" data-servico="alteracao-mei">Alteração de Dados do MEI</a>
+      </div>
+    </section>
 
-  <section class="plan-card card featured">
-    <span class="badge">Mais contratado</span>
-    <h3>Plano MEI Premium</h3>
-    <p class="price">R$ 129 a R$ 159 / mês</p>
-    <ul>
-      <li>✔ Tudo do Básico</li>
-      <li>✔ Regularização fiscal</li>
-      <li>✔ Certidões</li>
-      <li>✔ Suporte prioritário</li>
-      <li>✔ 20% off avulsos</li>
-    </ul>
-    <a href="#" class="btn">Contratar Premium</a>
-  </section>
+    <!-- ===== PLANOS ===== -->
+    <section class="mei-section mei-planos">
 
-</div>
+      <h2 class="plans-title">Escolha o plano ideal para o seu MEI</h2>
 
+      <div class="plans-grid">
+
+        <!-- PLANO BÁSICO -->
+        <div class="plan-card basic">
+          <h3>Plano MEI Básico</h3>
+          <p class="price">R$ 99,00 / mês</p>
+
+          <ul>
+            <li>✔ Emissão mensal do DAS</li>
+            <li>✔ Lembretes de vencimento</li>
+            <li>✔ DASN-SIMEI (1x ao ano)</li>
+            <li>✔ Acompanhamento básico</li>
+            <li>✔ Suporte via WhatsApp</li>
+            <li>✔ 10% de desconto em serviços avulsos</li>
+          </ul>
+
+          <button class="btn-plan" data-plano="mei-basico">
+            Contratar plano básico
+          </button>
+        </div>
+
+        <!-- PLANO PREMIUM -->
+        <div class="plan-card premium">
+          <span class="badge">Plano recomendado</span>
+
+          <h3>Plano MEI Premium</h3>
+          <p class="price">R$ 159,00 / mês</p>
+
+          <ul>
+            <li>✔ Todos os benefícios do plano básico</li>
+            <li>✔ Regularização fiscal completa</li>
+            <li>✔ Parcelamento de débitos</li>
+            <li>✔ Emissão de certidões</li>
+            <li>✔ Orientação personalizada</li>
+            <li>✔ Relatório mensal de situação</li>
+            <li>✔ Suporte prioritário</li>
+            <li>✔ 20% de desconto em serviços avulsos</li>
+          </ul>
+
+          <button class="btn-plan destaque" data-plano="mei-premium">
+            Contratar plano premium
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
 
   <!-- CTA FIXO -->
   <a href="https://wa.me/5500000000000" class="cta-fixed" target="_blank">
@@ -70,5 +106,4 @@
 
 </body>
 </html>
-<link rel="stylesheet" href="/servicos/mei/mei.css">
 
