@@ -1,4 +1,4 @@
-import { supabase } from './supabase.js';
+import { supabase } from './supabase.js'
 
 const menuToggle = document.querySelector('.menu-toggle');
 const menu = document.querySelector('.menu');
@@ -18,17 +18,18 @@ dropdownToggle.addEventListener('click', (e) => {
   }
 });
 
-/* TESTE SUPABASE */
+/* TESTE SUPABASE (não interfere no menu) */
 async function testSupabase() {
   const { data, error } = await supabase
     .from('servicos')
-    .select('*');
+    .select('*')
 
   if (error) {
-    console.error('Erro Supabase:', error);
+    console.error('Erro Supabase:', error)
   } else {
-    console.log('Dados Supabase:', data);
+    console.log('Dados Supabase:', data)
   }
 }
 
 testSupabase();
+
