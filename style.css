@@ -254,3 +254,20 @@ body {
   color: #0b1c2d;
 }
 
+@media (max-width: 768px) {
+
+  .dropdown-menu {
+    position: static;
+    display: none;
+  }
+
+  .menu-item.dropdown.open > .dropdown-menu {
+    display: block;
+  }
+
+  /* garante que os links recebam o toque */
+  .dropdown-menu a {
+    padding: 14px;
+    display: block;
+  }
+}
