@@ -1,20 +1,31 @@
-/* ===============================
-   PÁGINA MEI — CSS ISOLADO
-   =============================== */
+/* ===== BASE DA PÁGINA MEI ===== */
 
-main.container {
-  padding: 40px 0;
+.page-header {
+  text-align: center;
+  margin: 40px 0 50px;
+}
+
+.page-header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.page-header p {
+  color: #bd9617;
+  font-size: 1.1rem;
 }
 
 /* ===== BREADCRUMB ===== */
+
 .breadcrumb {
-  font-size: 14px;
-  margin-bottom: 25px;
-  color: #666;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #ccc;
 }
 
 .breadcrumb a {
-  color: #0a4da3;
+  color: #bd9617;
   text-decoration: none;
 }
 
@@ -22,123 +33,98 @@ main.container {
   text-decoration: underline;
 }
 
-/* ===== HEADER ===== */
-.page-header {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.page-header h1 {
-  font-size: 36px;
-  color: #0a4da3;
-  margin-bottom: 10px;
-}
-
-.page-header p {
-  font-size: 16px;
-  color: #555;
-}
-
 /* ===== GRID PRINCIPAL ===== */
-.mei-layout {
+
+.services-layout {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
   gap: 30px;
-  align-items: stretch;
+  margin-top: 40px;
 }
 
-/* ===== CARD BASE ===== */
-.mei-card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
+/* ===== CARD PADRÃO ===== */
 
-.mei-card h2,
-.mei-card h3 {
-  color: #0a4da3;
-  margin-bottom: 20px;
+.card {
+  background: rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 25px;
 }
 
 /* ===== SERVIÇOS AVULSOS ===== */
-.services-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+
+.services-section h2 {
+  margin-bottom: 20px;
+  font-size: 1.4rem;
 }
 
-.services-list li {
-  padding: 12px 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin-bottom: 12px;
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.service-card {
+  background: #ffffff;
+  color: #0b1c2d;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
-.services-list li:hover {
-  background: #f1f6ff;
-  border-color: #0a4da3;
+.service-card:hover {
+  background: #bd9617;
+  color: #0b1c2d;
 }
 
 /* ===== PLANOS ===== */
-.plan-price {
-  font-size: 22px;
-  font-weight: bold;
-  color: #0a4da3;
+
+.plan-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.plan-card .price {
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #bd9617;
+}
+
+.plan-card ul {
+  list-style: none;
   margin-bottom: 20px;
 }
 
-.plan-features {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 25px;
+.plan-card ul li {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
 }
 
-.plan-features li {
-  margin-bottom: 10px;
-  color: #444;
-}
+/* ===== PLANO DESTAQUE ===== */
 
-/* ===== BOTÃO ===== */
-.mei-btn {
-  display: block;
-  text-align: center;
-  padding: 12px;
-  border-radius: 8px;
-  background: #0a4da3;
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.mei-btn:hover {
-  background: #083c80;
-}
-
-/* ===== PLANO PREMIUM ===== */
-.mei-card.premium {
-  border: 2px solid #0a4da3;
+.plan-card.featured {
+  border: 2px solid #bd9617;
   position: relative;
 }
 
-.mei-card.premium::before {
-  content: "Mais vantajoso";
+.plan-card .badge {
   position: absolute;
   top: -12px;
-  right: 20px;
-  background: #0a4da3;
-  color: #fff;
-  padding: 5px 12px;
-  font-size: 12px;
+  right: 15px;
+  background: #bd9617;
+  color: #0b1c2d;
+  padding: 6px 12px;
   border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 /* ===== RESPONSIVO ===== */
-@media (max-width: 992px) {
-  .mei-layout {
+
+@media (max-width: 900px) {
+  .services-layout {
     grid-template-columns: 1fr;
   }
 }
