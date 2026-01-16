@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Contratar Serviço MEI | J L Serviços Contábeis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS GLOBAL -->
+  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
+
+  <!-- CSS ESPECÍFICO -->
+  <style>
+    .purchase-container {
+      max-width: 900px;
+      margin: 60px auto;
+      background: rgba(255,255,255,0.05);
+      padding: 40px;
+      border-radius: 20px;
+    }
+
+    .purchase-container h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .service-name {
+      text-align: center;
+      font-size: 1.4rem;
+      color: #bd9617;
+      margin-bottom: 30px;
+    }
+
+    .purchase-box {
+      display: grid;
+      gap: 30px;
+    }
+
+    .details {
+      background: rgba(0,0,0,0.25);
+      padding: 25px;
+      border-radius: 16px;
+    }
+
+    .details ul {
+      margin-top: 15px;
+      line-height: 1.9;
+    }
+
+    .price-box {
+      text-align: center;
+      background: rgba(189,150,23,0.15);
+      padding: 30px;
+      border-radius: 16px;
+    }
+
+    .price {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 15px 0;
+      color: #bd9617;
+    }
+
+    .btn-main {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 30px;
+      border-radius: 40px;
+      background: #bd9617;
+      color: #0b1c2d;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .btn-main:hover {
+      background: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+      .purchase-container {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<main class="container">
+
+  <div class="purchase-container">
+
+    <h1>Contratação de Serviço MEI</h1>
+    <div class="service-name" id="serviceName">Carregando...</div>
+
+    <div class="purchase-box">
+
+      <!-- DETALHES -->
+      <div class="details">
+        <h3>O que está incluso</h3>
+        <ul>
+          <li>✔ Atendimento personalizado</li>
+          <li>✔ Análise da sua situação</li>
+          <li>✔ Execução completa do serviço</li>
+          <li>✔ Orientações após a conclusão</li>
+          <li>✔ Suporte via WhatsApp</li>
+        </ul>
+      </div>
+
+      <!-- PREÇO -->
+      <div class="price-box">
+        <h3>Valor do serviço</h3>
+        <div class="price">R$ 99,00</div>
+        <p>Pagamento via PIX após análise</p>
+
+        <a href="#" id="btnForm" class="btn-main">
+          Solicitar este serviço
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Pega o serviço da URL
+  const params = new URLSearchParams(window.location.search);
+  const servico = params.get('servico') || 'Serviço MEI';
+
+  document.getElementById('serviceName').innerText = servico;
+
+  // Botão leva para WhatsApp (temporário)
+  document.getElementById('btnForm').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const mensagem = `Olá! Quero contratar o serviço: ${servico}`;
+    const url = `https://wa.me/5500000000000?text=${encodeURIComponent(mensagem)}`;
+
+    window.open(url, '_blank');
+  });
+</script>
+
+</body>
+</html>
