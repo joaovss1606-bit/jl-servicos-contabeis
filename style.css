@@ -1,11 +1,9 @@
-/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ===== BASE ===== */
 body {
   font-family: 'Montserrat', sans-serif;
   background: linear-gradient(180deg, #0b1c2d, #102a44);
@@ -18,7 +16,7 @@ body {
   margin: auto;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .site-header {
   padding: 40px 0;
   text-align: center;
@@ -34,7 +32,7 @@ body {
   color: #bd9617;
 }
 
-/* ===== MENU ===== */
+/* MENU */
 .menu-toggle {
   display: none;
   margin: 20px auto;
@@ -57,8 +55,22 @@ body {
   position: relative;
 }
 
-/* LINKS E BOTÃO SERVIÇOS (MESMO ESTILO) */
-.menu-item a,
+.menu-item a {
+  display: block;
+  padding: 14px;
+  text-align: center;
+  font-weight: 600;
+  color: #ffffff;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.menu-item a:hover {
+  background: #ffffff;
+  color: #0b1c2d;
+}
+
+/* BOTÃO SERVIÇOS (IGUAL AOS LINKS) */
 .dropdown-toggle {
   all: unset;
   display: block;
@@ -69,26 +81,41 @@ body {
   color: #ffffff;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.25s;
+  transition: 0.3s;
 }
 
-/* HOVER ÚNICO */
-.menu-item a:hover,
-.dropdown-toggle:hover,
-.dropdown-menu a:hover {
-  background: #bd9617;
+.dropdown-toggle:hover {
+  background: #ffffff;
   color: #0b1c2d;
 }
 
 /* ===== DROPDOWN ===== */
+
+.menu-item.dropdown {
+  position: relative;
+}
+
 .dropdown-menu {
-  display: none;
-  list-style: none;
-  padding: 8px 0;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
   background: #ffffff;
   border-radius: 12px;
-  min-width: 220px;
   box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  list-style: none;
+  padding: 0;
+
+  /* controle visual */
+  overflow: hidden;
+
+  /* animação */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.25s ease;
+
   z-index: 1000;
 }
 
@@ -98,26 +125,45 @@ body {
   padding: 12px 18px;
   color: #0b1c2d;
   font-weight: 500;
+  background-clip: padding-box;
 }
 
-/* ===== DESKTOP ===== */
+.dropdown-menu li a:hover {
+  background: #bd9617;
+  color: #0b1c2d;
+}
+
+/* ARREDONDAMENTO CORRETO NO HOVER */
+.dropdown-menu li:first-child a {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.dropdown-menu li:last-child a {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* DESKTOP */
 @media (min-width: 769px) {
   .menu-item.dropdown:hover > .dropdown-menu {
-    display: block;
-    position: absolute;
-    top: 100%;
-    left: 0;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
 
+  /* BOTÃO ☰ */
   .menu-toggle {
     display: block;
     margin: 15px auto;
   }
 
+  /* MENU */
   .menu {
     display: none;
     flex-direction: column;
@@ -131,9 +177,19 @@ body {
     display: flex;
   }
 
+  .menu-item a {
+    padding: 14px;
+    text-align: center;
+  }
+
+  /* DROPDOWN MOBILE */
   .dropdown-menu {
     position: static;
     box-shadow: none;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    display: none;
   }
 
   .menu-item.dropdown.open > .dropdown-menu {
@@ -141,7 +197,7 @@ body {
   }
 }
 
-/* ===== BLOG ===== */
+/* BLOG */
 .blog-home {
   display: grid;
   gap: 40px;
@@ -164,7 +220,13 @@ body {
   padding: 25px;
 }
 
-/* ===== BOTÕES ===== */
+.blog-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+/* BOTÕES */
 .btn {
   background: #bd9617;
   color: #0b1c2d;
@@ -189,7 +251,7 @@ body {
   color: #0b1c2d;
 }
 
-/* ===== CTA ===== */
+/* CTA */
 .cta-fixed {
   position: fixed;
   bottom: 20px;
@@ -201,7 +263,7 @@ body {
   font-weight: 600;
 }
 
-/* ===== TOPO ===== */
+/* TOPO */
 #btn-topo {
   position: fixed;
   bottom: 80px;
