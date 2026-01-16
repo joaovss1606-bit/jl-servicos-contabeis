@@ -1,0 +1,144 @@
+/* ===============================
+   PÁGINA MEI — CSS ISOLADO
+   =============================== */
+
+main.container {
+  padding: 40px 0;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+  font-size: 14px;
+  margin-bottom: 25px;
+  color: #666;
+}
+
+.breadcrumb a {
+  color: #0a4da3;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* ===== HEADER ===== */
+.page-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.page-header h1 {
+  font-size: 36px;
+  color: #0a4da3;
+  margin-bottom: 10px;
+}
+
+.page-header p {
+  font-size: 16px;
+  color: #555;
+}
+
+/* ===== GRID PRINCIPAL ===== */
+.mei-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 30px;
+  align-items: stretch;
+}
+
+/* ===== CARD BASE ===== */
+.mei-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.mei-card h2,
+.mei-card h3 {
+  color: #0a4da3;
+  margin-bottom: 20px;
+}
+
+/* ===== SERVIÇOS AVULSOS ===== */
+.services-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.services-list li {
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.services-list li:hover {
+  background: #f1f6ff;
+  border-color: #0a4da3;
+}
+
+/* ===== PLANOS ===== */
+.plan-price {
+  font-size: 22px;
+  font-weight: bold;
+  color: #0a4da3;
+  margin-bottom: 20px;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 25px;
+}
+
+.plan-features li {
+  margin-bottom: 10px;
+  color: #444;
+}
+
+/* ===== BOTÃO ===== */
+.mei-btn {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: #0a4da3;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.mei-btn:hover {
+  background: #083c80;
+}
+
+/* ===== PLANO PREMIUM ===== */
+.mei-card.premium {
+  border: 2px solid #0a4da3;
+  position: relative;
+}
+
+.mei-card.premium::before {
+  content: "Mais vantajoso";
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: #0a4da3;
+  color: #fff;
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 20px;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 992px) {
+  .mei-layout {
+    grid-template-columns: 1fr;
+  }
+}
