@@ -14,7 +14,7 @@ const dropdownItem = document.querySelector('.menu-item.dropdown');
 
 dropdownToggle.addEventListener('click', (e) => {
   if (window.innerWidth <= 768) {
-    e.preventDefault(); // impede navegação no mobile
+    e.preventDefault();
     dropdownItem.classList.toggle('open');
   }
 });
