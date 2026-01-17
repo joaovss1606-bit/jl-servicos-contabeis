@@ -2,77 +2,52 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Compra de Serviço</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contratar serviço MEI | J L Serviços Contábeis</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f6f8;
-      color: #0b1c2d;
-    }
+  <!-- CSS GLOBAL -->
+  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
 
-    .container {
-      max-width: 700px;
-      margin: 60px auto;
-      background: #ffffff;
-      padding: 32px;
-      border-radius: 18px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-    }
-
-    h1 {
-      margin-top: 0;
-    }
-
-    .servico-nome {
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .btn-finalizar {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      text-align: center;
-      background: #bd9617;
-      color: #0b1c2d;
-      font-weight: bold;
-      border-radius: 14px;
-      text-decoration: none;
-      margin-top: 30px;
-    }
-  </style>
+  <!-- CSS COMPRA -->
+  <link rel="stylesheet" href="./compra.css">
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>Confirmar serviço</h1>
-    <div class="servico-nome" id="servico"></div>
+  <main class="container compra-page">
 
-    <p>
-      Após a confirmação, você será direcionado para atendimento
-      via WhatsApp para concluir o serviço.
-    </p>
+    <header class="compra-header">
+      <h1 id="service-title">Serviço MEI</h1>
+      <p id="service-description"></p>
+    </header>
 
-    <a href="#" class="btn-finalizar">Continuar</a>
-  </div>
+    <section class="compra-content">
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const servico = params.get('servico');
+      <!-- RESUMO -->
+      <div class="compra-resumo">
+        <h2>O que está incluso</h2>
+        <ul id="service-includes"></ul>
+      </div>
 
-    const nomes = {
-      'abertura-mei': 'Abertura de MEI',
-      'alteracao-mei': 'Alteração de MEI',
-      'baixa-mei': 'Baixa de MEI'
-    };
+      <!-- FORMULÁRIO -->
+      <div class="compra-form">
+        <h2>Solicitar atendimento</h2>
 
-    document.getElementById('servico').innerText =
-      nomes[servico] || 'Serviço selecionado';
-  </script>
+        <form id="compraForm">
+          <input type="text" name="nome" placeholder="Seu nome" required>
+          <input type="text" name="whatsapp" placeholder="WhatsApp" required>
+          <input type="email" name="email" placeholder="E-mail (opcional)">
+          <textarea name="mensagem" placeholder="Conte brevemente sua necessidade"></textarea>
 
+          <button type="submit">Falar com especialista</button>
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="./compra.js"></script>
 </body>
 </html>
+
