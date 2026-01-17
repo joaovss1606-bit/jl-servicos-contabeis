@@ -79,3 +79,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* AJUSTE DE ESPAÇAMENTO SUPERIOR DA PÁGINA DE COMPRA */
+.compra-page {
+  padding-top: 60px;
+}
+
