@@ -81,7 +81,21 @@
 }
 
 /* AJUSTE DE ESPAÇAMENTO SUPERIOR DA PÁGINA DE COMPRA */
-.compra-page h1 {
-  margin-top: 80px;
+.compra-page {
+  min-height: calc(100vh - 120px);
+  padding-top: 80px;
+  padding-bottom: 80px;
+  box-sizing: border-box;
 }
 
+.compra-content {
+  display: flex;
+  gap: 48px;
+  align-items: stretch;
+}
+
+.compra-content {
+  display: flex;
+  gap: 48px;
+  align-items: stretch;
+}
