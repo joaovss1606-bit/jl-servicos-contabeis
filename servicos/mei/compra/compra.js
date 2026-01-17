@@ -86,6 +86,7 @@ document.getElementById('titulo-servico').textContent = servico.titulo
 document.getElementById('servico').value = servicoKey
 
 const lista = document.getElementById('lista-inclusos')
+lista.innerHTML = ''
 servico.inclusos.forEach(item => {
   const li = document.createElement('li')
   li.textContent = item
@@ -93,10 +94,26 @@ servico.inclusos.forEach(item => {
 })
 
 // WHATSAPP
-document.getElementById('btn-whatsapp').href =
-  `https://wa.me/5500000000000?text=Olá, quero contratar o serviço: ${servico.titulo}`
+document.getElementById('btn-whatsapp').addEventListener('click', () => {
+  const nome = document.querySelector('[name="nome"]').value
+  const whatsapp = document.querySelector('[name="whatsapp"]').value
 
-// FORM
+  if (!nome || !whatsapp) {
+    alert('Preencha seus dados antes de falar com o especialista.')
+    return
+  }
+
+  const texto = `Olá! Meu nome é ${nome}.
+Tenho interesse no serviço: ${servico.titulo}.
+Meu WhatsApp: ${whatsapp}`
+
+  window.open(
+    `https://wa.me/5500000000000?text=${encodeURIComponent(texto)}`,
+    '_blank'
+  )
+})
+
+// FORM → SUPABASE
 document.getElementById('form-pedido').addEventListener('submit', async (e) => {
   e.preventDefault()
 
@@ -114,7 +131,6 @@ document.getElementById('form-pedido').addEventListener('submit', async (e) => {
 
   if (error) {
     alert('Erro ao enviar pedido')
-  } else {
-    alert('Pedido enviado com sucesso!')
   }
 })
+
