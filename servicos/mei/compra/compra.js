@@ -166,3 +166,30 @@ Novo pedido de serviço:
 
   btnEnviar.textContent = 'Pedido enviado'
 })
+
+// ================= MÁSCARAS CPF / WHATSAPP =================
+
+const campoCPF = document.getElementById('cpf')
+const campoWhats = document.getElementById('whatsapp')
+
+// CPF: 000.000.000-00
+campoCPF.addEventListener('input', () => {
+  let v = campoCPF.value.replace(/\D/g, '').slice(0, 11)
+
+  v = v.replace(/(\d{3})(\d)/, '$1.$2')
+  v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+  v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4')
+
+  campoCPF.value = v
+})
+
+// WhatsApp: (00) 00000-0000
+campoWhats.addEventListener('input', () => {
+  let v = campoWhats.value.replace(/\D/g, '').slice(0, 11)
+
+  v = v.replace(/^(\d{2})(\d)/, '($1) $2')
+  v = v.replace(/(\d{5})(\d)/, '$1-$2')
+
+  campoWhats.value = v
+})
+
