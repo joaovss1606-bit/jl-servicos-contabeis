@@ -2,9 +2,9 @@ const servicos = {
   'abertura-mei': {
     titulo: 'Abertura de MEI',
     inclusos: [
-      'Análise do perfil',
+      'Análise do perfil do empreendedor',
       'Cadastro no Portal do Empreendedor',
-      'Definição do CNAE',
+      'Definição correta da atividade (CNAE)',
       'Emissão do CNPJ',
       'Orientações iniciais'
     ]
@@ -13,24 +13,26 @@ const servicos = {
     titulo: 'Regularização de MEI',
     inclusos: [
       'Diagnóstico completo',
-      'Regularização de pendências',
-      'Orientações fiscais'
+      'Identificação de pendências',
+      'Regularização fiscal',
+      'Orientações'
     ]
   },
   'encerramento-mei': {
     titulo: 'Encerramento de MEI',
     inclusos: [
       'Análise prévia',
-      'Baixa correta',
+      'Encerramento correto',
+      'Verificação de pendências',
       'Orientações finais'
     ]
   }
 }
 
-// SERVIÇO ATUAL
+// CAPTURA SERVIÇO
 const params = new URLSearchParams(window.location.search)
-const servicoKey = params.get('servico')
-const servico = servicos[servicoKey]
+const key = params.get('servico')
+const servico = servicos[key]
 
 if (!servico) {
   document.body.innerHTML = '<p>Serviço não encontrado.</p>'
@@ -39,7 +41,7 @@ if (!servico) {
 
 // RENDERIZA
 document.getElementById('titulo-servico').textContent = servico.titulo
-document.getElementById('servico').value = servicoKey
+document.getElementById('servico').value = key
 
 const lista = document.getElementById('lista-inclusos')
 servico.inclusos.forEach(item => {
@@ -48,36 +50,44 @@ servico.inclusos.forEach(item => {
   lista.appendChild(li)
 })
 
+// AUTO-RESIZE TEXTAREA
+const obs = document.getElementById('obs')
+obs.addEventListener('input', () => {
+  obs.style.height = 'auto'
+  obs.style.height = obs.scrollHeight + 'px'
+})
+
 // VALIDAÇÃO
 const nome = document.getElementById('nome')
 const whatsapp = document.getElementById('whatsapp')
-const btnEnviar = document.getElementById('btn-enviar')
-const btnWhatsapp = document.getElementById('btn-whatsapp')
+const btn = document.getElementById('btn-enviar')
 
 function validar() {
   if (nome.value.trim() && whatsapp.value.trim()) {
-    btnEnviar.disabled = false
-    btnEnviar.classList.add('ativo')
-    btnWhatsapp.classList.remove('disabled')
+    btn.disabled = false
+    btn.classList.add('ativo')
   } else {
-    btnEnviar.disabled = true
-    btnEnviar.classList.remove('ativo')
-    btnWhatsapp.classList.add('disabled')
+    btn.disabled = true
+    btn.classList.remove('ativo')
   }
 }
 
 nome.addEventListener('input', validar)
 whatsapp.addEventListener('input', validar)
 
-// ENVIO
+// ENVIO WHATSAPP
 document.getElementById('form-pedido').addEventListener('submit', (e) => {
   e.preventDefault()
 
-  const mensagem =
-    `Olá! Meu nome é ${nome.value}.
-Quero contratar o serviço: ${servico.titulo}.
-WhatsApp: ${whatsapp.value}`
+  const mensagem = `
+Olá! Quero contratar um serviço.
 
-  const url = `https://wa.me/5500000000000?text=${encodeURIComponent(mensagem)}`
+📌 Serviço: ${servico.titulo}
+👤 Nome: ${nome.value}
+📱 WhatsApp: ${whatsapp.value}
+📝 Observações: ${obs.value || 'Nenhuma'}
+  `.trim()
+
+  const url = `https://ea.me/61920041427?text=${encodeURIComponent(mensagem)}`
   window.open(url, '_blank')
 })
