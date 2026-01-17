@@ -118,7 +118,7 @@ whatsapp.addEventListener('input', () => {
 })
 
 /* ===============================
-   VALIDAÇÃO ROBUSTA
+   VALIDAÇÃO (À PROVA DE FALHA)
 ================================ */
 function somenteNumeros(valor) {
   return valor.replace(/\D/g, '')
@@ -134,22 +134,24 @@ function validarFormulario() {
     cpfNum.length === 11 &&
     whatsappNum.length >= 10
 
-  if (valido) {
-    btnEnviar.classList.add('ativo')
-    btnEnviar.disabled = false
-  } else {
-    btnEnviar.classList.remove('ativo')
-    btnEnviar.disabled = true
-  }
+  btnEnviar.disabled = !valido
+  btnEnviar.classList.toggle('ativo', valido)
 }
 
-form.addEventListener('input', validarFormulario)
+/* ESCUTA TODOS OS CAMPOS */
+[nome, email, cpf, whatsapp, obs].forEach(campo => {
+  campo.addEventListener('input', validarFormulario)
+})
+
+/* GARANTE ESTADO INICIAL */
+validarFormulario()
 
 /* ===============================
    ENVIO
 ================================ */
 form.addEventListener('submit', async (e) => {
   e.preventDefault()
+  if (btnEnviar.disabled) return
 
   btnEnviar.textContent = 'Enviando...'
   btnEnviar.disabled = true
