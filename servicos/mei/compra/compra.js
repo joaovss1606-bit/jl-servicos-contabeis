@@ -1,79 +1,35 @@
-import { supabase } from '/jl-servicos-contabeis/supabase.js'
-
 const servicos = {
   'abertura-mei': {
     titulo: 'Abertura de MEI',
     inclusos: [
-      'Análise do perfil do empreendedor',
+      'Análise do perfil',
       'Cadastro no Portal do Empreendedor',
-      'Definição correta da atividade (CNAE)',
+      'Definição do CNAE',
       'Emissão do CNPJ',
-      'Orientações iniciais',
-      'Suporte após a abertura'
+      'Orientações iniciais'
     ]
   },
   'regularizacao-mei': {
     titulo: 'Regularização de MEI',
     inclusos: [
-      'Diagnóstico da situação',
-      'Identificação de pendências',
-      'Regularização de DAS',
-      'Orientações fiscais',
-      'Suporte completo'
+      'Diagnóstico completo',
+      'Regularização de pendências',
+      'Orientações fiscais'
     ]
   },
   'encerramento-mei': {
     titulo: 'Encerramento de MEI',
     inclusos: [
-      'Análise antes da baixa',
-      'Encerramento correto',
-      'Verificação de pendências',
-      'Orientações pós-baixa',
-      'Suporte'
-    ]
-  },
-  'emissao-das': {
-    titulo: 'Emissão de DAS',
-    inclusos: [
-      'Emissão da guia DAS',
-      'Orientações de vencimento',
-      'Envio da guia',
-      'Suporte'
-    ]
-  },
-  'dasn': {
-    titulo: 'Declaração Anual DASN-SIMEI',
-    inclusos: [
-      'Conferência de dados',
-      'Envio da declaração',
-      'Comprovante',
-      'Orientações'
-    ]
-  },
-  'parcelamento': {
-    titulo: 'Parcelamento de Débitos',
-    inclusos: [
-      'Análise dos débitos',
-      'Simulação de parcelamento',
-      'Solicitação junto à Receita',
-      'Orientações'
-    ]
-  },
-  'alteracao-mei': {
-    titulo: 'Alteração de Dados do MEI',
-    inclusos: [
-      'Alteração cadastral',
-      'Atualização no portal',
-      'Conferência final',
-      'Orientações'
+      'Análise prévia',
+      'Baixa correta',
+      'Orientações finais'
     ]
   }
 }
 
-// CAPTURA SERVIÇO
+// SERVIÇO ATUAL
 const params = new URLSearchParams(window.location.search)
 const servicoKey = params.get('servico')
-
 const servico = servicos[servicoKey]
 
 if (!servico) {
@@ -86,51 +42,42 @@ document.getElementById('titulo-servico').textContent = servico.titulo
 document.getElementById('servico').value = servicoKey
 
 const lista = document.getElementById('lista-inclusos')
-lista.innerHTML = ''
 servico.inclusos.forEach(item => {
   const li = document.createElement('li')
   li.textContent = item
   lista.appendChild(li)
 })
 
-// WHATSAPP
-document.getElementById('btn-whatsapp').addEventListener('click', () => {
-  const nome = document.querySelector('[name="nome"]').value
-  const whatsapp = document.querySelector('[name="whatsapp"]').value
+// VALIDAÇÃO
+const nome = document.getElementById('nome')
+const whatsapp = document.getElementById('whatsapp')
+const btnEnviar = document.getElementById('btn-enviar')
+const btnWhatsapp = document.getElementById('btn-whatsapp')
 
-  if (!nome || !whatsapp) {
-    alert('Preencha seus dados antes de falar com o especialista.')
-    return
+function validar() {
+  if (nome.value.trim() && whatsapp.value.trim()) {
+    btnEnviar.disabled = false
+    btnEnviar.classList.add('ativo')
+    btnWhatsapp.classList.remove('disabled')
+  } else {
+    btnEnviar.disabled = true
+    btnEnviar.classList.remove('ativo')
+    btnWhatsapp.classList.add('disabled')
   }
+}
 
-  const texto = `Olá! Meu nome é ${nome}.
-Tenho interesse no serviço: ${servico.titulo}.
-Meu WhatsApp: ${whatsapp}`
+nome.addEventListener('input', validar)
+whatsapp.addEventListener('input', validar)
 
-  window.open(
-    `https://wa.me/5500000000000?text=${encodeURIComponent(texto)}`,
-    '_blank'
-  )
-})
-
-// FORM → SUPABASE
-document.getElementById('form-pedido').addEventListener('submit', async (e) => {
+// ENVIO
+document.getElementById('form-pedido').addEventListener('submit', (e) => {
   e.preventDefault()
 
-  const formData = new FormData(e.target)
+  const mensagem =
+    `Olá! Meu nome é ${nome.value}.
+Quero contratar o serviço: ${servico.titulo}.
+WhatsApp: ${whatsapp.value}`
 
-  const pedido = {
-    servico: formData.get('servico'),
-    nome: formData.get('nome'),
-    cpf: formData.get('cpf'),
-    whatsapp: formData.get('whatsapp'),
-    obs: formData.get('obs')
-  }
-
-  const { error } = await supabase.from('pedidos').insert(pedido)
-
-  if (error) {
-    alert('Erro ao enviar pedido')
-  }
+  const url = `https://wa.me/5500000000000?text=${encodeURIComponent(mensagem)}`
+  window.open(url, '_blank')
 })
-
