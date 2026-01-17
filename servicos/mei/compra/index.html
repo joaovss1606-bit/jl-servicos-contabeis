@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contratar serviço MEI | J L Serviços Contábeis</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contratação de Serviço MEI</title>
 
   <!-- CSS GLOBAL -->
   <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
-
-  <!-- CSS COMPRA -->
+  <!-- CSS LOCAL -->
   <link rel="stylesheet" href="./compra.css">
 </head>
 
@@ -16,38 +15,54 @@
 
   <main class="container compra-page">
 
-    <header class="compra-header">
-      <h1 id="service-title">Serviço MEI</h1>
-      <p id="service-description"></p>
-    </header>
+    <!-- RESUMO -->
+    <section class="compra-resumo">
+      <h1 id="titulo-servico"></h1>
+      <ul id="lista-inclusos"></ul>
+    </section>
 
-    <section class="compra-content">
+    <!-- FORMULÁRIO -->
+    <section class="compra-form">
+      <h2>Preencha seus dados</h2>
 
-      <!-- RESUMO -->
-      <div class="compra-resumo">
-        <h2>O que está incluso</h2>
-        <ul id="service-includes"></ul>
-      </div>
+      <form id="form-pedido">
+        <input type="hidden" id="servico" name="servico">
 
-      <!-- FORMULÁRIO -->
-      <div class="compra-form">
-        <h2>Solicitar atendimento</h2>
+        <label>
+          Nome completo
+          <input type="text" name="nome" required>
+        </label>
 
-        <form id="compraForm">
-          <input type="text" name="nome" placeholder="Seu nome" required>
-          <input type="text" name="whatsapp" placeholder="WhatsApp" required>
-          <input type="email" name="email" placeholder="E-mail (opcional)">
-          <textarea name="mensagem" placeholder="Conte brevemente sua necessidade"></textarea>
+        <label>
+          CPF
+          <input type="text" name="cpf" required>
+        </label>
 
-          <button type="submit">Falar com especialista</button>
-        </form>
-      </div>
+        <label>
+          WhatsApp
+          <input type="text" name="whatsapp" required>
+        </label>
 
+        <label>
+          Observações (opcional)
+          <textarea name="obs"></textarea>
+        </label>
+
+        <button type="submit" class="btn">
+          Enviar pedido
+        </button>
+      </form>
+    </section>
+
+    <!-- WHATSAPP -->
+    <section class="compra-whatsapp">
+      <a id="btn-whatsapp" target="_blank" class="btn-outline">
+        Falar no WhatsApp
+      </a>
     </section>
 
   </main>
 
-  <script src="./compra.js"></script>
+  <script type="module" src="./compra.js"></script>
 </body>
 </html>
-
