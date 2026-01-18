@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Serviços Contábeis | J L Serviços Contábeis</title>
 
+  <!-- CSS GLOBAL -->
   <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
-  <link rel="stylesheet" href="./servicos-contabeis.css">
+  <!-- CSS BASE (PADRÃO MEI) -->
+  <link rel="stylesheet" href="../mei/mei.css">
 </head>
-
-<script src="./servicos-contabeis.js"></script>
 
 <body>
 
+  <!-- ===== BREADCRUMB ===== -->
   <nav class="breadcrumb container">
     <a href="/jl-servicos-contabeis/">Início</a>
     <span>›</span>
@@ -23,29 +24,54 @@
 
   <main class="container mei-page">
 
+    <!-- ===== TÍTULO ===== -->
     <header class="mei-header">
       <h1>Serviços Contábeis</h1>
-      <p>Gestão contábil e fiscal para empresas e profissionais.</p>
+      <p>Gestão contábil, fiscal e estratégica para empresas e profissionais.</p>
     </header>
 
+    <!-- ===== SERVIÇOS ===== -->
     <section class="mei-section mei-servicos">
       <h2>Serviços Disponíveis</h2>
 
       <div class="services-grid">
-        <a class="service-card" href="./compra/?servico=consultoria-contabil">
+
+        <a class="service-card"
+           href="/jl-servicos-contabeis/servicos/compra/?categoria=contabeis&servico=consultoria-contabil">
           Consultoria Contábil
+          <span>Atendimento personalizado</span>
         </a>
-        <a class="service-card" href="./compra/?servico=planejamento-tributario">
+
+        <a class="service-card"
+           href="/jl-servicos-contabeis/servicos/compra/?categoria=contabeis&servico=planejamento-tributario">
           Planejamento Tributário
+          <span>Redução legal de impostos</span>
         </a>
-        <a class="service-card" href="./compra/?servico=balanco">
+
+        <a class="service-card"
+           href="/jl-servicos-contabeis/servicos/compra/?categoria=contabeis&servico=balanco-patrimonial">
           Elaboração de Balanço
+          <span>Balanço patrimonial e DRE</span>
         </a>
+
+        <a class="service-card"
+           href="/jl-servicos-contabeis/servicos/compra/?categoria=contabeis&servico=regularizacao-empresa">
+          Regularização de Empresa
+          <span>Fiscal, contábil e cadastral</span>
+        </a>
+
+        <a class="service-card"
+           href="/jl-servicos-contabeis/servicos/compra/?categoria=contabeis&servico=encerramento-empresa">
+          Encerramento de Empresa
+          <span>Baixa completa e segura</span>
+        </a>
+
       </div>
     </section>
 
   </main>
 
+  <!-- CTA FIXO -->
   <a href="https://wa.me/5500000000000" class="cta-fixed" target="_blank">
     Falar sobre Serviços Contábeis
   </a>
