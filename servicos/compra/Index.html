@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <title>Contratar Serviço | J L Serviços Contábeis</title>
 
   <!-- CSS GLOBAL -->
@@ -13,27 +14,25 @@
 
 <body>
 
+  <!-- ===== BREADCRUMB ===== -->
   <nav class="breadcrumb container">
-  <a href="/jl-servicos-contabeis/">Início</a>
-  <span>›</span>
+    <a href="/jl-servicos-contabeis/">Início</a>
+    <span>›</span>
+    <a href="/jl-servicos-contabeis/servicos/">Serviços</a>
+    <span>›</span>
+    <strong id="breadcrumb-servico">Serviço</strong>
+  </nav>
 
-  <a href="/jl-servicos-contabeis/servicos/">Serviços</a>
-  <span>›</span>
+  <main class="container compra-page">
 
-  <span id="breadcrumb-categoria">Categoria</span>
-  <span>›</span>
-
-  <strong id="breadcrumb-servico">Serviço</strong>
-</nav>
-
-    <!-- ===== TÍTULO ===== -->
+    <!-- ===== CABEÇALHO ===== -->
     <header class="compra-header">
       <h1 id="titulo-servico">Serviço</h1>
 
       <!-- VALOR -->
       <div id="valor-plano" class="valor-plano"></div>
 
-      <!-- AVISO DE ECONOMIA (serviços avulsos) -->
+      <!-- AVISO ECONOMIA -->
       <div id="aviso-economia" class="aviso-economia" style="display:none"></div>
     </header>
 
@@ -43,7 +42,7 @@
       <!-- ===== DESCRIÇÃO ===== -->
       <div class="card-descricao">
 
-        <!-- CARD PREMIUM (exclusivo da página de compra) -->
+        <!-- PREMIUM -->
         <div id="mensagem-premium" class="card-premium" style="display:none">
           ⭐ Você está fazendo a escolha certa!
         </div>
@@ -94,6 +93,8 @@
 
   </main>
 
+  <!-- JS ÚNICO DA COMPRA -->
   <script type="module" src="./compra.js"></script>
+
 </body>
 </html>
