@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -33,10 +32,12 @@
     <!-- ===== TÍTULO ===== -->
     <header class="compra-header">
       <h1 id="titulo-servico">Serviço</h1>
-      <p id="valor-servico" class="valor-servico"></p>
 
-      <!-- VALOR DO PLANO (aparece só se existir) -->
+      <!-- VALOR -->
       <div id="valor-plano" class="valor-plano"></div>
+
+      <!-- ===== AVISO DE ECONOMIA (SERVIÇOS AVULSOS) ===== -->
+      <div id="aviso-economia" class="aviso-economia" style="display:none"></div>
     </header>
 
     <!-- ===== GRID ===== -->
@@ -45,7 +46,7 @@
       <!-- ===== DESCRIÇÃO ===== -->
       <div class="card-descricao">
 
-        <!-- CARD PREMIUM (exclusivo / oculto por padrão) -->
+        <!-- CARD PREMIUM (exclusivo da página de compra) -->
         <div id="mensagem-premium" class="card-premium" style="display:none">
           ⭐ Você está fazendo a escolha certa!
         </div>
