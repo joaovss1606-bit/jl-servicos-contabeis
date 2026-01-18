@@ -13,6 +13,7 @@ const servicos = {
       'Suporte após a abertura'
     ]
   },
+
   'regularizacao-mei': {
     titulo: 'Regularização de MEI',
     inclusos: [
@@ -23,6 +24,7 @@ const servicos = {
       'Suporte completo'
     ]
   },
+
   'encerramento-mei': {
     titulo: 'Encerramento de MEI',
     inclusos: [
@@ -30,6 +32,50 @@ const servicos = {
       'Encerramento correto',
       'Verificação de pendências',
       'Orientações pós-baixa',
+      'Suporte'
+    ]
+  },
+
+  'emissao-das': {
+    titulo: 'Emissão de DAS',
+    inclusos: [
+      'Emissão da guia DAS',
+      'Verificação de valores',
+      'Orientações de pagamento',
+      'Envio da guia',
+      'Suporte'
+    ]
+  },
+
+  'dasn': {
+    titulo: 'Declaração Anual DASN-SIMEI',
+    inclusos: [
+      'Conferência das informações',
+      'Envio da declaração',
+      'Regularização de pendências',
+      'Comprovante de envio',
+      'Orientações finais'
+    ]
+  },
+
+  'parcelamento': {
+    titulo: 'Parcelamento de Débitos',
+    inclusos: [
+      'Análise dos débitos',
+      'Simulação de parcelamento',
+      'Solicitação junto à Receita',
+      'Acompanhamento',
+      'Orientações'
+    ]
+  },
+
+  'alteracao-mei': {
+    titulo: 'Alteração de Dados do MEI',
+    inclusos: [
+      'Alteração de dados cadastrais',
+      'Atualização no Portal do Empreendedor',
+      'Conferência final',
+      'Orientações',
       'Suporte'
     ]
   }
