@@ -38,22 +38,34 @@ const servicos = {
 // ================= PLANOS =================
 const planos = {
   basico: {
-    nome: 'Plano Básico',
-    valor: 'R$ 149,90',
-    beneficios: [
-      'Execução do serviço escolhido',
-      'Entrega padrão',
-      'Orientações essenciais'
+    titulo: 'Plano MEI Básico',
+    valor: 'R$ 99,00 / mês',
+    inclusos: [
+      '✔ Emissão mensal do DAS',
+      '✔ Lembretes de vencimento',
+      '✔ DASN-SIMEI (1x ao ano)',
+      '✔ Acompanhamento básico',
+      '✔ Suporte via WhatsApp',
+      '✔ 10% de desconto em serviços avulsos'
     ]
   },
+
   premium: {
-    nome: 'Plano Premium',
-    valor: 'R$ 249,90',
-    beneficios: [
-      'Execução do serviço escolhido',
-      'Atendimento prioritário',
-      'Suporte estendido',
-      'Acompanhamento pós-serviço'
+    titulo: 'Plano MEI Premium',
+    valor: 'R$ 159,00 / mês',
+    destaque: true,
+    inclusos: [
+      '✔ Emissão mensal do DAS',
+      '✔ Lembretes de vencimento',
+      '✔ DASN-SIMEI (1x ao ano)',
+      '✔ Acompanhamento completo',
+      '✔ Suporte prioritário via WhatsApp',
+      '✔ Regularização fiscal completa',
+      '✔ Parcelamento de débitos',
+      '✔ Emissão de certidões',
+      '✔ Orientação personalizada',
+      '✔ Relatório mensal de situação',
+      '✔ 20% de desconto em serviços avulsos'
     ]
   }
 }
