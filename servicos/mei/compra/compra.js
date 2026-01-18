@@ -55,16 +55,13 @@ const planos = {
     valor: 'R$ 159,00 / mês',
     destaque: true,
     inclusos: [
-      '✔ Emissão mensal do DAS',
-      '✔ Lembretes de vencimento',
-      '✔ DASN-SIMEI (1x ao ano)',
-      '✔ Acompanhamento completo',
-      '✔ Suporte prioritário via WhatsApp',
+      '✔ Todos os benefícios do plano básico',
       '✔ Regularização fiscal completa',
       '✔ Parcelamento de débitos',
       '✔ Emissão de certidões',
       '✔ Orientação personalizada',
       '✔ Relatório mensal de situação',
+      '✔ Suporte prioritário',
       '✔ 20% de desconto em serviços avulsos'
     ]
   }
