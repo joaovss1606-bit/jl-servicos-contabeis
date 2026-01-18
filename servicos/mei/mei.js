@@ -6,3 +6,13 @@ document.querySelectorAll(".service-card").forEach(card => {
     }
   });
 });
+
+document.querySelectorAll('.btn-plan').forEach(botao => {
+  botao.addEventListener('click', () => {
+    const plano = botao.dataset.plano
+    if (!plano) return
+
+    window.location.href =
+      `/jl-servicos-contabeis/servicos/mei/compra/?plano=${plano}`
+  })
+})
