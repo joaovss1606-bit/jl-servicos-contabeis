@@ -76,7 +76,7 @@ const params = new URLSearchParams(window.location.search)
 const servicoKey = params.get('servico')
 
 if (!servicoKey || !servicos[servicoKey]) {
-  alert('Serviço inválido ou não informado.')
+  alert('Serviço inválido.')
   throw new Error('Serviço inválido')
 }
 
@@ -94,23 +94,36 @@ servico.inclusos.forEach(item => {
   lista.appendChild(li)
 })
 
-// ================= FORM =================
+// ================= CAMPOS =================
+const form = document.getElementById('form-pedido')
 const btnEnviar = document.getElementById('btn-enviar')
-const camposObrigatorios = ['nome', 'email', 'cpf', 'whatsapp']
+
+const campoNome = form.querySelector('[name="nome"]')
+const campoEmail = form.querySelector('[name="email"]')
+const campoCPF = form.querySelector('[name="cpf"]')
+const campoWhats = form.querySelector('[name="whatsapp"]')
+const campoObs = form.querySelector('[name="obs"]')
+
+// botão começa travado
+btnEnviar.disabled = true
 
 function validarFormulario() {
-  const valido = camposObrigatorios.every(id => {
-    const campo = document.getElementById(id)
-    return campo && campo.value.trim() !== ''
-  })
+  const valido =
+    campoNome.value.trim() &&
+    campoEmail.value.trim() &&
+    campoCPF.value.trim() &&
+    campoWhats.value.trim()
 
   btnEnviar.disabled = !valido
-  btnEnviar.classList.toggle('ativo', valido)
+  btnEnviar.classList.toggle('ativo', !!valido)
 }
 
-camposObrigatorios.forEach(id => {
-  document.getElementById(id).addEventListener('input', validarFormulario)
+;[campoNome, campoEmail, campoCPF, campoWhats].forEach(campo => {
+  campo.addEventListener('input', validarFormulario)
 })
+
+// bloqueia submit nativo
+form.addEventListener('submit', e => e.preventDefault())
 
 // ================= ENVIO =================
 btnEnviar.addEventListener('click', () => {
@@ -121,11 +134,11 @@ btnEnviar.addEventListener('click', () => {
 
   const pedido = {
     servico: servicoKey,
-    nome: nome.value.trim(),
-    email: email.value.trim(),
-    cpf: cpf.value.trim(),
-    whatsapp: whatsapp.value.trim(),
-    obs: obs.value.trim()
+    nome: campoNome.value.trim(),
+    email: campoEmail.value.trim(),
+    cpf: campoCPF.value.trim(),
+    whatsapp: campoWhats.value.trim(),
+    obs: campoObs.value.trim()
   }
 
   const mensagem = `
@@ -139,28 +152,28 @@ Novo pedido de serviço:
 📝 Observações: ${pedido.obs || 'Nenhuma'}
 `.trim()
 
-  // ✅ ABRE WHATSAPP IMEDIATAMENTE (SEM BLOQUEIO)
+  // ✅ WhatsApp abre IMEDIATAMENTE
   window.open(
     `https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`,
     '_blank'
   )
 
-  // 🔁 SALVA EM SEGUNDO PLANO (SEM ATRAPALHAR)
+  // salva em segundo plano
   supabase.from('pedidos').insert(pedido)
 })
 
 // ================= MÁSCARAS =================
-cpf.addEventListener('input', () => {
-  let v = cpf.value.replace(/\D/g, '').slice(0, 11)
+campoCPF.addEventListener('input', () => {
+  let v = campoCPF.value.replace(/\D/g, '').slice(0, 11)
   v = v.replace(/(\d{3})(\d)/, '$1.$2')
   v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
   v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4')
-  cpf.value = v
+  campoCPF.value = v
 })
 
-whatsapp.addEventListener('input', () => {
-  let v = whatsapp.value.replace(/\D/g, '').slice(0, 11)
+campoWhats.addEventListener('input', () => {
+  let v = campoWhats.value.replace(/\D/g, '').slice(0, 11)
   v = v.replace(/^(\d{2})(\d)/, '($1) $2')
   v = v.replace(/(\d{5})(\d)/, '$1-$2')
-  whatsapp.value = v
+  campoWhats.value = v
 })
