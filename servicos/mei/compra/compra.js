@@ -149,19 +149,32 @@ if (planoKey && planos[planoKey]) {
 }
 
 // ================= RENDER =================
-document.getElementById('titulo-servico').textContent = tituloFinal
+// ===== RENDERIZAÇÃO DO TÍTULO =====
+const tituloServicoEl = document.getElementById('titulo-servico')
+const breadcrumbServicoEl = document.getElementById('breadcrumb-servico')
 
+if (tituloServicoEl) {
+  tituloServicoEl.textContent = servico.titulo
+}
+
+if (breadcrumbServicoEl) {
+  breadcrumbServicoEl.textContent = servico.titulo
+}
+
+// ===== RENDERIZAÇÃO DA LISTA =====
 const lista = document.getElementById('lista-inclusos')
 lista.innerHTML = ''
-listaItens.forEach(item => {
+
+servico.inclusos.forEach(item => {
   const li = document.createElement('li')
   li.textContent = item
   lista.appendChild(li)
 })
 
-if (valorPlano) {
-  const elValor = document.getElementById('valor-plano')
-  if (elValor) elValor.textContent = valorPlano
+// ===== VALOR (SÓ SE EXISTIR) =====
+const elValor = document.getElementById('valor-plano')
+if (elValor && servico.valor) {
+  elValor.textContent = servico.valor
 }
 
 // ================= FORM =================
