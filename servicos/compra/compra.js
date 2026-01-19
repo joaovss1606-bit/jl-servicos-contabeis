@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "Emissão de DAS",
           "Suporte simples"
         ],
-        valor: "R$ 99,90",
+        valor: "R$ 99,99",
         categoriaLabel: "MEI"
       },
       "premium": {
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "Consultoria estendida",
           "Relatórios adicionais"
         ],
-        valor: "R$ 149,90",
+        valor: "R$ 159,99",
         categoriaLabel: "MEI"
       },
       "abertura-mei": {
