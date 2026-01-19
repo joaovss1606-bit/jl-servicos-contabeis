@@ -2,54 +2,66 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Finalizar Serviço</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Compra de Serviço | J L Serviços Contábeis</title>
-
-  <!-- CSS GLOBAL -->
-  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
+  <link rel="stylesheet" href="./compra.css" />
 </head>
-
 <body>
 
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb container">
-    <a href="/jl-servicos-contabeis/">Início</a>
-    <span>›</span>
-    <a href="/jl-servicos-contabeis/servicos/">Serviços</a>
-    <span>›</span>
-    <strong>Compra</strong>
-  </nav>
+<main class="container">
 
-  <main class="container mei-page">
+  <h1 class="titulo-servico" id="nomeServico">
+    Serviço MEI
+  </h1>
 
-    <header class="mei-header">
-      <h1 id="service-title">Serviço</h1>
-      <p id="service-description">
-        Finalize a contratação do serviço selecionado.
-      </p>
-    </header>
+  <div class="grid">
 
-    <section class="mei-section">
+    <!-- CARD ESQUERDO -->
+    <div class="card">
       <h2>Resumo do Serviço</h2>
 
-      <div class="service-card">
-        <p><strong>Serviço:</strong> <span id="service-name">—</span></p>
-        <p><strong>Valor:</strong> <span id="service-price">A definir</span></p>
-      </div>
-    </section>
-
-    <section class="mei-section">
-      <button class="cta-button" disabled>
-        Finalizar Compra
-      </button>
-
-      <p style="margin-top: 1rem; opacity: 0.6;">
-        (Integração será ativada no próximo passo)
+      <p class="descricao" id="descricaoServico">
+        Descrição completa do serviço selecionado.
       </p>
-    </section>
 
-  </main>
+      <div class="valor">
+        Valor:
+        <strong id="valorServico">A definir</strong>
+      </div>
+    </div>
 
+    <!-- CARD DIREITO -->
+    <div class="card">
+      <h2>Dados do Cliente</h2>
+
+      <form id="formCompra">
+
+        <input type="text" placeholder="Nome completo *" required />
+
+        <input type="email" placeholder="E-mail *" required />
+
+        <input type="text" id="whatsapp" placeholder="WhatsApp *" required />
+
+        <input type="text" id="cpf" placeholder="CPF *" required />
+
+        <textarea
+          id="observacoes"
+          placeholder="Observações (opcional)">
+        </textarea>
+
+        <button type="submit" disabled id="btnEnviar">
+          Enviar Pedido
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="./compra.js"></script>
 </body>
 </html>
+
