@@ -171,7 +171,8 @@ body {
   }
 }
 
-header nav a {
+header nav a,
+header nav .dropdown-toggle {
   font-size: 16px;
   font-weight: 600;
 }
