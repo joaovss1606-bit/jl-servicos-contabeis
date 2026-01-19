@@ -4,10 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const camposObrigatorios = ["nome", "whatsapp", "email", "cpf"];
 
+  // BASE do GitHub Pages
   const BASE_URL = "/jl-servicos-contabeis";
 
   /* ===============================
-     🔹 DADOS MOCK
+     🔹 DADOS MOCK (TEMPORÁRIOS)
      =============================== */
   const servicosMock = {
     mei: {
@@ -16,14 +17,16 @@ document.addEventListener("DOMContentLoaded", () => {
         descricao: "Plano básico de serviços para MEI.",
         inclusos: ["Orientação inicial", "Emissão de DAS", "Suporte simples"],
         valor: "R$ 99,90",
-        categoriaLabel: "MEI"
+        categoriaLabel: "MEI",
+        categoriaPath: "/servicos/mei/"
       },
       premium: {
         titulo: "Plano MEI — Premium",
         descricao: "Plano premium com atendimento completo.",
         inclusos: ["Tudo do Básico", "Consultoria estendida", "Relatórios adicionais"],
         valor: "R$ 149,90",
-        categoriaLabel: "MEI"
+        categoriaLabel: "MEI",
+        categoriaPath: "/servicos/mei/"
       }
     },
     certificado: {
@@ -32,13 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
         descricao: "Serviço de renovação do seu certificado digital.",
         inclusos: ["Renovação imediata", "Suporte especializado"],
         valor: "R$ 150,00",
-        categoriaLabel: "Certificado Digital"
+        categoriaLabel: "Certificado Digital",
+        categoriaPath: "/servicos/certificado/"
       }
     }
   };
 
   /* ===============================
-     🔹 PARÂMETROS
+     🔹 PARÂMETROS DA URL
      =============================== */
   const params = new URLSearchParams(window.location.search);
   const categoria = params.get("categoria");
@@ -52,26 +56,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ===============================
-     🔹 BREADCRUMB CORRETO (GitHub Pages)
+     🔹 BREADCRUMB (FUNCIONAL EM TODAS)
      =============================== */
   const breadcrumb = document.getElementById("breadcrumb");
 
   if (breadcrumb) {
-    const categoriaUrl = `${BASE_URL}/servicos/${categoria}/`;
-
     breadcrumb.innerHTML = `
       <a href="${BASE_URL}/">Início</a>
       <span>›</span>
       <a href="${BASE_URL}/">Serviços</a>
       <span>›</span>
-      <a href="${categoriaUrl}">${dados.categoriaLabel}</a>
+      <a href="${BASE_URL}${dados.categoriaPath}">
+        ${dados.categoriaLabel}
+      </a>
       <span>›</span>
       <span>${dados.titulo}</span>
     `;
   }
 
   /* ===============================
-     🔹 CONTEÚDO
+     🔹 CONTEÚDO DA PÁGINA
      =============================== */
   document.getElementById("nomeServico").innerText = dados.titulo;
   document.getElementById("descricaoServico").innerText = dados.descricao;
@@ -86,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ===============================
-     🔹 RESTANTE DO CÓDIGO (INALTERADO)
+     🔹 MÁSCARA WHATSAPP
      =============================== */
   const whatsappInput = document.getElementById("whatsapp");
   whatsappInput.addEventListener("input", () => {
@@ -97,6 +101,9 @@ document.addEventListener("DOMContentLoaded", () => {
     validarFormulario();
   });
 
+  /* ===============================
+     🔹 MÁSCARA CPF
+     =============================== */
   const cpfInput = document.getElementById("cpf");
   cpfInput.addEventListener("input", () => {
     let v = cpfInput.value.replace(/\D/g, "").slice(0, 11);
@@ -107,11 +114,17 @@ document.addEventListener("DOMContentLoaded", () => {
     validarFormulario();
   });
 
+  /* ===============================
+     🔹 VALIDAÇÃO EMAIL
+     =============================== */
   const emailInput = document.getElementById("email");
   function emailValido(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
+  /* ===============================
+     🔹 VALIDAÇÃO GERAL
+     =============================== */
   function validarFormulario() {
     const valido = camposObrigatorios.every(id => {
       const campo = document.getElementById(id);
