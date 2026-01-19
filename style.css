@@ -213,3 +213,11 @@ header nav .dropdown-toggle {
   opacity: 0.9;
 }
 
+.service-card span {
+  display: block;
+  text-align: center;
+}
+
+.service-card span + span {
+  margin-top: 6px;
+}
