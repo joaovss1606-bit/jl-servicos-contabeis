@@ -195,3 +195,21 @@ header nav .dropdown-toggle {
   margin-top: 4px;
 }
 
+.service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.service-card .title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.service-card .price {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
