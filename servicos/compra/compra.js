@@ -4,51 +4,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const camposObrigatorios = ["nome", "whatsapp", "email", "cpf"];
 
-  // BASE do GitHub Pages
   const BASE_URL = "/jl-servicos-contabeis";
 
   /* ===============================
-     🔹 DADOS MOCK (TEMPORÁRIOS)
+     🔹 DADOS MOCK (PADRÃO COM SLUG)
      =============================== */
   const servicosMock = {
     mei: {
       basico: {
         titulo: "Plano MEI — Básico",
         descricao: "Plano básico de serviços para MEI.",
-        inclusos: ["Orientação inicial", "Emissão de DAS", "Suporte simples"],
+        inclusos: [
+          "Orientação inicial",
+          "Emissão de DAS",
+          "Suporte simples"
+        ],
         valor: "R$ 99,90",
-        categoriaLabel: "MEI",
-        categoriaPath: "/servicos/mei/"
+        categoriaLabel: "MEI"
       },
       premium: {
         titulo: "Plano MEI — Premium",
         descricao: "Plano premium com atendimento completo.",
-        inclusos: ["Tudo do Básico", "Consultoria estendida", "Relatórios adicionais"],
+        inclusos: [
+          "Tudo do Básico",
+          "Consultoria estendida",
+          "Relatórios adicionais"
+        ],
         valor: "R$ 149,90",
-        categoriaLabel: "MEI",
-        categoriaPath: "/servicos/mei/"
+        categoriaLabel: "MEI"
       }
     },
+
     certificado: {
       renovacao: {
         titulo: "Renovação de Certificado Digital",
-        descricao: "Serviço de renovação do seu certificado digital.",
-        inclusos: ["Renovação imediata", "Suporte especializado"],
+        descricao: "Serviço de renovação do certificado digital.",
+        inclusos: [
+          "Renovação imediata",
+          "Suporte especializado"
+        ],
         valor: "R$ 150,00",
-        categoriaLabel: "Certificado Digital",
-        categoriaPath: "/servicos/certificado/"
+        categoriaLabel: "Certificado Digital"
       }
     }
   };
 
   /* ===============================
-     🔹 PARÂMETROS DA URL
+     🔹 PARÂMETROS
      =============================== */
   const params = new URLSearchParams(window.location.search);
   const categoria = params.get("categoria");
-  const plano = params.get("plano");
+  const slug = params.get("slug");
 
-  const dados = servicosMock[categoria]?.[plano];
+  const dados = servicosMock[categoria]?.[slug];
 
   if (!dados) {
     document.getElementById("nomeServico").innerText = "Serviço não encontrado";
@@ -56,26 +64,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ===============================
-     🔹 BREADCRUMB (FUNCIONAL EM TODAS)
+     🔹 BREADCRUMB (100% FUNCIONAL)
      =============================== */
   const breadcrumb = document.getElementById("breadcrumb");
 
   if (breadcrumb) {
+    const categoriaUrl = `${BASE_URL}/servicos/${categoria}/`;
+
     breadcrumb.innerHTML = `
       <a href="${BASE_URL}/">Início</a>
       <span>›</span>
       <a href="${BASE_URL}/">Serviços</a>
       <span>›</span>
-      <a href="${BASE_URL}${dados.categoriaPath}">
-        ${dados.categoriaLabel}
-      </a>
+      <a href="${categoriaUrl}">${dados.categoriaLabel}</a>
       <span>›</span>
       <span>${dados.titulo}</span>
     `;
   }
 
   /* ===============================
-     🔹 CONTEÚDO DA PÁGINA
+     🔹 CONTEÚDO DO SERVIÇO
      =============================== */
   document.getElementById("nomeServico").innerText = dados.titulo;
   document.getElementById("descricaoServico").innerText = dados.descricao;
@@ -83,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const ul = document.getElementById("inclusosServico");
   ul.innerHTML = "";
+
   dados.inclusos.forEach(item => {
     const li = document.createElement("li");
     li.innerText = item;
@@ -90,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ===============================
-     🔹 MÁSCARA WHATSAPP
+     🔹 MÁSCARAS + VALIDAÇÃO
      =============================== */
   const whatsappInput = document.getElementById("whatsapp");
   whatsappInput.addEventListener("input", () => {
@@ -101,9 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
     validarFormulario();
   });
 
-  /* ===============================
-     🔹 MÁSCARA CPF
-     =============================== */
   const cpfInput = document.getElementById("cpf");
   cpfInput.addEventListener("input", () => {
     let v = cpfInput.value.replace(/\D/g, "").slice(0, 11);
@@ -114,17 +120,11 @@ document.addEventListener("DOMContentLoaded", () => {
     validarFormulario();
   });
 
-  /* ===============================
-     🔹 VALIDAÇÃO EMAIL
-     =============================== */
   const emailInput = document.getElementById("email");
   function emailValido(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  /* ===============================
-     🔹 VALIDAÇÃO GERAL
-     =============================== */
   function validarFormulario() {
     const valido = camposObrigatorios.every(id => {
       const campo = document.getElementById(id);
