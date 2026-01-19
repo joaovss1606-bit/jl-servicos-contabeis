@@ -2,48 +2,67 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Serviços | J L Serviços Contábeis</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- se já existir um css global, use ele -->
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
 </head>
+
 <body>
 
-<main class="container">
-
-  <!-- BREADCRUMB FIXO -->
-  <nav class="breadcrumb">
+  <!-- ===== BREADCRUMB ===== -->
+  <nav class="breadcrumb container">
     <a href="/jl-servicos-contabeis/">Início</a>
     <span>›</span>
-    <span>Serviços</span>
+    <strong>Serviços</strong>
   </nav>
 
-  <h1>Serviços</h1>
+  <main class="container">
 
-  <section class="servicos-lista">
+    <header class="mei-header">
+      <h1>Serviços</h1>
+      <p>Escolha a categoria de serviços que melhor atende você.</p>
+    </header>
 
-    <article class="servico-categoria">
-      <h2>Serviços para MEI</h2>
-      <p>Abertura, regularização, planos mensais e suporte contábil.</p>
-      <a href="/jl-servicos-contabeis/servicos/mei/">Ver serviços</a>
-    </article>
+    <section class="mei-section mei-servicos">
 
-    <article class="servico-categoria">
-      <h2>Serviços para Pessoa Física</h2>
-      <p>Imposto de renda, declarações e regularizações.</p>
-      <a href="/jl-servicos-contabeis/servicos/pessoa-fisica/">Ver serviços</a>
-    </article>
+      <div class="services-grid">
 
-    <article class="servico-categoria">
-      <h2>Certidões e Regularizações</h2>
-      <p>Certificado digital, CND, regularizações diversas.</p>
-      <a href="/jl-servicos-contabeis/servicos/certificados/">Ver serviços</a>
-    </article>
+        <a class="service-card" href="/jl-servicos-contabeis/servicos/mei/">
+          MEI
+          <span>Planos e serviços para MEI</span>
+        </a>
 
-  </section>
+        <a class="service-card" href="/jl-servicos-contabeis/servicos/pessoa-fisica/">
+          Pessoa Física
+          <span>Serviços fiscais e financeiros</span>
+        </a>
 
-</main>
+        <a class="service-card" href="/jl-servicos-contabeis/servicos/contabeis/">
+          Serviços Contábeis
+          <span>Consultoria e gestão contábil</span>
+        </a>
+
+        <a class="service-card" href="/jl-servicos-contabeis/servicos/certidoes-regularizacoes/">
+          Certidões e Regularizações
+          <span>Emissão e regularização</span>
+        </a>
+
+        <a class="service-card" href="/jl-servicos-contabeis/servicos/certificado-digital/">
+          Certificado Digital
+          <span>Emissão e renovação</span>
+        </a>
+
+        <a class="service-card" href="/jl-servicos-contabeis/servicos/outros/">
+          Outros Serviços
+          <span>Soluções complementares</span>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
 
 </body>
 </html>
+
