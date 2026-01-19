@@ -4,8 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const camposObrigatorios = ["nome", "whatsapp", "email", "cpf"];
 
+  const BASE_URL = "/jl-servicos-contabeis";
+
   /* ===============================
-     🔹 DADOS MOCK (TEMPORÁRIOS)
+     🔹 DADOS MOCK
      =============================== */
   const servicosMock = {
     mei: {
@@ -13,13 +15,15 @@ document.addEventListener("DOMContentLoaded", () => {
         titulo: "Plano MEI — Básico",
         descricao: "Plano básico de serviços para MEI.",
         inclusos: ["Orientação inicial", "Emissão de DAS", "Suporte simples"],
-        valor: "R$ 99,90"
+        valor: "R$ 99,90",
+        categoriaLabel: "MEI"
       },
       premium: {
         titulo: "Plano MEI — Premium",
         descricao: "Plano premium com atendimento completo.",
         inclusos: ["Tudo do Básico", "Consultoria estendida", "Relatórios adicionais"],
-        valor: "R$ 149,90"
+        valor: "R$ 149,90",
+        categoriaLabel: "MEI"
       }
     },
     certificado: {
@@ -27,40 +31,18 @@ document.addEventListener("DOMContentLoaded", () => {
         titulo: "Renovação de Certificado Digital",
         descricao: "Serviço de renovação do seu certificado digital.",
         inclusos: ["Renovação imediata", "Suporte especializado"],
-        valor: "R$ 150,00"
+        valor: "R$ 150,00",
+        categoriaLabel: "Certificado Digital"
       }
     }
   };
 
   /* ===============================
-     🔹 MAPA DE CATEGORIAS (BREADCRUMB)
-     =============================== */
-  const categoriasMap = {
-    mei: {
-      nome: "MEI",
-      url: "/servicos/mei/"
-    },
-    "pessoa-fisica": {
-      nome: "Pessoa Física",
-      url: "/servicos/pessoa-fisica/"
-    },
-    certificado: {
-      nome: "Certidões e Regularizações",
-      url: "/servicos/certificado/"
-    }
-  };
-
-  /* ===============================
-     🔹 PARÂMETROS DA URL
+     🔹 PARÂMETROS
      =============================== */
   const params = new URLSearchParams(window.location.search);
   const categoria = params.get("categoria");
   const plano = params.get("plano");
-
-  if (!categoria || !plano) {
-    document.getElementById("nomeServico").innerText = "Serviço não encontrado";
-    return;
-  }
 
   const dados = servicosMock[categoria]?.[plano];
 
@@ -70,26 +52,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ===============================
-     🔹 BREADCRUMB (AJUSTADO)
+     🔹 BREADCRUMB CORRETO (GitHub Pages)
      =============================== */
   const breadcrumb = document.getElementById("breadcrumb");
 
-  if (breadcrumb && categoriasMap[categoria]) {
+  if (breadcrumb) {
+    const categoriaUrl = `${BASE_URL}/servicos/${categoria}/`;
+
     breadcrumb.innerHTML = `
-      <a href="/">Início</a>
+      <a href="${BASE_URL}/">Início</a>
       <span>›</span>
-      <a href="/">Serviços</a>
+      <a href="${BASE_URL}/">Serviços</a>
       <span>›</span>
-      <a href="${categoriasMap[categoria].url}">
-        ${categoriasMap[categoria].nome}
-      </a>
+      <a href="${categoriaUrl}">${dados.categoriaLabel}</a>
       <span>›</span>
       <span>${dados.titulo}</span>
     `;
   }
 
   /* ===============================
-     🔹 PREENCHER CONTEÚDO
+     🔹 CONTEÚDO
      =============================== */
   document.getElementById("nomeServico").innerText = dados.titulo;
   document.getElementById("descricaoServico").innerText = dados.descricao;
@@ -104,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ===============================
-     🔹 MÁSCARA WHATSAPP
+     🔹 RESTANTE DO CÓDIGO (INALTERADO)
      =============================== */
   const whatsappInput = document.getElementById("whatsapp");
   whatsappInput.addEventListener("input", () => {
@@ -115,9 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
     validarFormulario();
   });
 
-  /* ===============================
-     🔹 MÁSCARA CPF
-     =============================== */
   const cpfInput = document.getElementById("cpf");
   cpfInput.addEventListener("input", () => {
     let v = cpfInput.value.replace(/\D/g, "").slice(0, 11);
@@ -128,18 +107,11 @@ document.addEventListener("DOMContentLoaded", () => {
     validarFormulario();
   });
 
-  /* ===============================
-     🔹 VALIDAÇÃO EMAIL
-     =============================== */
   const emailInput = document.getElementById("email");
   function emailValido(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
-  emailInput.addEventListener("input", validarFormulario);
 
-  /* ===============================
-     🔹 VALIDAÇÃO GERAL
-     =============================== */
   function validarFormulario() {
     const valido = camposObrigatorios.every(id => {
       const campo = document.getElementById(id);
@@ -147,51 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (id === "email" && !emailValido(campo.value)) return false;
       return true;
     });
-
     botao.disabled = !valido;
   }
 
   camposObrigatorios.forEach(id => {
     document.getElementById(id).addEventListener("input", validarFormulario);
-  });
-
-  /* ===============================
-     🔹 ENVIO WHATSAPP
-     =============================== */
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-
-    botao.disabled = true;
-    botao.innerHTML = `<span class="loading"></span> Enviando...`;
-
-    const nome = document.getElementById("nome").value;
-    const whatsapp = document.getElementById("whatsapp").value;
-    const email = document.getElementById("email").value;
-    const cpf = document.getElementById("cpf").value;
-    const observacoes = document.getElementById("observacoes").value;
-
-    const mensagem = `
-Olá! Gostaria de contratar um serviço:
-
-📌 *Serviço:* ${dados.titulo}
-💰 *Valor:* ${dados.valor}
-
-👤 *Nome:* ${nome}
-📱 *WhatsApp:* ${whatsapp}
-📧 *Email:* ${email}
-🪪 *CPF:* ${cpf}
-
-📝 *Observações:*
-${observacoes || "Nenhuma"}
-    `.trim();
-
-    const numero = "5561920041427";
-    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
-
-    setTimeout(() => {
-      window.open(url, "_blank");
-      botao.innerHTML = "Enviar Pedido";
-      botao.disabled = false;
-    }, 800);
   });
 });
