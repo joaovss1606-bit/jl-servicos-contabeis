@@ -32,18 +32,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // Nome do serviço
     document.getElementById("nomeServico").innerText = data.titulo;
 
-    // Descrição
+    // Descrição do serviço
     document.getElementById("descricaoServico").innerText = data.descricao;
 
-    // Valor
-    document.getElementById("valorServico").innerText = `R$ ${Number(data.preco_base).toFixed(2)}`;
+    // Valor do serviço
+    document.getElementById("valorServico").innerText =
+      `R$ ${Number(data.preco_base).toFixed(2)}`;
 
-    // O que está incluso (descrição do preço)
+    // O que está incluso / descrição do preço
     const ul = document.getElementById("inclusosServico");
     ul.innerHTML = "";
 
     if (data.descricao_preco) {
-      data.descricao_preco.split("\n").forEach(item => {
+      const itens = data.descricao_preco
+        .split("\n")
+        .map(i => i.trim())
+        .filter(i => i !== "");
+
+      // Mesmo sendo só 1 item, exibimos como lista (visual consistente)
+      itens.forEach(item => {
         const li = document.createElement("li");
         li.innerText = item;
         ul.appendChild(li);
@@ -105,3 +112,4 @@ ${observacoes || "Nenhuma"}
     window.open(url, "_blank");
   });
 });
+
