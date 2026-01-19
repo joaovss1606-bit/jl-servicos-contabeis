@@ -177,3 +177,21 @@ header nav .dropdown-toggle {
   font-weight: 600;
 }
 
+/* PADRÃO SERVIÇOS AVULSOS */
+.service-card {
+  text-align: center;
+}
+
+.service-card .price {
+  display: block;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.service-card .desc {
+  display: block;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
