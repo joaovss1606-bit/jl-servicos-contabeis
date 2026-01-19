@@ -11,8 +11,6 @@
   <link rel="stylesheet" href="./mei.css">
 </head>
 
-<script src="./mei.js"></script>
-
 <body>
 
   <!-- ===== BREADCRUMB ===== -->
@@ -39,43 +37,43 @@
       <div class="services-grid">
 
         <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=mei&servico=abertura-mei">
+           href="../compra/?categoria=mei&servico=abertura-mei">
           Abertura de MEI
           <span>R$ 148,99</span>
         </a>
 
         <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=mei&servico=regularizacao-mei">
+           href="../compra/?categoria=mei&servico=regularizacao-mei">
           Regularização de MEI
           <span>R$ 198,99</span>
         </a>
 
         <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=mei&servico=encerramento-mei">
+           href="../compra/?categoria=mei&servico=encerramento-mei">
           Encerramento de MEI
           <span>R$ 128,99</span>
         </a>
 
         <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=mei&servico=emissao-das">
+           href="../compra/?categoria=mei&servico=emissao-das">
           Emissão de DAS
           <span>R$ 48,99</span>
         </a>
 
         <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=mei&servico=dasn">
+           href="../compra/?categoria=mei&servico=dasn">
           Declaração Anual (DASN-SIMEI)
           <span>R$ 98,99</span>
         </a>
 
         <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=mei&servico=parcelamento">
+           href="../compra/?categoria=mei&servico=parcelamento">
           Parcelamento de Débitos
           <span>R$ 178,99</span>
         </a>
 
         <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=mei&servico=alteracao-mei">
+           href="../compra/?categoria=mei&servico=alteracao-mei">
           Alteração de Dados do MEI
           <span>R$ 78,99</span>
         </a>
@@ -104,9 +102,11 @@
             <li>✔ 10% de desconto em serviços avulsos</li>
           </ul>
 
-          <button class="btn-plan" type="button">
+          <a
+            href="../compra/?categoria=mei&plano=basico"
+            class="btn-plan">
             Contratar plano básico
-          </button>
+          </a>
         </div>
 
         <!-- PLANO PREMIUM -->
@@ -125,9 +125,11 @@
             <li>✔ 20% de desconto em serviços avulsos</li>
           </ul>
 
-          <button class="btn-plan destaque" type="button">
+          <a
+            href="../compra/?categoria=mei&plano=premium"
+            class="btn-plan destaque">
             Contratar plano premium
-          </button>
+          </a>
         </div>
 
       </div>
@@ -139,6 +141,9 @@
   <a href="https://wa.me/5500000000000" class="cta-fixed" target="_blank">
     Falar sobre MEI
   </a>
+
+  <!-- JS -->
+  <script src="./mei.js"></script>
 
 </body>
 </html>
