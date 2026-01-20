@@ -364,12 +364,25 @@ servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
   }
 
   /* ===============================
+      /* ===============================
      🔹 BREADCRUMB DEFINITIVO
      =============================== */
   const breadcrumb = document.getElementById("breadcrumb");
 
   if (breadcrumb) {
-    const categoriaUrl = `${BASE_URL}/servicos/${categoria}/`;
+    const rotasCategorias = {
+      "outros-servicos": "outros",
+      "outros": "outros",
+      "certidoes": "certidoes",
+      "certidoes-regularizacoes": "certidoes",
+      "certificado-digital": "certificado-digital",
+      "mei": "mei",
+      "pessoa-fisica": "pessoa-fisica",
+      "contabeis": "contabeis"
+    };
+
+    const pastaCategoria = rotasCategorias[categoria] || categoria;
+    const categoriaUrl = `${BASE_URL}/servicos/${pastaCategoria}/`;
 
     breadcrumb.innerHTML = `
       <a href="${BASE_URL}/">Início</a>
