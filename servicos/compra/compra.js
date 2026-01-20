@@ -363,42 +363,24 @@ servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
     return;
   }
 
-  /* ===============================
       /* ===============================
      🔹 BREADCRUMB DEFINITIVO
      =============================== */
-const breadcrumb = document.getElementById("breadcrumb");
+const categoriaParaPasta = {
+  mei: "mei",
+  contabeis: "contabeis",
+  outros: "outros",
+  "outros-servicos": "outros",
 
-if (breadcrumb) {
-  const categoriaParaPasta = {
-    mei: "mei",
-    contabeis: "contabeis",
-    outros: "outros",
-    "outros-servicos": "outros",
+  // ❌ REMOVER certidoes
+  // certidoes: "certidoes",
 
-    certidoes: "certidoes",
-    "certidoes-regularizacoes": "certidoes",
+  // ✅ CORRETO
+  "certidoes-regularizacoes": "certidoes-regularizacoes",
 
-    "certificado-digital": "certificado-digital",
-    "pessoa-fisica": "pessoa-fisica"
-  };
-
-  const pastaCategoria = categoriaParaPasta[categoria];
-
-  breadcrumb.innerHTML = `
-    <a href="${BASE_URL}/">Início</a>
-    <span>›</span>
-    <a href="${BASE_URL}/">Serviços</a>
-    <span>›</span>
-    ${
-      pastaCategoria
-        ? `<a href="${BASE_URL}/servicos/${pastaCategoria}/">${dados.categoriaLabel}</a>`
-        : `<span>${dados.categoriaLabel}</span>`
-    }
-    <span>›</span>
-    <strong>${dados.titulo}</strong>
-  `;
-}
+  "certificado-digital": "certificado-digital",
+  "pessoa-fisica": "pessoa-fisica"
+};
 
   /* ===============================
      🔹 CONTEÚDO DO SERVIÇO
