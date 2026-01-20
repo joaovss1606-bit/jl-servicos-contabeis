@@ -370,26 +370,29 @@ servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
  const breadcrumb = document.getElementById("breadcrumb");
 
 if (breadcrumb) {
-  const categoriaParaArquivo = {
-    mei: "mei.html",
-    contabeis: "contabeis.html",
-    outros: "outros.html",
-    "outros-servicos": "outros.html",
-    certidoes: "certidoes.html",
-    "certidoes-regularizacoes": "certidoes.html",
-    "certificado-digital": "certificado-digital.html"
+  const categoriaParaPasta = {
+    mei: "mei",
+    contabeis: "contabeis",
+    outros: "outros",
+    "outros-servicos": "outros",
+
+    certidoes: "certidoes",
+    "certidoes-regularizacoes": "certidoes",
+
+    "certificado-digital": "certificado-digital",
+    "pessoa-fisica": "pessoa-fisica"
   };
 
-  const arquivoCategoria = categoriaParaArquivo[categoria];
+  const pastaCategoria = categoriaParaPasta[categoria];
 
   breadcrumb.innerHTML = `
     <a href="${BASE_URL}/">Início</a>
     <span>›</span>
-    <a href="${BASE_URL}/">Serviços</a>
+    <a href="${BASE_URL}/servicos/">Serviços</a>
     <span>›</span>
     ${
-      arquivoCategoria
-        ? `<a href="${BASE_URL}/servicos/${arquivoCategoria}">${dados.categoriaLabel}</a>`
+      pastaCategoria
+        ? `<a href="${BASE_URL}/servicos/${pastaCategoria}/">${dados.categoriaLabel}</a>`
         : `<span>${dados.categoriaLabel}</span>`
     }
     <span>›</span>
