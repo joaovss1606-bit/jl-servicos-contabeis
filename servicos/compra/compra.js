@@ -296,6 +296,47 @@ document.addEventListener("DOMContentLoaded", () => {
 };
 
   /* ===============================
+   🔹 ALIASES DE CATEGORIA (COMPATIBILIDADE)
+   =============================== */
+servicosMock["outros-servicos"] = servicosMock.outros;
+servicosMock["certificado-digital"] = {
+  "certificado-a1": {
+    titulo: "Certificado Digital A1",
+    descricao: "Certificado digital tipo A1.",
+    inclusos: [
+      "Emissão do certificado",
+      "Suporte técnico"
+    ],
+    valor: "R$ 189,99",
+    categoriaLabel: "Certificado Digital"
+  },
+
+  "certificado-a3": {
+    titulo: "Certificado Digital A3",
+    descricao: "Certificado digital tipo A3.",
+    inclusos: [
+      "Emissão do certificado",
+      "Suporte técnico"
+    ],
+    valor: "R$ 249,99",
+    categoriaLabel: "Certificado Digital"
+  },
+
+  "renovacao-certificado": {
+    titulo: "Renovação de Certificado Digital",
+    descricao: "Renovação de certificado digital.",
+    inclusos: [
+      "Renovação imediata",
+      "Suporte técnico"
+    ],
+    valor: "R$ 149,99",
+    categoriaLabel: "Certificado Digital"
+  }
+};
+
+servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
+
+  /* ===============================
      🔹 PARÂMETROS DA URL
      =============================== */
   const params = new URLSearchParams(window.location.search);
