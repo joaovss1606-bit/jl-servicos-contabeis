@@ -251,3 +251,39 @@ header nav .dropdown-toggle {
   color: #ffffff; /* branco */
   font-weight: 600;
 }
+
+/* ===============================
+   BREADCRUMB PADRÃO
+   =============================== */
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Links do breadcrumb (dourados) */
+.breadcrumb a {
+  color: #d4af37; /* dourado */
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.breadcrumb a:hover {
+  opacity: 0.8;
+}
+
+/* Separador › */
+.breadcrumb span {
+  color: #d4af37;
+}
+
+/* Página atual (branca) */
+.breadcrumb strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
