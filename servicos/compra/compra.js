@@ -9,69 +9,327 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===============================
      🔹 DADOS MOCK (PADRÃO COM SLUG)
      =============================== */
-  const servicosMock = {
-    mei: {
-      basico: {
-        titulo: "Plano MEI — Básico",
-        descricao: "Plano básico de serviços para MEI.",
-        inclusos: [
-          "Orientação inicial",
-          "Emissão de DAS",
-          "Suporte simples"
-        ],
-        valor: "R$ 99,99",
-        categoriaLabel: "MEI"
-      },
-      premium: {
-        titulo: "Plano MEI — Premium",
-        descricao: "Plano premium com atendimento completo.",
-        inclusos: [
-          "Tudo do Básico",
-          "Consultoria estendida",
-          "Relatórios adicionais"
-        ],
-        valor: "R$ 159,99",
-        categoriaLabel: "MEI"
-      },
-      "abertura-mei": {
-        titulo: "Abertura de MEI",
-        descricao: "Abertura completa do MEI com orientação e regularização inicial.",
-        inclusos: [
-          "Cadastro no Portal do Empreendedor",
-          "Emissão de CNPJ",
-          "Orientação inicial"
-        ],
-        valor: "R$ 148,99",
-        categoriaLabel: "MEI"
-      }
+ const servicosMock = {
+  mei: {
+    /* ===== PLANOS ===== */
+    basico: {
+      titulo: "Plano MEI — Básico",
+      descricao: "Plano básico para manter seu MEI regularizado mensalmente.",
+      inclusos: [
+        "Emissão mensal do DAS",
+        "Lembretes de vencimento",
+        "DASN-SIMEI (1x ao ano)",
+        "Suporte via WhatsApp"
+      ],
+      valor: "R$ 99,99",
+      categoriaLabel: "MEI"
     },
 
-    "certificado-digital": {
-      "renovacao-certificado": {
-        titulo: "Renovação de Certificado Digital",
-        descricao: "Serviço de renovação do certificado digital.",
-        inclusos: [
-          "Renovação imediata",
-          "Suporte especializado"
-        ],
-        valor: "R$ 149,90",
-        categoriaLabel: "Certificado Digital"
-      }
+    premium: {
+      titulo: "Plano MEI — Premium",
+      descricao: "Plano completo com acompanhamento e regularização total do MEI.",
+      inclusos: [
+        "Todos os benefícios do plano básico",
+        "Regularização fiscal",
+        "Parcelamento de débitos",
+        "Emissão de certidões",
+        "Suporte prioritário"
+      ],
+      valor: "R$ 159,99",
+      categoriaLabel: "MEI"
     },
 
-    "certidoes-regularizacoes": {
-      "certidao-negativa": {
-        titulo: "Certidão Negativa de Débitos",
-        descricao: "Emissão de certidão negativa junto aos órgãos competentes.",
-        inclusos: [
-          "Consulta de pendências",
-          "Emissão da certidão"
-        ],
-        valor: "R$ 79,90",
-        categoriaLabel: "Certidões e Regularizações"
-      }
+    /* ===== SERVIÇOS AVULSOS ===== */
+    "abertura-mei": {
+      titulo: "Abertura de MEI",
+      descricao: "Abertura completa do MEI com orientação inicial.",
+      inclusos: [
+        "Cadastro no Portal do Empreendedor",
+        "Emissão de CNPJ",
+        "Orientação inicial"
+      ],
+      valor: "R$ 148,99",
+      categoriaLabel: "MEI"
+    },
+
+    "regularizacao-mei": {
+      titulo: "Regularização de MEI",
+      descricao: "Regularização de pendências fiscais e cadastrais do MEI.",
+      inclusos: [
+        "Análise de pendências",
+        "Regularização fiscal",
+        "Orientação corretiva"
+      ],
+      valor: "R$ 198,99",
+      categoriaLabel: "MEI"
+    },
+
+    "encerramento-mei": {
+      titulo: "Encerramento de MEI",
+      descricao: "Baixa completa do MEI junto aos órgãos oficiais.",
+      inclusos: [
+        "Encerramento no portal",
+        "Baixa do CNPJ",
+        "Orientação final"
+      ],
+      valor: "R$ 128,99",
+      categoriaLabel: "MEI"
+    },
+
+    "emissao-das": {
+      titulo: "Emissão de DAS",
+      descricao: "Emissão da guia DAS do MEI.",
+      inclusos: [
+        "Cálculo do imposto",
+        "Emissão da guia"
+      ],
+      valor: "R$ 48,99",
+      categoriaLabel: "MEI"
+    },
+
+    dasn: {
+      titulo: "Declaração Anual do MEI (DASN-SIMEI)",
+      descricao: "Envio da declaração anual obrigatória do MEI.",
+      inclusos: [
+        "Apuração do faturamento",
+        "Envio da declaração"
+      ],
+      valor: "R$ 98,99",
+      categoriaLabel: "MEI"
+    },
+
+    parcelamento: {
+      titulo: "Parcelamento de Débitos do MEI",
+      descricao: "Parcelamento de débitos em atraso do MEI.",
+      inclusos: [
+        "Análise da dívida",
+        "Simulação e parcelamento"
+      ],
+      valor: "R$ 178,99",
+      categoriaLabel: "MEI"
+    },
+
+    "alteracao-mei": {
+      titulo: "Alteração de Dados do MEI",
+      descricao: "Alteração de dados cadastrais do MEI.",
+      inclusos: [
+        "Alteração no cadastro",
+        "Confirmação das mudanças"
+      ],
+      valor: "R$ 78,99",
+      categoriaLabel: "MEI"
     }
-  };
+  },
+
+  "pessoa-fisica": {
+    irpf: {
+      titulo: "Declaração de Imposto de Renda",
+      descricao: "Elaboração e envio da declaração de IRPF.",
+      inclusos: [
+        "Análise de documentos",
+        "Apuração de imposto",
+        "Envio da declaração"
+      ],
+      valor: "R$ 139,99",
+      categoriaLabel: "Pessoa Física"
+    },
+
+    "cpf-regularizacao": {
+      titulo: "Regularização de CPF",
+      descricao: "Correção de pendências do CPF junto à Receita Federal.",
+      inclusos: [
+        "Análise da situação",
+        "Regularização cadastral"
+      ],
+      valor: "R$ 79,99",
+      categoriaLabel: "Pessoa Física"
+    },
+
+    "orientacao-fiscal-pf": {
+      titulo: "Orientação Fiscal Pessoa Física",
+      descricao: "Orientação tributária personalizada.",
+      inclusos: [
+        "Análise da situação fiscal",
+        "Orientação especializada"
+      ],
+      valor: "R$ 99,99",
+      categoriaLabel: "Pessoa Física"
+    }
+  },
+
+  contabeis: {
+    "consultoria-contabil": {
+      titulo: "Consultoria Contábil",
+      descricao: "Consultoria contábil personalizada.",
+      inclusos: [
+        "Análise contábil",
+        "Orientação estratégica"
+      ],
+      valor: "R$ 199,99",
+      categoriaLabel: "Serviços Contábeis"
+    },
+
+    "planejamento-tributario": {
+      titulo: "Planejamento Tributário",
+      descricao: "Planejamento para redução legal de impostos.",
+      inclusos: [
+        "Análise tributária",
+        "Estratégias de economia fiscal"
+      ],
+      valor: "R$ 249,99",
+      categoriaLabel: "Serviços Contábeis"
+    },
+
+    "balanco-patrimonial": {
+      titulo: "Elaboração de Balanço",
+      descricao: "Elaboração de balanço patrimonial e DRE.",
+      inclusos: [
+        "Balanço patrimonial",
+        "DRE"
+      ],
+      valor: "R$ 299,99",
+      categoriaLabel: "Serviços Contábeis"
+    },
+
+    "regularizacao-empresa": {
+      titulo: "Regularização de Empresa",
+      descricao: "Regularização fiscal, contábil e cadastral.",
+      inclusos: [
+        "Análise de pendências",
+        "Regularização completa"
+      ],
+      valor: "R$ 349,99",
+      categoriaLabel: "Serviços Contábeis"
+    },
+
+    "encerramento-empresa": {
+      titulo: "Encerramento de Empresa",
+      descricao: "Baixa completa da empresa.",
+      inclusos: [
+        "Encerramento fiscal",
+        "Baixa nos órgãos"
+      ],
+      valor: "R$ 399,99",
+      categoriaLabel: "Serviços Contábeis"
+    }
+  },
+
+  "certidoes-regularizacoes": {
+    "certidao-negativa": {
+      titulo: "Certidão Negativa de Débitos",
+      descricao: "Emissão de certidão negativa.",
+      inclusos: [
+        "Consulta de pendências",
+        "Emissão da certidão"
+      ],
+      valor: "R$ 79,99",
+      categoriaLabel: "Certidões e Regularizações"
+    },
+
+    "regularizacao-cadastral": {
+      titulo: "Regularização Cadastral",
+      descricao: "Regularização de dados cadastrais.",
+      inclusos: [
+        "Análise cadastral",
+        "Correção de dados"
+      ],
+      valor: "R$ 149,99",
+      categoriaLabel: "Certidões e Regularizações"
+    },
+
+    "certidao-estadual": {
+      titulo: "Certidão Estadual",
+      descricao: "Emissão de certidão estadual.",
+      inclusos: [
+        "Consulta estadual",
+        "Emissão da certidão"
+      ],
+      valor: "R$ 69,99",
+      categoriaLabel: "Certidões e Regularizações"
+    },
+
+    "certidao-municipal": {
+      titulo: "Certidão Municipal",
+      descricao: "Emissão de certidão municipal.",
+      inclusos: [
+        "Consulta municipal",
+        "Emissão da certidão"
+      ],
+      valor: "R$ 69,99",
+      categoriaLabel: "Certidões e Regularizações"
+    }
+  },
+
+  "certificado-digital": {
+    "certificado-a1": {
+      titulo: "Certificado Digital A1",
+      descricao: "Certificado digital tipo A1.",
+      inclusos: [
+        "Emissão do certificado",
+        "Suporte técnico"
+      ],
+      valor: "R$ 189,99",
+      categoriaLabel: "Certificado Digital"
+    },
+
+    "certificado-a3": {
+      titulo: "Certificado Digital A3",
+      descricao: "Certificado digital tipo A3.",
+      inclusos: [
+        "Emissão do certificado",
+        "Suporte técnico"
+      ],
+      valor: "R$ 249,99",
+      categoriaLabel: "Certificado Digital"
+    },
+
+    "renovacao-certificado": {
+      titulo: "Renovação de Certificado Digital",
+      descricao: "Renovação de certificado digital.",
+      inclusos: [
+        "Renovação imediata",
+        "Suporte técnico"
+      ],
+      valor: "R$ 149,99",
+      categoriaLabel: "Certificado Digital"
+    }
+  },
+
+  outros: {
+    "planilha-financeira": {
+      titulo: "Planilha Financeira Pessoal",
+      descricao: "Controle financeiro mensal.",
+      inclusos: [
+        "Planilha personalizada",
+        "Orientação de uso"
+      ],
+      valor: "R$ 49,99",
+      categoriaLabel: "Outros Serviços"
+    },
+
+    "organizacao-documentos": {
+      titulo: "Organização de Documentos",
+      descricao: "Organização e digitalização de documentos.",
+      inclusos: [
+        "Classificação",
+        "Organização digital"
+      ],
+      valor: "R$ 99,99",
+      categoriaLabel: "Outros Serviços"
+    },
+
+    "orientacao-financeira": {
+      titulo: "Orientação Financeira Básica",
+      descricao: "Orientação financeira personalizada.",
+      inclusos: [
+        "Diagnóstico financeiro",
+        "Orientação prática"
+      ],
+      valor: "R$ 119,99",
+      categoriaLabel: "Outros Serviços"
+    }
+  }
+};
 
   /* ===============================
      🔹 PARÂMETROS DA URL
