@@ -221,3 +221,33 @@ header nav .dropdown-toggle {
 .service-card span + span {
   margin-top: 6px;
 }
+
+/* =========================
+   BREADCRUMB - PADRÃO FINAL
+   ========================= */
+
+.breadcrumb {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb a {
+  color: #d4af37; /* dourado */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  margin: 0 6px;
+  color: #9ca3af; /* cinza neutro */
+}
+
+/* Página atual */
+.breadcrumb strong {
+  color: #ffffff; /* branco */
+  font-weight: 600;
+}
