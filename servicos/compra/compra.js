@@ -367,7 +367,7 @@ servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
       /* ===============================
      🔹 BREADCRUMB DEFINITIVO
      =============================== */
- const breadcrumb = document.getElementById("breadcrumb");
+const breadcrumb = document.getElementById("breadcrumb");
 
 if (breadcrumb) {
   const categoriaParaPasta = {
@@ -388,7 +388,7 @@ if (breadcrumb) {
   breadcrumb.innerHTML = `
     <a href="${BASE_URL}/">Início</a>
     <span>›</span>
-    <a href="${BASE_URL}/servicos/">Serviços</a>
+    <a href="${BASE_URL}/">Serviços</a>
     <span>›</span>
     ${
       pastaCategoria
