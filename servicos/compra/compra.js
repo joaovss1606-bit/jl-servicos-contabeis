@@ -348,7 +348,7 @@ servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
 
   const dados = servicosMock[categoria]?.[slug];
 
-  // ===== BREADCRUMB (SEMPRE RENDERIZA) =====
+ // ===== BREADCRUMB (SEMPRE RENDERIZA) =====
 const breadcrumb = document.getElementById("breadcrumb");
 
 if (breadcrumb) {
@@ -357,7 +357,7 @@ if (breadcrumb) {
     <span>›</span>
     <a href="${BASE_URL}/">Serviços</a>
     <span>›</span>
-    <span>${categoriaLabel || "Serviço"}</span>
+    <span>${dados?.categoriaLabel || "Serviço"}</span>
   `;
 }
 
