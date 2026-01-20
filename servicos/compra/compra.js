@@ -369,31 +369,33 @@ servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
      =============================== */
   const breadcrumb = document.getElementById("breadcrumb");
 
-  if (breadcrumb) {
-    const rotasCategorias = {
-      "outros-servicos": "outros",
-      "outros": "outros",
-      "certidoes": "certidoes",
-      "certidoes-regularizacoes": "certidoes",
-      "certificado-digital": "certificado-digital",
-      "mei": "mei",
-      "pessoa-fisica": "pessoa-fisica",
-      "contabeis": "contabeis"
-    };
+if (breadcrumb) {
+  const mapaCategorias = {
+    mei: "mei.html",
+    contabeis: "contabeis.html",
+    outros: "outros.html",
+    "outros-servicos": "outros.html",
+    certidoes: "certidoes.html",
+    "certidoes-regularizacoes": "certidoes.html",
+    "certificado-digital": "certificado-digital.html"
+  };
 
-    const pastaCategoria = rotasCategorias[categoria] || categoria;
-    const categoriaUrl = `${BASE_URL}/servicos/${categoria}.html`;
+  const categoriaArquivo = mapaCategorias[categoria];
 
-    breadcrumb.innerHTML = `
-      <a href="${BASE_URL}/">Início</a>
-      <span>›</span>
-      <a href="${BASE_URL}/">Serviços</a>
-      <span>›</span>
-      <a href="${categoriaUrl}">${dados.categoriaLabel}</a>
-      <span>›</span>
-      <strong>${dados.titulo}</strong>
-    `;
-  }
+  breadcrumb.innerHTML = `
+    <a href="${BASE_URL}/">Início</a>
+    <span>›</span>
+    <a href="${BASE_URL}/">Serviços</a>
+    <span>›</span>
+    ${
+      categoriaArquivo
+        ? `<a href="${BASE_URL}/servicos/${categoriaArquivo}">${dados.categoriaLabel}</a>`
+        : `<span>${dados.categoriaLabel}</span>`
+    }
+    <span>›</span>
+    <strong>${dados.titulo}</strong>
+  `;
+}
 
   /* ===============================
      🔹 CONTEÚDO DO SERVIÇO
