@@ -261,26 +261,56 @@ servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
     if (campo) campo.addEventListener("input", validarFormulario);
   });
 
+/* ===============================
+   🔹 MÁSCARA WHATSAPP (FORMATO BR)
+   =============================== */
+const inputWhatsapp = document.getElementById("whatsapp");
+
+if (inputWhatsapp) {
+  let apagando = false;
+
+  inputWhatsapp.addEventListener("keydown", (e) => {
+    apagando = e.key === "Backspace";
+  });
+
+  inputWhatsapp.addEventListener("input", () => {
+    if (apagando) return;
+
+    let v = inputWhatsapp.value.replace(/\D/g, "").slice(0, 11);
+
+    // DDD
+    if (v.length >= 2) {
+      v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+    }
+
+    // Celular com 9 dígitos
+    if (v.length >= 11) {
+      v = `(${v.slice(1, 3)}) ${v.slice(3, 4)}${v.slice(4, 8)}-${v.slice(8, 12)}`;
+    }
+
+    inputWhatsapp.value = v;
+  });
+}
+
   /* ===============================
-     🔹 MÁSCARA WHATSAPP (BACKSPACE FUNCIONA)
-     =============================== */
-  const inputWhatsapp = document.getElementById("whatsapp");
-  if (inputWhatsapp) {
-    let apagando = false;
+   🔹 VALIDAÇÃO DE DDD EXISTENTE
+   =============================== */
+if (inputWhatsapp) {
+  inputWhatsapp.addEventListener("blur", () => {
+    const numeros = inputWhatsapp.value.replace(/\D/g, "");
 
-    inputWhatsapp.addEventListener("keydown", e => {
-      apagando = e.key === "Backspace";
-    });
+    if (numeros.length < 2) return;
 
-    inputWhatsapp.addEventListener("input", () => {
-      if (apagando) return;
+    const ddd = numeros.slice(0, 2);
 
-      let v = inputWhatsapp.value.replace(/\D/g, "").slice(0, 11);
-      if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-      if (v.length > 7) v = `${v.slice(0, 9)}-${v.slice(9)}`;
-      inputWhatsapp.value = v;
-    });
-  }
+    if (!DDD_VALIDOS.includes(ddd)) {
+      inputWhatsapp.setCustomValidity("DDD inválido. Informe um DDD existente.");
+      inputWhatsapp.reportValidity();
+    } else {
+      inputWhatsapp.setCustomValidity("");
+    }
+  });
+}
 
   /* ===============================
      🔹 MÁSCARA CPF
