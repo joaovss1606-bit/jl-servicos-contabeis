@@ -103,7 +103,11 @@ document.addEventListener("DOMContentLoaded", () => {
       irpf: {
         titulo: "Declaração de Imposto de Renda",
         descricao: "Elaboração e envio da declaração de IRPF.",
-        inclusos: ["Análise de documentos", "Apuração de imposto", "Envio da declaração"],
+        inclusos: [
+          "Análise de documentos",
+          "Apuração de imposto",
+          "Envio da declaração"
+        ],
         valor: "R$ 139,99",
         categoriaLabel: "Pessoa Física"
       }
@@ -177,6 +181,32 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ===============================
+     🔹 MÁSCARAS (WHATSAPP + CPF)
+     =============================== */
+  const whatsappInput = document.getElementById("whatsapp");
+  if (whatsappInput) {
+    whatsappInput.addEventListener("input", () => {
+      let v = whatsappInput.value.replace(/\D/g, "").slice(0, 11);
+      if (v.length >= 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+      if (v.length >= 10) v = `${v.slice(0, 10)}-${v.slice(10)}`;
+      whatsappInput.value = v;
+      validarFormulario();
+    });
+  }
+
+  const cpfInput = document.getElementById("cpf");
+  if (cpfInput) {
+    cpfInput.addEventListener("input", () => {
+      let v = cpfInput.value.replace(/\D/g, "").slice(0, 11);
+      if (v.length >= 3) v = `${v.slice(0, 3)}.${v.slice(3)}`;
+      if (v.length >= 7) v = `${v.slice(0, 7)}.${v.slice(7)}`;
+      if (v.length >= 11) v = `${v.slice(0, 11)}-${v.slice(11)}`;
+      cpfInput.value = v;
+      validarFormulario();
+    });
+  }
+
+  /* ===============================
      🔹 ENVIO DO PEDIDO (WHATSAPP)
      =============================== */
   let envioEmAndamento = false;
@@ -225,3 +255,4 @@ ${observacoes || "Nenhuma"}
     });
   }
 });
+
