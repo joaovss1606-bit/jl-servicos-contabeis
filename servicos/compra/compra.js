@@ -200,13 +200,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputCpf = document.getElementById("cpf");
 
   if (inputWhatsapp) {
-    inputWhatsapp.addEventListener("input", () => {
-      let v = inputWhatsapp.value.replace(/\D/g, "").slice(0, 11);
-      if (v.length >= 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-      if (v.length >= 10) v = `${v.slice(0, 10)}-${v.slice(10)}`;
-      inputWhatsapp.value = v;
-    });
-  }
+  let apagando = false;
+
+  inputWhatsapp.addEventListener("keydown", (e) => {
+    apagando = e.key === "Backspace";
+  });
+
+  inputWhatsapp.addEventListener("input", () => {
+    if (apagando) return;
+
+    let v = inputWhatsapp.value.replace(/\D/g, "").slice(0, 11);
+
+    if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+    if (v.length > 7) v = `${v.slice(0, 9)}-${v.slice(9)}`;
+
+    inputWhatsapp.value = v;
+  });
+}
 
   if (inputCpf) {
     inputCpf.addEventListener("input", () => {
