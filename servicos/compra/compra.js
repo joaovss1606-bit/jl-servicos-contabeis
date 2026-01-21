@@ -261,47 +261,71 @@ servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
     if (campo) campo.addEventListener("input", validarFormulario);
   });
 
+  const DDD_VALIDOS = [
+  "11","12","13","14","15","16","17","18","19",
+  "21","22","24","27","28",
+  "31","32","33","34","35","37","38",
+  "41","42","43","44","45","46",
+  "47","48","49",
+  "51","53","54","55",
+  "61",
+  "62","64",
+  "63",
+  "65","66",
+  "67",
+  "68",
+  "69",
+  "71","73","74","75","77",
+  "79",
+  "81","87","88",
+  "82",
+  "83",
+  "84",
+  "85","88",
+  "86","89",
+  "91","93","94",
+  "92","97",
+  "95",
+  "96",
+  "98","99"
+];
+
 /* ===============================
-   🔹 MÁSCARA WHATSAPP (FORMATO BR)
+   🔹 WHATSAPP – MÁSCARA BR ESTÁVEL
+   (61) 99999-9999
    =============================== */
+
 const inputWhatsapp = document.getElementById("whatsapp");
 
 if (inputWhatsapp) {
   let apagando = false;
 
-  inputWhatsapp.addEventListener("keydown", (e) => {
+  inputWhatsapp.addEventListener("keydown", e => {
     apagando = e.key === "Backspace";
   });
 
   inputWhatsapp.addEventListener("input", () => {
-    if (apagando) return;
+    if (apagando) {
+      apagando = false;
+      return;
+    }
 
     let v = inputWhatsapp.value.replace(/\D/g, "").slice(0, 11);
 
-    // DDD
-    if (v.length >= 2) {
-      v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-    }
-
-    // Celular com 9 dígitos
-    if (v.length >= 11) {
-      v = `(${v.slice(1, 3)}) ${v.slice(3, 4)}${v.slice(4, 8)}-${v.slice(8, 12)}`;
-    }
+    if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+    if (v.length > 7) v = `${v.slice(0, 9)}-${v.slice(9)}`;
 
     inputWhatsapp.value = v;
   });
 }
 
-  /* ===============================
-   🔹 VALIDAÇÃO DE DDD EXISTENTE
-   =============================== */
-if (inputWhatsapp) {
+  /* 🔹 Validação segura de DDD */
   inputWhatsapp.addEventListener("blur", () => {
     const numeros = inputWhatsapp.value.replace(/\D/g, "");
 
     if (numeros.length < 2) return;
 
-    const ddd = numeros.slice(0, 2);
+    const ddd = numeros.substring(0, 2);
 
     if (!DDD_VALIDOS.includes(ddd)) {
       inputWhatsapp.setCustomValidity("DDD inválido. Informe um DDD existente.");
@@ -361,4 +385,3 @@ if (inputWhatsapp) {
     }, 600);
   });
 });
-
