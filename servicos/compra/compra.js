@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const camposObrigatorios = ["nome", "whatsapp", "email", "cpf"];
   const BASE_URL = "/jl-servicos-contabeis";
 
-  // 1. Definição ÚNICA dos DDDs (Movido para o topo)
   const DDD_VALIDOS = ["11","12","13","14","15","16","17","18","19","21","22","24","27","28","31","32","33","34","35","37","38","41","42","43","44","45","46","47","48","49","51","53","54","55","61","62","63","64","65","66","67","68","69","71","73","74","75","77","79","81","82","83","84","85","86","87","88","89","91","92","93","94","95","96","97","98","99"];
 
   const servicosMock = {
@@ -32,88 +31,113 @@ document.addEventListener("DOMContentLoaded", () => {
       "planilha-financeira": { titulo: "Planilha Financeira Pessoal", descricao: "Planilha personalizada para controle financeiro mensal.", inclusos: ["Planilha personalizada", "Orientação de uso"], valor: "R$ 59,99", categoriaLabel: "Outros Serviços" }
     }
   };
-
   servicosMock["outros-servicos"] = servicosMock.outros;
   servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
 
-  // 2. Captura segura dos parâmetros
   const params = new URLSearchParams(window.location.search);
-  const categoria = params.get("categoria")?.trim();
-  const slug = (params.get("servico") || params.get("plano") || params.get("slug"))?.trim();
-
+  const categoria = params.get("categoria");
+  const slug = params.get("servico") || params.get("plano") || params.get("slug");
   const dados = servicosMock[categoria]?.[slug];
 
   if (!dados) {
-    const nomeEl = document.getElementById("nomeServico");
-    if (nomeEl) nomeEl.innerText = "Serviço não encontrado";
+    if (document.getElementById("nomeServico")) document.getElementById("nomeServico").innerText = "Serviço não encontrado";
     return;
   }
 
-  // 3. Preenchimento da Tela
+  // Popula tela
   document.getElementById("nomeServico").innerText = dados.titulo;
   document.getElementById("descricaoServico").innerText = dados.descricao;
   document.getElementById("valorServico").innerText = dados.valor;
 
   const lista = document.getElementById("inclusosServico");
   if (lista && dados.inclusos) {
-    lista.innerHTML = dados.inclusos.map(item => `<li>${item}</li>`).join("");
+    lista.innerHTML = "";
+    dados.inclusos.forEach(item => {
+      const li = document.createElement("li");
+      li.innerText = item;
+      lista.appendChild(li);
+    });
   }
 
-  // 4. Validação e Máscaras
-  function emailValido(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+  // Breadcrumb (RESTAURADO)
+  const breadcrumb = document.getElementById("breadcrumb");
+  if (breadcrumb) {
+    breadcrumb.innerHTML = `
+      <a href="${BASE_URL}/">Início</a> <span>›</span>
+      <a href="${BASE_URL}/">Serviços</a> <span>›</span>
+      <a href="${BASE_URL}/servicos/${categoria}/">${dados.categoriaLabel}</a> <span>›</span>
+      <strong>${dados.titulo}</strong>
+    `;
+  }
 
+  // Validação
+  function emailValido(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
   function validarFormulario() {
     const valido = camposObrigatorios.every(id => {
       const campo = document.getElementById(id);
       if (!campo || campo.value.trim() === "") return false;
       if (id === "email") return emailValido(campo.value);
-      if (id === "whatsapp") return campo.value.replace(/\D/g, "").length === 11;
-      if (id === "cpf") return campo.value.replace(/\D/g, "").length === 11;
       return true;
     });
     botao.disabled = !valido;
   }
 
-  // Máscara WhatsApp Corrigida
+  // MÁSCARA WHATSAPP (CORRIGIDA)
   const inputWhatsapp = document.getElementById("whatsapp");
   if (inputWhatsapp) {
     inputWhatsapp.addEventListener("input", (e) => {
       if (e.inputType === "deleteContentBackward") return;
       let v = inputWhatsapp.value.replace(/\D/g, "").slice(0, 11);
       if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-      if (v.length > 9) v = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
+      if (v.length > 9) v = `${v.slice(0, 10)}-${v.slice(10)}`; // Posição correta do hífen
       inputWhatsapp.value = v;
       validarFormulario();
     });
   }
 
-  // Máscara CPF Corrigida
+  // MÁSCARA CPF
   const inputCpf = document.getElementById("cpf");
   if (inputCpf) {
     inputCpf.addEventListener("input", () => {
       let v = inputCpf.value.replace(/\D/g, "").slice(0, 11);
       if (v.length > 3) v = `${v.slice(0, 3)}.${v.slice(3)}`;
-      if (v.length > 7) v = `${v.slice(0, 7)}.${v.slice(7)}`;
-      if (v.length > 11) v = `${v.slice(0, 11)}-${v.slice(11)}`;
+      if (v.length > 6) v = `${v.slice(0, 7)}.${v.slice(7)}`;
+      if (v.length > 9) v = `${v.slice(0, 11)}-${v.slice(11)}`;
       inputCpf.value = v;
       validarFormulario();
     });
   }
 
-  // Monitorar outros campos
+  // Monitorar campos restantes
   ["nome", "email"].forEach(id => {
     document.getElementById(id)?.addEventListener("input", validarFormulario);
   });
 
-  // 5. Envio
+  // ENVIO (DADOS DO CLIENTE INCLUÍDOS)
   form.addEventListener("submit", e => {
     e.preventDefault();
     botao.disabled = true;
-    botao.innerHTML = "Enviando...";
+    
+    const clienteNome = document.getElementById("nome").value;
+    const clienteWhats = document.getElementById("whatsapp").value;
+    const clienteEmail = document.getElementById("email").value;
+    const clienteCpf = document.getElementById("cpf").value;
 
-    const mensagem = `📌 *Novo Pedido*\n\n🛎️ *Serviço:* ${dados.titulo}\n💰 *Valor:* ${dados.valor}`;
+    const mensagem = `
+📌 *Novo Pedido de Serviço*
+
+🛎️ *Serviço:* ${dados.titulo}
+💰 *Valor:* ${dados.valor}
+
+👤 *Dados do Cliente:*
+- *Nome:* ${clienteNome}
+- *WhatsApp:* ${clienteWhats}
+- *E-mail:* ${clienteEmail}
+- *CPF:* ${clienteCpf}
+    `.trim();
+
     window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
     
-    setTimeout(() => { botao.disabled = false; botao.innerHTML = "Enviar Pedido"; }, 2000);
+    setTimeout(() => { botao.disabled = false; }, 1000);
   });
 });
