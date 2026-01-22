@@ -149,3 +149,79 @@ body { font-family: 'Montserrat', sans-serif; background: #0b1c2d; color: #fffff
     margin: 0;
     color: #bd9617;
 }
+
+
+
+/* CONTAINER CENTRAL DO CABEÇALHO */
+.header-content {
+    display: flex;
+    flex-direction: column; /* Empilha itens no celular, alinha no desktop */
+    align-items: center; /* Centraliza horizontalmente */
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+/* GRUPO LOGO + TEXTOS */
+.brand-identity {
+    display: flex;
+    align-items: center; /* Alinha logo e textos verticalmente */
+    gap: 25px; /* Espaço profissional entre logo e textos */
+    margin-bottom: 15px; /* Espaço antes do menu ou toggle */
+    flex-wrap: wrap; /* Permite quebrar linha no celular */
+    justify-content: center; /* Centraliza a linha no celular */
+}
+
+/* ESTILO DA SUA LOGO */
+.site-logo-header {
+    max-width: 150px; /* Tamanho da logo em desktop */
+    height: auto;
+    transition: transform 0.3s ease; /* Efeito de transição */
+}
+
+.site-logo-header:hover {
+    transform: scale(1.05); /* Pequeno zoom ao passar o mouse */
+}
+
+/* TEXTOS DA MARCA (TÍTULO E SUBTÍTULO) */
+.brand-text {
+    text-align: left; /* Título e subtítulo alinhados à esquerda da logo */
+}
+
+.site-title-header {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.8rem !important; /* Tamanho grande e profissional */
+    font-weight: 800; /* Mais destaque */
+    color: #bd9617 !important; /* Dourado da sua marca */
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0; /* Remove margens padrão que podem atrapalhar */
+    line-height: 1.1; /* Espaçamento entre as linhas */
+}
+
+.site-subtitle-header {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem; /* Subtítulo com bom tamanho */
+    color: rgba(255, 255, 255, 0.8); /* Cor mais suave */
+    font-weight: 500;
+    margin-top: 5px; /* Espaço abaixo do título */
+}
+
+/* RESPONSIVIDADE PARA CELULARES */
+@media (max-width: 768px) {
+    .site-logo-header {
+        max-width: 100px; /* Logo menor no celular */
+    }
+    .brand-identity {
+        flex-direction: column; /* Empilha logo e textos no celular */
+        gap: 10px;
+    }
+    .brand-text {
+        text-align: center; /* Centraliza textos no celular */
+    }
+    .site-title-header {
+        font-size: 2.5rem !important; /* Título menor no celular */
+    }
+    .site-subtitle-header {
+        font-size: 0.9rem; /* Subtítulo menor no celular */
+    }
+}
