@@ -98,3 +98,38 @@ button:disabled {
 @media (max-width: 768px) {
   .grid { grid-template-columns: 1fr; }
 }
+
+/* Corrigindo o campo de observação feio */
+textarea#observacoes {
+  background: #102a44; /* Mesmo azul dos inputs */
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 12px;
+  border-radius: 6px;
+  width: 100%;
+  min-height: 80px;
+  margin-bottom: 15px;
+  font-family: inherit;
+  resize: none;
+}
+
+/* Spinner no botão verde */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top: 3px solid #000; /* Cor preta para aparecer no botão verde */
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Garante que o botão carregando não mude de cor drasticamente */
+.btn-loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
