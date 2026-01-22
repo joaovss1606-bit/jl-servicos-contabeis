@@ -105,3 +105,16 @@ body { font-family: 'Montserrat', sans-serif; background: #0b1c2d; color: #fffff
     gap: 20px;
     margin-top: 30px;
 }
+/* Para aumentar o título como você pediu */
+.site-title {
+    font-size: 3.8rem !important; /* Aumente esse número se quiser ainda maior */
+    margin-top: 10px;
+}
+
+/* Para controlar o tamanho da logo que você acabou de 'jogar' lá */
+.logo-home {
+    max-width: 200px; /* Ajuste aqui para a logo não ficar gigante */
+    height: auto;
+    display: block;
+    margin: 0 auto 20px; /* Centraliza a logo e dá espaço para o título */
+}
