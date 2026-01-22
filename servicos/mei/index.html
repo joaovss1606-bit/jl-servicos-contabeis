@@ -1,213 +1,87 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Serviços para MEI | J L Serviços Contábeis</title>
-
-  <!-- CSS GLOBAL -->
-  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
-  <!-- CSS EXCLUSIVO MEI -->
+  <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="./mei.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
+<body>
 
- <body>
+  <header class="site-header">
+    <div class="container header-top">
+      <h1 class="site-title" style="font-size: 1.5rem;">J L Serviços Contábeis</h1>
+      <nav class="main-nav">
+        <ul class="menu">
+          <li class="menu-item"><a href="../../index.html">Início</a></li>
+          <li class="menu-item"><a href="../../blog/index.html">Blog</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-  <!-- ===== BREADCRUMB ===== -->
   <nav class="breadcrumb container">
-  <a href="/jl-servicos-contabeis/">Início</a>
-  <span>›</span>
-  <a href="/jl-servicos-contabeis/">Serviços</a>
-  <span>›</span>
-  <strong>MEI</strong>
-</nav>
+    <a href="../../index.html">Início</a> / <span>Serviços</span> / <strong>MEI</strong>
+  </nav>
 
   <main class="container mei-page">
-
-    <!-- ===== TÍTULO ===== -->
     <header class="mei-header">
       <h1>Serviços para MEI</h1>
-      <p>Soluções completas para manter seu MEI regularizado, organizado e sem preocupações.</p>
+      <p>Soluções completas para manter seu CNPJ regularizado com a expertise da JL.</p>
     </header>
 
-    <!-- ===== SERVIÇOS AVULSOS ===== -->
-    <section class="mei-section mei-servicos">
+    <section class="mei-section">
       <h2>Serviços Avulsos</h2>
-
       <div class="services-grid">
-
-        <a class="service-card"
-           href="../compra/?categoria=mei&servico=abertura-mei">
+        <a class="service-card" data-servico="abertura-mei">
           <span class="service-title">Abertura de MEI</span>
           <span class="service-price">R$ 148,99</span>
         </a>
-
-        <a class="service-card"
-           href="../compra/?categoria=mei&servico=regularizacao-mei">
-          <span class="service-title">Regularização de MEI</span>
+        <a class="service-card" data-servico="regularizacao-mei">
+          <span class="service-title">Regularização</span>
           <span class="service-price">R$ 198,99</span>
         </a>
-
-        <a class="service-card"
-           href="../compra/?categoria=mei&servico=encerramento-mei">
-          <span class="service-title">Encerramento de MEI</span>
-          <span class="service-price">R$ 128,99</span>
-        </a>
-
-        <a class="service-card"
-           href="../compra/?categoria=mei&servico=emissao-das">
-          <span class="service-title">Emissão de DAS</span>
-         <span class="service-price">R$ 48,99</span>
-        </a>
-
-        <a class="service-card"
-           href="../compra/?categoria=mei&servico=dasn">
-          <span class="service-title">Declaração Anual (DASN-SIMEI)</span>
+        <a class="service-card" data-servico="dasn">
+          <span class="service-title">Declaração Anual</span>
           <span class="service-price">R$ 98,99</span>
         </a>
-
-        <a class="service-card"
-           href="../compra/?categoria=mei&servico=parcelamento">
-          <span class="service-title">Parcelamento de Débitos</span>
-          <span class="service-price">R$ 178,99</span>
-        </a>
-
-        <a class="service-card"
-           href="../compra/?categoria=mei&servico=alteracao-mei">
-          <span class="service-title">Alteração de Dados do MEI</span>
-          <span class="service-price">R$ 78,99</span>
-        </a>
-
       </div>
     </section>
 
-    <!-- ===== PLANOS ===== -->
-    <section class="mei-section mei-planos" id="planos">
-
-      <h2 class="plans-title">Escolha o plano ideal para o seu MEI</h2>
-
+    <section class="mei-section">
+      <h2>Planos Mensais</h2>
       <div class="plans-grid">
-
-        <!-- PLANO BÁSICO -->
-        <div class="plan-card basic">
-          <h3>Plano MEI Básico</h3>
-          <p class="price">R$ 99,99 / mês</p>
-
+        <div class="plan-card">
+          <h3>Básico</h3>
+          <p class="price">R$ 99,99/mês</p>
           <ul>
-            <li>✔ Emissão mensal do DAS</li>
-            <li>✔ Lembretes de vencimento</li>
-            <li>✔ DASN-SIMEI (1x ao ano)</li>
-            <li>✔ Acompanhamento básico</li>
-            <li>✔ Suporte via WhatsApp</li>
-            <li>✔ 10% de desconto em serviços avulsos</li>
+            <li>✔ Emissão mensal DAS</li>
+            <li>✔ Suporte WhatsApp</li>
           </ul>
-
-          <a
-            href="../compra/?categoria=mei&plano=basico"
-            class="btn-plan">
-            Contratar
-          </a>
+          <button class="btn-plan" data-plano="basico">Contratar Plano</button>
         </div>
 
-        <!-- PLANO PREMIUM -->
-        <div class="plan-card premium destaque">
-          <h3>Plano MEI Premium</h3>
-          <p class="price">R$ 159,99 / mês</p>
-
+        <div class="plan-card premium">
+          <span class="badge">MAIS VENDIDO</span>
+          <h3>Premium</h3>
+          <p class="price">R$ 159,99/mês</p>
           <ul>
-            <li>✔ Todos os benefícios do plano básico</li>
-            <li>✔ Regularização fiscal completa</li>
-            <li>✔ Parcelamento de débitos</li>
-            <li>✔ Emissão de certidões</li>
-            <li>✔ Orientação personalizada</li>
-            <li>✔ Relatório mensal de situação</li>
-            <li>✔ Suporte prioritário</li>
-            <li>✔ 20% de desconto em serviços avulsos</li>
+            <li>✔ Todos do Básico</li>
+            <li>✔ Parcelamentos inclusos</li>
           </ul>
-
-          <a
-            href="../compra/?categoria=mei&plano=premium"
-            class="btn-plan destaque">
-            Contratar
-          </a>
+          <button class="btn-plan destaque" data-plano="premium">Contratar Premium</button>
         </div>
-
       </div>
     </section>
-
   </main>
 
-    <!-- ===== FOOTER ===== -->
-<footer class="site-footer">
+  <footer class="site-footer" style="text-align: center; padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+    <p style="color: #bd9617; font-weight: bold;">J L Serviços Contábeis</p>
+    <p style="color: #fff; opacity: 0.5; font-size: 0.8rem;">© 2026 — Todos os direitos reservados</p>
+  </footer>
 
-  <div class="footer-container">
-
-    <!-- COLUNA 1 -->
-    <div class="footer-col">
-      <h3>J L Serviços Contábeis</h3>
-      <p>
-        Soluções contábeis com transparência, segurança e foco em resultados
-        para MEI, Pessoa Física e Empresas.
-      </p>
-    </div>
-
-    <!-- COLUNA 2 -->
-    <div class="footer-col">
-      <h4>Links Rápidos</h4>
-      <ul>
-        <li><a href="/jl-servicos-contabeis/">Início</a></li>
-        <li><a href="/jl-servicos-contabeis/">Serviços</a></li>
-        <li><a href="/jl-servicos-contabeis/sobre/">Quem Somos</a></li>
-        <li><a href="/jl-servicos-contabeis/lgpd/index.html">Política de Privacidade</a></li>
-      </ul>
-    </div>
-
-    <!-- COLUNA 3 -->
-    <div class="footer-col">
-      <h4>Contato</h4>
-
-      <a href="https://wa.me/5561920041427"
-         target="_blank"
-         style="
-           display:inline-block;
-           background:#25D366;
-           color:#000;
-           padding:12px 20px;
-           border-radius:30px;
-           font-weight:bold;
-           text-decoration:none;
-           margin-bottom:15px;
-         ">
-        Falar no WhatsApp
-      </a>
-
-      <p style="margin-top:15px;">
-        jlservicoscontabeis0@gmail.com
-      </p>
-    </div>
-
-  </div>
-
-  <div style="
-    border-top:1px solid rgba(255,255,255,0.1);
-    margin-top:40px;
-    padding-top:20px;
-    text-align:center;
-    font-size:14px;
-    color:#ffffff99;
-  ">
-    © 2026 J L Serviços Contábeis — Todos os direitos reservados
-  </div>
-
-</footer>
-
-  <!-- CTA FIXO -->
-  <a href="https://wa.me/5500000000000" class="cta-fixed" target="_blank">
-    Falar sobre MEI
-  </a>
-
-  <!-- JS -->
   <script src="./mei.js"></script>
-
 </body>
 </html>
