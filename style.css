@@ -473,3 +473,45 @@ header nav .dropdown-toggle {
     text-transform: uppercase;
     letter-spacing: 2px;
 }
+
+/* Fundo Global */
+body {
+    background-color: #0b1c2d;
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+}
+
+/* Título Principal em Dourado */
+.site-title {
+    color: #bd9617 !important; /* Dourado JL */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Títulos dos Cards do Blog na Home */
+.blog-content h2 {
+    color: #bd9617; /* Dourado nos títulos dos posts */
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+/* Estilização dos Cards do Blog */
+.blog-highlight {
+    background: #0e2a47; /* Azul um pouco mais claro que o fundo */
+    border-radius: 12px;
+    border: 1px solid rgba(189, 150, 23, 0.2); /* Borda sutil dourada */
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    overflow: hidden;
+}
+
+.blog-highlight:hover {
+    transform: translateY(-5px);
+    border-color: #bd9617; /* Brilha dourado no hover */
+}
+
+.blog-content p {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
