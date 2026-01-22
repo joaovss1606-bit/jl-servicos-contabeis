@@ -113,22 +113,59 @@ body { font-family: 'Montserrat', sans-serif; background: #0b1c2d; color: #fffff
     background: rgba(255,255,255,0.05) !important; 
 }
 
-/* 4. Dropdown (Ajuste para não deslocar) */
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 240px;
-    background: #0e2a47 !important; 
-    border: 1px solid #bd9617;
-    list-style: none;
-    padding: 10px 0;
-    display: none;
-    z-index: 1000;
+/* ==========================================================================
+   REATIVANDO O DROPDOWN (SEM PERDER O ALINHAMENTO)
+   ========================================================================== */
+
+/* Garante que o menu de serviços seja o ponto de referência */
+.menu-item.dropdown {
+    position: relative;
 }
 
-.menu-item:hover .dropdown-menu { 
-    display: block !important; 
+/* Esconde a lista por padrão e define o visual */
+.dropdown-menu {
+    position: absolute;
+    top: 100%; /* Aparece exatamente abaixo do botão */
+    left: 50%;
+    transform: translateX(-50%); /* Centraliza em relação ao botão */
+    width: 260px;
+    background: #0e2a47 !important; 
+    border: 1px solid #bd9617;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    z-index: 9999;
+    
+    /* Estado inicial: Invisível */
+    display: none; 
+    box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+}
+
+/* Mostra a lista quando o mouse passa por cima do "SERVIÇOS" */
+.menu-item.dropdown:hover .dropdown-menu {
+    display: block !important;
+}
+
+/* Estilo dos links dentro da lista suspensa */
+.dropdown-menu li a {
+    display: block !important;
+    width: 100%;
+    padding: 12px 20px !important;
+    font-size: 14px !important;
+    text-transform: none !important; /* Deixa a primeira letra maiúscula apenas */
+    font-weight: 500 !important;
+    text-align: left !important;
+    height: auto !important; /* Importante: links internos não seguem os 60px do menu */
+    color: #ffffff !important;
+    transition: background 0.2s;
+}
+
+/* Efeito de destaque ao passar o mouse nos itens da lista */
+.dropdown-menu li a:hover {
+    background: #bd9617 !important;
+    color: #0b1c2d !important;
 }
 /* ==========================================================================
    BLOG HOME (CARDS)
