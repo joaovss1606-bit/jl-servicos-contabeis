@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const camposObrigatorios = ["nome", "whatsapp", "email", "cpf"];
   const BASE_URL = "/jl-servicos-contabeis";
 
+  // --- BASE DE DADOS (MOCK) ---
   const servicosMock = {
     mei: {
       basico: { titulo: "Plano MEI — Básico", categoriaLabel: "MEI", valor: "R$ 99,99", descricao: "Plano básico para manter seu MEI regularizado mensalmente.", inclusos: ["Emissão mensal do DAS", "Lembretes de vencimento", "DASN-SIMEI (1x ao ano)", "Suporte via WhatsApp"] },
@@ -30,78 +31,88 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Aliases para compatibilidade de rotas
   servicosMock["outros-servicos"] = servicosMock.outros;
   servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
 
+  // --- CAPTURA DE PARÂMETROS DA URL ---
   const params = new URLSearchParams(window.location.search);
   const cat = params.get("categoria");
   const serv = params.get("servico") || params.get("plano") || params.get("slug");
   const dados = servicosMock[cat]?.[serv];
 
-  if (!dados) {
-    console.error("Serviço não encontrado na URL.");
-    return;
-  }
+  if (!dados) return;
 
-  // Preenche Interface
+  // --- PREENCHIMENTO AUTOMÁTICO ---
   document.getElementById("nomeServico").innerText = dados.titulo;
   document.getElementById("descricaoServico").innerText = dados.descricao;
   document.getElementById("valorServico").innerText = dados.valor;
   document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join("");
 
-    // --- BREADCRUMB DINÂMICO COM CATEGORIA ---
+  // --- BREADCRUMB DINÂMICO (INÍCIO > SERVIÇOS > CATEGORIA > PLANO) ---
   const bread = document.getElementById("breadcrumb");
-  if (bread && dados) {
+  if (bread) {
     bread.innerHTML = `
-      <a href="${BASE_URL}/">Início</a> 
-      <span>›</span> 
-      <a href="${BASE_URL}/">Serviços</a> 
-      <span>›</span> 
-      <a href="${BASE_URL}/servicos/${cat}/">${dados.categoriaLabel}</a> 
-      <span>›</span> 
+      <a href="${BASE_URL}/">Início</a> <span>›</span> 
+      <a href="${BASE_URL}/">Serviços</a> <span>›</span> 
+      <a href="${BASE_URL}/servicos/${cat}/">${dados.categoriaLabel}</a> <span>›</span> 
       <strong>${dados.titulo}</strong>
     `;
   }
 
-  // Máscaras (WhatsApp e CPF)
-  const mask = (el, fn) => el.addEventListener("input", (e) => { e.target.value = fn(e.target.value); validarFormulario(); });
-  
-  mask(document.getElementById("whatsapp"), v => {
-    v = v.replace(/\D/g, "").slice(0, 11);
-    if (v.length > 2) v = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-    if (v.length > 7) v = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
-    return v;
+  // --- MÁSCARAS BLINDADAS (WHATSAPP E CPF) ---
+  const maskWhatsApp = (val) => {
+    val = val.replace(/\D/g, "").slice(0, 11);
+    if (val.length > 0) val = "(" + val;
+    if (val.length > 3) val = val.slice(0, 3) + ") " + val.slice(3);
+    if (val.length > 10) val = val.slice(0, 10) + "-" + val.slice(10);
+    return val;
+  };
+
+  const maskCPF = (val) => {
+    val = val.replace(/\D/g, "").slice(0, 11);
+    if (val.length > 3 && val.length <= 6) val = val.slice(0, 3) + "." + val.slice(3);
+    else if (val.length > 6 && val.length <= 9) val = val.slice(0, 3) + "." + val.slice(3, 6) + "." + v.slice(6);
+    else if (val.length > 9) val = val.slice(0, 3) + "." + val.slice(3, 6) + "." + val.slice(6, 9) + "-" + val.slice(9);
+    return val;
+  };
+
+  document.getElementById("whatsapp").addEventListener("input", (e) => {
+    e.target.value = maskWhatsApp(e.target.value);
+    validarFormulario();
   });
 
-  mask(document.getElementById("cpf"), v => {
-    v = v.replace(/\D/g, "").slice(0, 11);
-    if (v.length > 3) v = v.slice(0, 3) + "." + v.slice(3);
-    if (v.length > 6) v = v.slice(0, 7) + "." + v.slice(7);
-    if (v.length > 9) v = v.slice(0, 11) + "-" + v.slice(11);
-    return v;
+  document.getElementById("cpf").addEventListener("input", (e) => {
+    e.target.value = maskCPF(e.target.value);
+    validarFormulario();
   });
 
+  // --- VALIDAÇÃO DO BOTÃO ---
   function validarFormulario() {
     const email = document.getElementById("email").value;
-    const ok = camposObrigatorios.every(id => document.getElementById(id).value.length > 5) && email.includes("@");
-    botao.disabled = !ok || botao.classList.contains("btn-loading");
+    const obrigatoriosOk = camposObrigatorios.every(id => document.getElementById(id).value.trim().length >= 3);
+    const emailOk = email.includes("@") && email.includes(".");
+    
+    botao.disabled = !(obrigatoriosOk && emailOk) || botao.classList.contains("btn-loading");
   }
 
   document.getElementById("nome").addEventListener("input", validarFormulario);
   document.getElementById("email").addEventListener("input", validarFormulario);
 
-  // Envio Final
+  // --- ENVIO WHATSAPP COM SPINNER E EMOJIS ---
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+    if (botao.classList.contains("btn-loading")) return;
+
     botao.classList.add("btn-loading");
     botao.disabled = true;
-    const originalText = botao.innerHTML;
-    botao.innerHTML = `<span class="spinner"></span> Enviando...`;
+    const textoOriginal = botao.innerHTML;
+    botao.innerHTML = `<span class="spinner"></span> Enviando pedido...`;
 
-    const obs = document.getElementById("observacoes").value.trim() || "Nenhuma";
+    // Busca o campo exatamente como está no seu HTML: id="observacoes"
+    const obs = document.getElementById("observacoes")?.value.trim() || "Nenhuma";
     
-    const msg = `🚀 *NOVO PEDIDO DE SERVIÇO*
+    const mensagem = 
+`🚀 *NOVO PEDIDO DE SERVIÇO*
 
 🛠️ *Serviço:* ${dados.titulo}
 💰 *Valor:* ${dados.valor}
@@ -113,11 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
 🆔 *CPF:* ${document.getElementById("cpf").value}
 💬 *Obs:* ${obs}`.trim();
 
-    window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(msg)}`, "_blank");
+    window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
 
     setTimeout(() => {
       botao.classList.remove("btn-loading");
-      botao.innerHTML = originalText;
+      botao.innerHTML = textoOriginal;
       validarFormulario();
     }, 3000);
   });
