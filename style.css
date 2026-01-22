@@ -7,7 +7,14 @@ body { font-family: 'Montserrat', sans-serif; background: #0b1c2d; color: #fffff
 
 /* HEADER */
 .site-header { padding: 30px 0; text-align: center; background: #0b1c2d; }
-.site-title { font-size: 2rem; font-weight: 700; color: #bd9617 !important; text-transform: uppercase; }
+.site-title {
+    font-size: 3.5rem !important; /* Aumentei de 2.6 para 3.5 */
+    font-weight: 700;
+    color: #bd9617 !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px; /* Espaço para não colar no que vem abaixo */
+}
 
 /* ==========================================================================
    MENU E DROPDOWN (CORREÇÃO DE TAMANHO E VISIBILIDADE)
