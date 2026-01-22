@@ -60,23 +60,16 @@
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Garante alinhamento */
   gap: 20px;
+  align-items: stretch;
 }
 
 .service-card {
-  background: rgba(10, 25, 47, 0.8);
-  border: 1px solid rgba(189,150,23,0.3);
-  padding: 30px;
-  border-radius: 12px;
-  text-align: center;
-  transition: all 0.3s ease;
-  text-decoration: none;
+  min-height: 150px; /* Evita tamanhos desiguais */
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  cursor: pointer;
+  justify-content: space-between;
 }
 
 .service-title {
