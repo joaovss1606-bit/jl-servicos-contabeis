@@ -3,79 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog - J L Serviços Contábeis</title>
+  <title>Categorias do Blog | J L Serviços Contábeis</title>
   <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header class="site-header">
-  <div class="container header-top">
-    <h1 class="site-title">J L Serviços Contábeis</h1>
-    <nav class="main-nav">
-      <ul class="menu">
-        <li class="menu-item"><a href="../index.html">Início</a></li>
-        <li class="menu-item"><a href="../sobre/">Sobre</a></li>
-        <li class="menu-item"><a href="index.html">Blog</a></li>
-      </ul>
+  <header class="site-header">
+    <div class="container header-top">
+      <h1 class="site-title" style="font-size: 1.5rem;">J L Serviços Contábeis</h1>
+      <nav class="main-nav">
+        <ul class="menu">
+          <li class="menu-item"><a href="../index.html">Início</a></li>
+          <li class="menu-item"><a href="index.html" style="color: #bd9617;">Blog</a></li>
+          <li class="menu-item"><a href="../sobre/index.html">Sobre</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav style="margin: 20px 0; color: #ffffff99; font-size: 0.9rem;">
+      <a href="../index.html" style="color: #bd9617; text-decoration: none;">Início</a> / 
+      <span>Blog</span>
     </nav>
-  </div>
-</header>
 
-<main class="container">
-  <div style="text-align: center; margin: 50px 0 40px;">
-    <h2 style="color: #bd9617; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 2px;">Blog Contábil</h2>
-    <p style="color: #ffffff; opacity: 0.8;">Tudo o que você precisa saber sobre o universo fiscal e empresarial</p>
-  </div>
+    <div style="text-align: center; margin-bottom: 50px;">
+      <h2 style="color: #bd9617; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px;">Central de Conteúdo</h2>
+      <p style="color: #fff; opacity: 0.8;">Selecione uma categoria para explorar nossos artigos especializados</p>
+      <div style="width: 60px; height: 3px; background: #bd9617; margin: 20px auto;"></div>
+    </div>
 
-  <section class="blog-home">
-    <article class="blog-highlight">
-      <div class="blog-content">
-        <h2>Conta PF vs PJ</h2>
-        <p>Por que separar as suas contas é vital para o sucesso.</p>
-        <a href="separar-conta-pf-pj.html" style="color:#bd9617; font-weight:bold; text-decoration:none;">Ler Artigo →</a>
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 60px;">
+      
+      <div style="background: rgba(255,255,255,0.03); padding: 40px 20px; border-radius: 15px; border: 1px solid rgba(189,150,23,0.1); text-align: center; transition: 0.3s;">
+        <i class="fas fa-file-invoice-dollar" style="font-size: 3.5rem; color: #bd9617; margin-bottom: 20px;"></i>
+        <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 15px;">Fiscal</h3>
+        <p style="color: #ffffff99; font-size: 0.95rem; margin-bottom: 25px; min-height: 60px;">
+          Tudo sobre DAS-MEI, impostos, notas fiscais e regularização perante a Receita.
+        </p>
+        <a href="fiscal/index.html" style="background: transparent; border: 2px solid #bd9617; color: #bd9617; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">Ver Artigos</a>
       </div>
-    </article>
 
-    <article class="blog-highlight">
-      <div class="blog-content">
-        <h2>Mudanças 2026</h2>
-        <p>Fique por dentro das novas regras tributárias deste ano.</p>
-        <a href="mudancas-contabeis-2026.html" style="color:#bd9617; font-weight:bold; text-decoration:none;">Ler Artigo →</a>
+      <div style="background: rgba(255,255,255,0.03); padding: 40px 20px; border-radius: 15px; border: 1px solid rgba(189,150,23,0.1); text-align: center;">
+        <i class="fas fa-calculator" style="font-size: 3.5rem; color: #bd9617; margin-bottom: 20px;"></i>
+        <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 15px;">Contabilidade</h3>
+        <p style="color: #ffffff99; font-size: 0.95rem; margin-bottom: 25px; min-height: 60px;">
+          Gestão financeira, separação de contas PF/PJ e balancetes para o seu negócio.
+        </p>
+        <a href="contabilidade/index.html" style="background: transparent; border: 2px solid #bd9617; color: #bd9617; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">Ver Artigos</a>
       </div>
-    </article>
 
-    <article class="blog-highlight">
-      <div class="blog-content">
-        <h2>Contratar no MEI</h2>
-        <p>Regras e custos para registrar seu primeiro funcionário.</p>
-        <a href="contratar-funcionario-mei.html" style="color:#bd9617; font-weight:bold; text-decoration:none;">Ler Artigo →</a>
+      <div style="background: rgba(255,255,255,0.03); padding: 40px 20px; border-radius: 15px; border: 1px solid rgba(189,150,23,0.1); text-align: center;">
+        <i class="fas fa-users" style="font-size: 3.5rem; color: #bd9617; margin-bottom: 20px;"></i>
+        <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 15px;">DP e RH</h3>
+        <p style="color: #ffffff99; font-size: 0.95rem; margin-bottom: 25px; min-height: 60px;">
+          Regras para contratação de funcionários, eSocial, férias e direitos trabalhistas.
+        </p>
+        <a href="departamento-pessoal/index.html" style="background: transparent; border: 2px solid #bd9617; color: #bd9617; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">Ver Artigos</a>
       </div>
-    </article>
 
-    <article class="blog-highlight">
-      <div class="blog-content">
-        <h2>Guia DAS-MEI</h2>
-        <p>Como manter seu imposto em dia e evitar multas.</p>
-        <a href="guia-das-mei.html" style="color:#bd9617; font-weight:bold; text-decoration:none;">Ler Artigo →</a>
+      <div style="background: rgba(255,255,255,0.03); padding: 40px 20px; border-radius: 15px; border: 1px solid rgba(189,150,23,0.1); text-align: center;">
+        <i class="fas fa-gavel" style="font-size: 3.5rem; color: #bd9617; margin-bottom: 20px;"></i>
+        <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 15px;">Legislação</h3>
+        <p style="color: #ffffff99; font-size: 0.95rem; margin-bottom: 25px; min-height: 60px;">
+          Fique por dentro das mudanças nas leis e reformas tributárias para 2026.
+        </p>
+        <a href="legislacao/index.html" style="background: transparent; border: 2px solid #bd9617; color: #bd9617; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-block;">Ver Artigos</a>
       </div>
-    </article>
 
-    <article class="blog-highlight">
-      <div class="blog-content">
-        <h2>Documentos Mensais</h2>
-        <p>Checklist do que enviar para o seu contador mensalmente.</p>
-        <a href="documentos-mensais-contador.html" style="color:#bd9617; font-weight:bold; text-decoration:none;">Ler Artigo →</a>
-      </div>
-    </article>
-  </section>
-</main>
+    </section>
+  </main>
 
-<footer class="site-footer">
-  <div class="footer-bottom" style="text-align:center; padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px;">
-    © 2026 J L Serviços Contábeis — Todos os direitos reservados
-  </div>
-</footer>
+  <footer class="site-footer" style="margin-top: 100px; padding: 60px 0 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+    <div class="container">
+      <h2 style="color: #bd9617; margin-bottom: 15px;">J L Serviços Contábeis</h2>
+      <p style="color: #fff; opacity: 0.6; font-size: 0.9rem;">© 2026 — Todos os direitos reservados</p>
+    </div>
+  </footer>
 
 </body>
 </html>
