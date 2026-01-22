@@ -434,3 +434,42 @@ header nav .dropdown-toggle {
   color: #ffffff;
   font-weight: 600;
 }
+
+/* Títulos das Seções */
+.blog-home h2 {
+    color: #bd9617; /* Dourado JL */
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Ajuste nos Cards da Home */
+.blog-highlight {
+    background: #0e2a47; /* Azul levemente claro para contraste */
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(189, 150, 23, 0.15);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.blog-highlight:hover {
+    transform: translateY(-5px);
+    border-color: #bd9617;
+}
+
+.blog-content {
+    padding: 20px;
+}
+
+.blog-content p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Estilo do Header Principal */
+.site-title {
+    color: #bd9617 !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
