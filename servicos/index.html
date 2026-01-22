@@ -1,68 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Serviços | J L Serviços Contábeis</title>
-
-  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pessoa Física | J L Serviços Contábeis</title>
+  
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="./pessoa-fisica.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-  <!-- ===== BREADCRUMB ===== -->
+  <header class="site-header">
+    <div class="container header-top">
+      <h1 class="site-title" style="font-size: 1.5rem;">J L Serviços Contábeis</h1>
+      <nav class="main-nav">
+        <ul class="menu">
+          <li class="menu-item"><a href="../../index.html">Início</a></li>
+          <li class="menu-item"><a href="../../blog/index.html">Blog</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
   <nav class="breadcrumb container">
-    <a href="/jl-servicos-contabeis/">Início</a>
-    <span>›</span>
-    <strong>Serviços</strong>
+    <a href="../../index.html">Início</a> / <span>Serviços</span> / <strong>Pessoa Física</strong>
   </nav>
 
-  <main class="container">
-
-    <header class="mei-header">
-      <h1>Serviços</h1>
-      <p>Escolha a categoria de serviços que melhor atende você.</p>
+  <main class="container pf-page">
+    <header class="pf-header">
+      <h1>Pessoa Física</h1>
+      <p>Tranquilidade e conformidade com o leão. Cuidamos da sua vida fiscal para você focar no que importa.</p>
     </header>
 
-    <section class="mei-section mei-servicos">
-
+    <section class="pf-section">
+      <h2>Serviços Disponíveis</h2>
       <div class="services-grid">
-
-        <a class="service-card" href="/jl-servicos-contabeis/servicos/mei/">
-          MEI
-          <span>Planos e serviços para MEI</span>
+        
+        <a class="service-card" data-servico="imposto-renda">
+          <span class="service-title">Declaração de Imposto de Renda</span>
+          <span class="service-price">R$ 139,99</span>
         </a>
 
-        <a class="service-card" href="/jl-servicos-contabeis/servicos/pessoa-fisica/">
-          Pessoa Física
-          <span>Serviços fiscais e financeiros</span>
+        <a class="service-card" data-servico="ganho-capital">
+          <span class="service-title">Apuração de Ganho de Capital</span>
+          <span class="service-price">R$ 189,99</span>
         </a>
 
-        <a class="service-card" href="/jl-servicos-contabeis/servicos/contabeis/">
-          Serviços Contábeis
-          <span>Consultoria e gestão contábil</span>
+        <a class="service-card" data-servico="regularizacao-cpf">
+          <span class="service-title">Regularização de CPF</span>
+          <span class="service-price">R$ 79,99</span>
         </a>
 
-        <a class="service-card" href="/jl-servicos-contabeis/servicos/certidoes-regularizacoes/">
-          Certidões e Regularizações
-          <span>Emissão e regularização</span>
-        </a>
-
-        <a class="service-card" href="/jl-servicos-contabeis/servicos/certificado-digital/">
-          Certificado Digital
-          <span>Emissão e renovação</span>
-        </a>
-
-        <a class="service-card" href="/jl-servicos-contabeis/servicos/outros/">
-          Outros Serviços
-          <span>Soluções complementares</span>
+        <a class="service-card" data-servico="orientacao-fiscal">
+          <span class="service-title">Orientação Fiscal Personalizada</span>
+          <span class="service-price">R$ 119,99</span>
         </a>
 
       </div>
     </section>
-
   </main>
 
+  <footer class="site-footer" style="text-align: center; padding: 60px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 80px;">
+    <h3 style="color: #bd9617; margin-bottom: 10px;">J L Serviços Contábeis</h3>
+    <p style="color: #fff; opacity: 0.5; font-size: 0.8rem;">© 2026 — Todos os direitos reservados</p>
+  </footer>
+
+  <script src="./pessoa-fisica.js"></script>
 </body>
 </html>
-
