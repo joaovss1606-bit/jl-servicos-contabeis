@@ -56,89 +56,80 @@ body { font-family: 'Montserrat', sans-serif; background: #0b1c2d; color: #fffff
 }
 
 /* ==========================================================================
-   MENU E DROPDOWN (PADRONIZAÇÃO TOTAL)
+   PADRONIZAÇÃO DEFINITIVA DO MENU (CORREÇÃO PARA BOTÃO E LINK)
    ========================================================================== */
-.main-nav { 
-    width: 100%;
-    margin-top: 20px; 
-    border-top: 1px solid rgba(189, 150, 23, 0.2); 
-    border-bottom: 1px solid rgba(189, 150, 23, 0.2); 
-}
 
+/* 1. Alinhamento da linha do menu */
 .menu { 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; /* Garante alinhamento vertical perfeito */
-    list-style: none; 
-    padding: 0; 
-    margin: 0;
+    display: flex !important; 
+    justify-content: center !important; 
+    align-items: stretch !important; /* Faz todos terem a mesma altura total */
+    list-style: none !important; 
+    padding: 0 !important; 
+    margin: 0 !important;
 }
 
-.menu-item { position: relative; }
+.menu-item { 
+    display: flex !important;
+    align-items: center !important;
+}
 
-/* PADRONIZAÇÃO: Links e Botões com o mesmo DNA */
+/* 2. O SEGREDO: Forçar Button e A a serem idênticos */
 .menu-item a, 
-.menu-item .dropdown-toggle {
-    display: flex; /* Flex ajuda a centralizar o texto internamente */
-    align-items: center;
-    justify-content: center;
-    
-    /* Fontes idênticas */
+.menu-item button.dropdown-toggle {
+    /* Reset total de estilos de botão */
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+
+    /* Padronização de Texto */
     font-family: 'Montserrat', sans-serif !important;
     font-size: 15px !important; 
     font-weight: 600 !important;
     color: #ffffff !important;
-    text-transform: uppercase;
-    text-decoration: none;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    letter-spacing: 1px !important;
     
-    /* Espaçamento e Reset de Botão */
-    padding: 20px 25px; /* Aumentei o padding para um clique melhor */
-    background: none !important;
-    border: none !important;
-    cursor: pointer;
-    outline: none;
-    transition: 0.3s;
+    /* Alinhamento de conteúdo */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 60px !important; /* Força uma altura fixa para todos */
+    padding: 0 25px !important; /* Espaço nas laterais */
     
-    /* Garante que o botão não herde larguras estranhas */
-    width: auto;
-    appearance: none;
-    -webkit-appearance: none;
+    transition: 0.3s !important;
+    line-height: normal !important; /* Resolve desalinhamento vertical */
 }
 
-/* Efeito Hover igual para todos */
+/* 3. Hover unificado */
 .menu-item a:hover, 
-.menu-item .dropdown-toggle:hover { 
+.menu-item button.dropdown-toggle:hover { 
     color: #bd9617 !important; 
     background: rgba(255,255,255,0.05) !important; 
 }
 
-/* Ajuste do Dropdown para não brotar do nada */
+/* 4. Dropdown (Ajuste para não deslocar) */
 .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%); /* Centraliza o dropdown em relação ao item pai */
+    left: 0;
     width: 240px;
     background: #0e2a47 !important; 
     border: 1px solid #bd9617;
-    border-radius: 0 0 8px 8px;
-    display: none;
-    z-index: 1000;
     list-style: none;
     padding: 10px 0;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    display: none;
+    z-index: 1000;
 }
 
-.dropdown-menu li a {
-    text-align: left !important;
-    text-transform: none !important;
-    font-size: 14px !important;
-    padding: 12px 20px !important;
-    display: block;
-    width: 100%;
+.menu-item:hover .dropdown-menu { 
+    display: block !important; 
 }
-
-.menu-item:hover .dropdown-menu { display: block; }
 /* ==========================================================================
    BLOG HOME (CARDS)
    ========================================================================== */
