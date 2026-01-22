@@ -1,3 +1,17 @@
+/* Garante o fundo azul e fonte branca do site principal */
+body {
+    background-color: #0b1c2d !important; /* Cor padrão do seu site */
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+}
+
+/* Centraliza o conteúdo para não ficar colado nas bordas */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 /* Layout Principal */
 .sobre-main {
   display: grid;
