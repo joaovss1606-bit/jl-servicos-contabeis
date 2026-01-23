@@ -72,15 +72,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- BREADCRUMB DINÂMICO (NOVO) ---
   const bread = document.getElementById("breadcrumb");
-  if (bread) {
-    const nomesCategorias = {
-      "mei": "MEI",
-      "pessoa-fisica": "Pessoa Física",
-      "contabeis": "Serviços Contábeis",
-      "certidoes-regularizacoes": "Certidões",
-      "certificado-digital": "Certificado Digital",
-      "outros": "Outros"
-    };
+ if (bread) {
+    bread.innerHTML = `
+      <a href="../index.html" style="color: #bd9617; text-decoration: none;">Início</a> 
+      <span style="margin: 0 8px;">›</span> 
+      <a href="../servicos/index.html" style="color: #bd9617; text-decoration: none;">Serviços</a> 
+      <span style="margin: 0 8px;">›</span> 
+      <strong style="color: #ffffff;">${dados.titulo}</strong>
+    `;
+  }
 
     const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
     // O link abaixo aponta para a pasta da categoria dentro de /servicos/
