@@ -489,3 +489,60 @@ body.home-page .site-subtitle-header {
     background: #bd9617;
     color: white !important;
 }
+
+/* Container principal do header */
+.site-header .container {
+    display: flex;
+    flex-direction: column; /* Faz as linhas empilharem */
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* Linha de cima: Logo na esquerda e Botão na direita */
+.header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Linha de baixo: Menu totalmente centralizado */
+.main-nav-row {
+    display: flex;
+    justify-content: center; /* Aqui acontece a mágica da centralização */
+    border-top: 1px solid rgba(189, 150, 23, 0.2); /* Linha divisória sutil */
+    padding-top: 15px;
+}
+
+.menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 40px; /* Espaço generoso entre os links */
+}
+
+.menu-item a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    transition: 0.3s;
+}
+
+.menu-item a:hover {
+    color: #bd9617;
+}
+
+/* Ajuste do Botão de Login para ficar no topo */
+.btn-area-cliente {
+    border: 1px solid #bd9617;
+    padding: 8px 16px;
+    border-radius: 5px;
+    color: #bd9617 !important;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
