@@ -70,6 +70,30 @@ document.addEventListener("DOMContentLoaded", () => {
   if(elValor) elValor.innerText = dados.valor;
   if(elInclu) elInclu.innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join("");
 
+  // --- BREADCRUMB DINÂMICO (NOVO) ---
+  const bread = document.getElementById("breadcrumb");
+  if (bread) {
+    const nomesCategorias = {
+      "mei": "MEI",
+      "pessoa-fisica": "Pessoa Física",
+      "contabeis": "Serviços Contábeis",
+      "certidoes-regularizacoes": "Certidões",
+      "certificado-digital": "Certificado Digital",
+      "outros": "Outros"
+    };
+
+    const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
+    // O link abaixo aponta para a pasta da categoria dentro de /servicos/
+    const linkCategoria = `../servicos/${cat}/index.html`;
+
+    bread.innerHTML = `
+      <a href="../index.html">Início</a> <span>›</span> 
+      <a href="../servicos/index.html">Serviços</a> <span>›</span> 
+      <a href="${linkCategoria}">${nomeCatAmigavel}</a> <span>›</span> 
+      <strong>${dados.titulo}</strong>
+    `;
+  }
+
   // --- MÁSCARAS E VALIDAÇÕES ---
   const maskWhatsApp = (val) => {
     val = val.replace(/\D/g, "").slice(0, 11);
@@ -139,5 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
           validarFormulario();
         }, 3000);
     });
+  }
+});
   }
 });
