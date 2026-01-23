@@ -2,11 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("pedidoForm");
   const botao = document.getElementById("btnEnviar");
   const camposObrigatorios = ["nome", "whatsapp", "email", "cpf"];
-  const BASE_URL = "/jl-servicos-contabeis";
 
   // --- BASE DE DADOS (MOCK) ---
-  const servicosMock = {
-    // --- BASE DE DADOS COMPLETA (MOCK) ---
   const servicosMock = {
     mei: {
       basico: { titulo: "Plano MEI — Básico", categoriaLabel: "MEI", valor: "R$ 99,99", descricao: "Manutenção mensal essencial para seu MEI.", inclusos: ["DAS Mensal", "DASN Anual", "Suporte"] },
@@ -48,24 +45,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  servicosMock["outros-servicos"] = servicosMock.outros;
-  servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
-
-  // --- CAPTURA DE PARÂMETROS DA URL (REVISADO) ---
+  // --- CAPTURA DE PARÂMETROS DA URL ---
   const params = new URLSearchParams(window.location.search);
-  const cat = params.get("categoria")?.trim().toLowerCase();
-  const serv = (params.get("servico") || params.get("plano") || params.get("slug"))?.trim().toLowerCase();
+  const cat = params.get("categoria")?.trim();
+  const serv = (params.get("servico") || params.get("plano") || params.get("slug"))?.trim();
 
   const dados = servicosMock[cat]?.[serv];
 
   if (!dados) {
-      console.warn(`Erro de Link: Categoria [${cat}] ou Serviço [${serv}] não batem com o Mock.`);
+      console.warn("Serviço não encontrado:", cat, serv);
       const elDesc = document.getElementById("descricaoServico");
-      if(elDesc) elDesc.innerHTML = `<span style="color: #ff4444;">Serviço não localizado. Por favor, selecione novamente no catálogo.</span>`;
+      if(elDesc) elDesc.innerHTML = `<span style="color: #ff4444;">Serviço não localizado.</span>`;
       return;
   }
 
-  // --- PREENCHIMENTO AUTOMÁTICO ---
+  // --- PREENCHIMENTO DO HTML ---
   const elNome = document.getElementById("nomeServico");
   const elDesc = document.getElementById("descricaoServico");
   const elValor = document.getElementById("valorServico");
@@ -76,17 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if(elValor) elValor.innerText = dados.valor;
   if(elInclu) elInclu.innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join("");
 
-  // --- BREADCRUMB DINÂMICO ---
-  const bread = document.getElementById("breadcrumb");
-  if (bread) {
-    bread.innerHTML = `
-      <a href="${BASE_URL}/index.html">Início</a> <span>›</span> 
-      <a href="${BASE_URL}/servicos/index.html">Serviços</a> <span>›</span> 
-      <strong>${dados.titulo}</strong>
-    `;
-  }
-
-  // --- MÁSCARAS E VALIDAÇÕES (Mantidas conforme seu original) ---
+  // --- MÁSCARAS E VALIDAÇÕES ---
   const maskWhatsApp = (val) => {
     val = val.replace(/\D/g, "").slice(0, 11);
     if (val.length > 0) val = "(" + val;
