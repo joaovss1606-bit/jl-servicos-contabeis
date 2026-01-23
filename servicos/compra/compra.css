@@ -226,3 +226,26 @@ input, textarea {
 @media (max-width: 768px) {
     .mei-header h1 { font-size: 2rem; }
 }
+/* Remova qualquer menção a .page-title e adicione estas regras específicas */
+
+.mei-header {
+    text-align: center;
+    margin: 40px 0 60px;
+}
+
+.mei-header h1 {
+    font-size: 3rem;
+    color: #bd9617;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    font-weight: 800;
+}
+
+.mei-header p {
+    color: #ffffff;
+    opacity: 0.9;
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.6;
+}
