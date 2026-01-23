@@ -54,27 +54,24 @@ document.addEventListener("DOMContentLoaded", () => {
     "outros": "Outros"
   };
 
-  // --- CAPTURA DE PARÂMETROS DA URL ---
   const params = new URLSearchParams(window.location.search);
   const cat = params.get("categoria")?.trim();
   const serv = (params.get("servico") || params.get("plano") || params.get("slug"))?.trim();
-
   const dados = servicosMock[cat]?.[serv];
 
   if (!dados) {
-      console.warn("Serviço não encontrado:", cat, serv);
       const elDesc = document.getElementById("descricaoServico");
       if(elDesc) elDesc.innerHTML = `<span style="color: #ff4444;">Serviço não localizado.</span>`;
       return;
   }
 
-  // --- PREENCHIMENTO DO HTML ---
+  // Preenchimento HTML
   document.getElementById("nomeServico") && (document.getElementById("nomeServico").innerText = dados.titulo);
   document.getElementById("descricaoServico") && (document.getElementById("descricaoServico").innerText = dados.descricao);
   document.getElementById("valorServico") && (document.getElementById("valorServico").innerText = dados.valor);
   document.getElementById("inclusosServico") && (document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join(""));
 
-  // --- BREADCRUMB DINÂMICO ---
+  // --- BREADCRUMB CORRIGIDO ---
   const bread = document.getElementById("breadcrumb");
   if (bread) {
     const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
@@ -91,12 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // --- MÁSCARAS ---
+  // --- MÁSCARAS CORRIGIDAS ---
   const handleWhatsApp = (e) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 11) v = v.slice(0, 11);
     if (v.length > 2) v = "(" + v.slice(0, 2) + ") " + v.slice(2);
-    if (v.length > 9) v = v.slice(0, 9) + "-" + v.slice(9);
+    if (v.length > 7) v = v.slice(0, 9) + "-" + v.slice(9);
     e.target.value = v;
     validarFormulario();
   };
@@ -104,9 +101,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const handleCPF = (e) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 11) v = v.slice(0, 11);
-    v = v.replace(/(\d{3})(\d)/, "$1.$2");
-    v = v.replace(/(\d{3})(\d)/, "$1.$2");
-    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    if (v.length > 3) v = v.slice(0, 3) + "." + v.slice(3);
+    if (v.length > 7) v = v.slice(0, 7) + "." + v.slice(7);
+    if (v.length > 11) v = v.slice(0, 11) + "-" + v.slice(11);
     e.target.value = v;
     validarFormulario();
   };
@@ -117,14 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function validarFormulario() {
     const emailEl = document.getElementById("email");
     if(!emailEl || !botao) return;
-    
-    const email = emailEl.value;
-    const obrigatoriosOk = camposObrigatorios.every(id => {
-        const el = document.getElementById(id);
-        return el && el.value.trim().length >= 8; // Aumentado para validar máscaras
-    });
-    
-    const emailOk = email.includes("@") && email.includes(".");
+    const emailOk = emailEl.value.includes("@") && emailEl.value.includes(".");
+    const obrigatoriosOk = camposObrigatorios.every(id => document.getElementById(id)?.value.trim().length >= 5);
     botao.disabled = !(obrigatoriosOk && emailOk);
   }
 
@@ -133,33 +124,26 @@ document.addEventListener("DOMContentLoaded", () => {
   if (form) {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-        
         botao.disabled = true;
-        const textoOriginal = botao.innerHTML;
         botao.innerHTML = `Enviando pedido...`;
 
-        const obs = document.getElementById("observacoes")?.value.trim() || "Nenhuma";
         const mensagem = 
-`🚀 *NOVO PEDIDO DE SERVIÇO*
+`🚀 *NOVO PEDIDO*
 🛠️ *Serviço:* ${dados.titulo}
 💰 *Valor:* ${dados.valor}
 
-👤 *DADOS DO CLIENTE:*
+👤 *CLIENTE:*
 📝 *Nome:* ${document.getElementById("nome").value}
 📱 *WhatsApp:* ${document.getElementById("whatsapp").value}
 📧 *E-mail:* ${document.getElementById("email").value}
 🆔 *CPF:* ${document.getElementById("cpf").value}
-💬 *Obs:* ${obs}`.trim();
+💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
 
         window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
-
         setTimeout(() => {
           botao.disabled = false;
-          botao.innerHTML = textoOriginal;
-          validarFormulario();
+          botao.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
         }, 3000);
     });
-  }
-});
   }
 });
