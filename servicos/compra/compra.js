@@ -71,22 +71,23 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("valorServico") && (document.getElementById("valorServico").innerText = dados.valor);
   document.getElementById("inclusosServico") && (document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join(""));
 
-  // --- BREADCRUMB CORRIGIDO ---
-  const bread = document.getElementById("breadcrumb");
-  if (bread) {
+ // --- BREADCRUMB LIMPO (Herdando do mei.css) ---
+const bread = document.getElementById("breadcrumb");
+if (bread && cat) {
     const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
     const linkCategoria = `../servicos/${cat}/index.html`;
 
+    // Removemos os estilos inline para deixar o CSS (mei.css) trabalhar
     bread.innerHTML = `
-      <a href="../index.html" style="color: #bd9617; text-decoration: none;">Início</a> 
-      <span style="margin: 0 8px;">›</span> 
-      <a href="../servicos/index.html" style="color: #bd9617; text-decoration: none;">Serviços</a> 
-      <span style="margin: 0 8px;">›</span> 
-      <a href="${linkCategoria}" style="color: #bd9617; text-decoration: none;">${nomeCatAmigavel}</a> 
-      <span style="margin: 0 8px;">›</span> 
-      <strong style="color: #ffffff;">${dados.titulo}</strong>
+        <a href="../index.html">Início</a> 
+        <span> › </span> 
+        <a href="../servicos/index.html">Serviços</a> 
+        <span> › </span> 
+        <a href="${linkCategoria}">${nomeCatAmigavel}</a> 
+        <span> › </span> 
+        <strong>${dados.titulo}</strong>
     `;
-  }
+}
 
   // --- MÁSCARAS CORRIGIDAS ---
   const handleWhatsApp = (e) => {
