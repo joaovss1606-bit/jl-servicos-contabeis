@@ -61,38 +61,39 @@
       </div>
     </div>
 
-    <div class="form-card">
-      <h2 class="section-subtitle">Dados do Cliente</h2>
-      <form id="pedidoForm">
-        <div class="input-group">
-          <i class="fas fa-user"></i>
-          <input type="text" id="nome" placeholder="Nome completo *" required>
-        </div>
-
-        <div class="input-group">
-          <i class="fas fa-envelope"></i>
-          <input type="email" id="email" placeholder="E-mail *" required>
-        </div>
-
-        <div class="row-inputs">
-          <div class="input-group">
-            <i class="fab fa-whatsapp"></i>
-            <input type="text" id="whatsapp" placeholder="WhatsApp (DDD) *" required>
-          </div>
-          <div class="input-group">
-            <i class="fas fa-id-card"></i>
-            <input type="text" id="cpf" placeholder="CPF *" required>
-          </div>
-        </div>
-
-        <textarea id="observacoes" placeholder="Observações ou dúvidas adicionais (opcional)"></textarea>
-
-        <button type="submit" disabled id="btnEnviar" class="btn-checkout">
-          <span>Confirmar e Enviar via WhatsApp</span>
-          <i class="fab fa-whatsapp"></i>
-        </button>
-      </form>
+ <div class="form-card" style="background: rgba(11, 28, 45, 0.5); padding: 30px; border-radius: 12px; border: 1px solid rgba(189, 150, 23, 0.2);">
+  <h2 style="color: #bd9617; font-family: 'Playfair Display', serif; margin-bottom: 25px; font-size: 1.5rem;">Dados do Cliente</h2>
+  
+  <form id="pedidoForm" style="display: flex; flex-direction: column; gap: 20px;">
+    
+    <div class="input-group" style="position: relative; display: flex; align-items: center;">
+      <i class="fas fa-user" style="position: absolute; left: 15px; color: #bd9617;"></i>
+      <input type="text" id="nome" placeholder="Nome completo *" required style="width: 100%; padding: 15px 15px 15px 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-family: 'Montserrat', sans-serif;">
     </div>
+
+    <div class="input-group" style="position: relative; display: flex; align-items: center;">
+      <i class="fas fa-envelope" style="position: absolute; left: 15px; color: #bd9617;"></i>
+      <input type="email" id="email" placeholder="E-mail *" required style="width: 100%; padding: 15px 15px 15px 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-family: 'Montserrat', sans-serif;">
+    </div>
+
+    <div class="row-inputs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+      <div class="input-group" style="position: relative; display: flex; align-items: center;">
+        <i class="fab fa-whatsapp" style="position: absolute; left: 15px; color: #bd9617;"></i>
+        <input type="text" id="whatsapp" placeholder="WhatsApp *" required style="width: 100%; padding: 15px 15px 15px 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-family: 'Montserrat', sans-serif;">
+      </div>
+      <div class="input-group" style="position: relative; display: flex; align-items: center;">
+        <i class="fas fa-id-card" style="position: absolute; left: 15px; color: #bd9617;"></i>
+        <input type="text" id="cpf" placeholder="CPF *" required style="width: 100%; padding: 15px 15px 15px 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-family: 'Montserrat', sans-serif;">
+      </div>
+    </div>
+
+    <textarea id="observacoes" placeholder="Alguma observação adicional?" style="width: 100%; height: 120px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; padding: 15px; font-family: 'Montserrat', sans-serif; resize: none;"></textarea>
+
+    <button type="submit" disabled id="btnEnviar" class="btn-checkout" style="width: 100%; padding: 20px; background: #bd9617; color: #0b1c2d; border: none; border-radius: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px;">
+      Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>
+    </button>
+  </form>
+</div>
   </div>
 </main>
 
