@@ -18,7 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
       "alteracao-mei": { titulo: "Alteração de Dados do MEI", categoriaLabel: "MEI", valor: "R$ 78,99", descricao: "Alteração de dados cadastrais do MEI.", inclusos: ["Alteração no cadastro", "Confirmação das mudanças"] }
     },
     "pessoa-fisica": {
-      irpf: { titulo: "Declaração de Imposto de Renda (IRPF)", categoriaLabel: "Pessoa Física", valor: "R$ 139,99", descricao: "Elaboração e envio da declaração de Imposto de Renda Pessoa Física.", inclusos: ["Análise de documentos", "Apuração de imposto", "Envio da declaração"] }
+      irpf: { titulo: "Declaração de Imposto de Renda (IRPF)", categoriaLabel: "Pessoa Física", valor: "R$ 139,99", descricao: "Elaboração e envio da declaração de Imposto de Renda Pessoa Física.", inclusos: ["Análise de documentos", "Apuração de imposto", "Envio da declaração"] },
+      "cpf-regularizacao": { titulo: "Regularização de CPF", categoriaLabel: "Pessoa Física", valor: "R$ 79,99", descricao: "Regularização de CPF suspenso ou pendente junto à Receita Federal.", inclusos: ["Consulta de pendências", "Protocolo de regularização", "Acompanhamento"] },
+      "orientacao-fiscal-pf": { titulo: "Orientação Fiscal Pessoa Física", categoriaLabel: "Pessoa Física", valor: "R$ 119,99", descricao: "Consultoria para planejamento tributário de pessoas físicas.", inclusos: ["Análise de rendimentos", "Dicas de economia fiscal", "Suporte técnico"] }
     },
     contabeis: {
       "consultoria-contabil": { titulo: "Consultoria Contábil", categoriaLabel: "Serviços Contábeis", valor: "R$ 199,99", descricao: "Consultoria contábil personalizada para empresas e profissionais.", inclusos: ["Análise contábil", "Orientação estratégica"] }
@@ -40,15 +42,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const serv = params.get("servico") || params.get("plano") || params.get("slug");
   const dados = servicosMock[cat]?.[serv];
 
-  if (!dados) return;
+  if (!dados) {
+      console.error("Dados do serviço não encontrados na URL.");
+      return;
+  }
 
   // --- PREENCHIMENTO AUTOMÁTICO ---
-  document.getElementById("nomeServico").innerText = dados.titulo;
-  document.getElementById("descricaoServico").innerText = dados.descricao;
-  document.getElementById("valorServico").innerText = dados.valor;
-  document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join("");
+  const elNome = document.getElementById("nomeServico");
+  const elDesc = document.getElementById("descricaoServico");
+  const elValor = document.getElementById("valorServico");
+  const elInclu = document.getElementById("inclusosServico");
 
-  // --- BREADCRUMB DINÂMICO (INÍCIO > SERVIÇOS > CATEGORIA > PLANO) ---
+  if(elNome) elNome.innerText = dados.titulo;
+  if(elDesc) elDesc.innerText = dados.descricao;
+  if(elValor) elValor.innerText = dados.valor;
+  if(elInclu) elInclu.innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join("");
+
+  // --- BREADCRUMB DINÂMICO ---
   const bread = document.getElementById("breadcrumb");
   if (bread) {
     bread.innerHTML = `
@@ -59,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // --- MÁSCARAS BLINDADAS (WHATSAPP E CPF) ---
+  // --- MÁSCARAS BLINDADAS ---
   const maskWhatsApp = (val) => {
     val = val.replace(/\D/g, "").slice(0, 11);
     if (val.length > 0) val = "(" + val;
@@ -70,9 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const maskCPF = (val) => {
     val = val.replace(/\D/g, "").slice(0, 11);
-    if (val.length > 3 && val.length <= 6) val = val.slice(0, 3) + "." + val.slice(3);
-    else if (val.length > 6 && val.length <= 9) val = val.slice(0, 3) + "." + val.slice(3, 6) + "." + v.slice(6);
-    else if (val.length > 9) val = val.slice(0, 3) + "." + val.slice(3, 6) + "." + val.slice(6, 9) + "-" + val.slice(9);
+    if (val.length > 9) val = val.slice(0, 3) + "." + val.slice(3, 6) + "." + val.slice(6, 9) + "-" + val.slice(9);
+    else if (val.length > 6) val = val.slice(0, 3) + "." + val.slice(3, 6) + "." + val.slice(6);
+    else if (val.length > 3) val = val.slice(0, 3) + "." + val.slice(3);
     return val;
   };
 
@@ -92,26 +102,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const obrigatoriosOk = camposObrigatorios.every(id => document.getElementById(id).value.trim().length >= 3);
     const emailOk = email.includes("@") && email.includes(".");
     
-    botao.disabled = !(obrigatoriosOk && emailOk) || botao.classList.contains("btn-loading");
+    if (botao) {
+        botao.disabled = !(obrigatoriosOk && emailOk) || botao.classList.contains("btn-loading");
+    }
   }
 
   document.getElementById("nome").addEventListener("input", validarFormulario);
   document.getElementById("email").addEventListener("input", validarFormulario);
 
-  // --- ENVIO WHATSAPP COM SPINNER E EMOJIS ---
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (botao.classList.contains("btn-loading")) return;
+  // --- ENVIO WHATSAPP ---
+  if (form) {
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (botao.classList.contains("btn-loading")) return;
 
-    botao.classList.add("btn-loading");
-    botao.disabled = true;
-    const textoOriginal = botao.innerHTML;
-    botao.innerHTML = `<span class="spinner"></span> Enviando pedido...`;
+        botao.classList.add("btn-loading");
+        botao.disabled = true;
+        const textoOriginal = botao.innerHTML;
+        botao.innerHTML = `<span class="spinner"></span> Enviando pedido...`;
 
-    // Busca o campo exatamente como está no seu HTML: id="observacoes"
-    const obs = document.getElementById("observacoes")?.value.trim() || "Nenhuma";
-    
-    const mensagem = 
+        const obs = document.getElementById("observacoes")?.value.trim() || "Nenhuma";
+        
+        const mensagem = 
 `🚀 *NOVO PEDIDO DE SERVIÇO*
 
 🛠️ *Serviço:* ${dados.titulo}
@@ -124,12 +136,13 @@ document.addEventListener("DOMContentLoaded", () => {
 🆔 *CPF:* ${document.getElementById("cpf").value}
 💬 *Obs:* ${obs}`.trim();
 
-    window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
+        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
 
-    setTimeout(() => {
-      botao.classList.remove("btn-loading");
-      botao.innerHTML = textoOriginal;
-      validarFormulario();
-    }, 3000);
-  });
+        setTimeout(() => {
+          botao.classList.remove("btn-loading");
+          botao.innerHTML = textoOriginal;
+          validarFormulario();
+        }, 3000);
+    });
+  }
 });
