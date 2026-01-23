@@ -58,13 +58,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if(elValor) elValor.innerText = dados.valor;
   if(elInclu) elInclu.innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join("");
 
-  // --- BREADCRUMB DINÂMICO ---
+ // --- BREADCRUMB DINÂMICO NO COMPRA.JS ---
   const bread = document.getElementById("breadcrumb");
   if (bread) {
     bread.innerHTML = `
-      <a href="${BASE_URL}/">Início</a> <span>›</span> 
-      <a href="${BASE_URL}/">Serviços</a> <span>›</span> 
-      <a href="${BASE_URL}/servicos/${cat}/">${dados.categoriaLabel}</a> <span>›</span> 
+      <a href="${BASE_URL}/index.html">Início</a> <span>›</span> 
+      <a href="${BASE_URL}/index.html#servicos">Serviços</a> <span>›</span> 
+      <a href="${BASE_URL}/servicos/${cat}/index.html">${dados.categoriaLabel}</a> <span>›</span> 
       <strong>${dados.titulo}</strong>
     `;
   }
