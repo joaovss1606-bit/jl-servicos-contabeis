@@ -71,21 +71,22 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("valorServico") && (document.getElementById("valorServico").innerText = dados.valor);
   document.getElementById("inclusosServico") && (document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join(""));
 
- // --- BREADCRUMB LIMPO (Herdando do mei.css) ---
+ // --- BREADCRUMB CORRIGIDO (Estrutura: raiz/servico/compra/) ---
 const bread = document.getElementById("breadcrumb");
 if (bread && cat) {
     const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
-    const linkCategoria = `../servicos/${cat}/index.html`;
+    
+    // Caminho para a categoria: sobe de 'compra', e entra na pasta da categoria
+    const linkCategoria = `../${cat}/index.html`; 
 
-    // Removemos os estilos inline para deixar o CSS (mei.css) trabalhar
     bread.innerHTML = `
-        <a href="../index.html">Início</a> 
-        <span> › </span> 
-        <a href="../servicos/index.html">Serviços</a> 
-        <span> › </span> 
-        <a href="${linkCategoria}">${nomeCatAmigavel}</a> 
-        <span> › </span> 
-        <strong>${dados.titulo}</strong>
+        <a href="../../index.html">Início</a> 
+        <span> › </span> 
+        <a href="../index.html">Serviços</a> 
+        <span> › </span> 
+        <a href="${linkCategoria}">${nomeCatAmigavel}</a> 
+        <span> › </span> 
+        <strong style="color: #fff;">${dados.titulo}</strong>
     `;
 }
 
