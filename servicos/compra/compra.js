@@ -90,24 +90,24 @@ if (bread && cat) {
 }
 
   // --- MÁSCARAS CORRIGIDAS ---
-  const handleWhatsApp = (e) => {
+ const handleWhatsApp = (e) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 11) v = v.slice(0, 11);
-    if (v.length > 2) v = "(" + v.slice(0, 2) + ") " + v.slice(2);
-    if (v.length > 7) v = v.slice(0, 9) + "-" + v.slice(9);
+    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+    v = v.replace(/(\d{5})(\d)/, "$1-$2");
     e.target.value = v;
     validarFormulario();
-  };
+};
 
-  const handleCPF = (e) => {
+ const handleCPF = (e) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 11) v = v.slice(0, 11);
-    if (v.length > 3) v = v.slice(0, 3) + "." + v.slice(3);
-    if (v.length > 7) v = v.slice(0, 7) + "." + v.slice(7);
-    if (v.length > 11) v = v.slice(0, 11) + "-" + v.slice(11);
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
     e.target.value = v;
     validarFormulario();
-  };
+};
 
   document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
   document.getElementById("cpf")?.addEventListener("input", handleCPF);
