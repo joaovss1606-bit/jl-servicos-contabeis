@@ -5,83 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pessoa Física | J L Serviços Contábeis</title>
 
-  <!-- CSS GLOBAL -->
-  <link rel="stylesheet" href="/jl-servicos-contabeis/style.css">
-  <!-- CSS BASE (PADRÃO MEI) -->
-  <link rel="stylesheet" href="../mei/mei.css">
+  <link rel="stylesheet" href="../../style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    /* Ajustes específicos para o cabeçalho de categoria da imagem */
+    .category-header {
+        padding: 20px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #0b1c2d;
+    }
+    .category-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        text-decoration: none;
+    }
+    .category-nav .menu {
+        gap: 20px;
+    }
+    .category-nav .menu-item a {
+        font-size: 0.9rem !important;
+        height: auto !important;
+        padding: 5px 10px !important;
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- ===== BREADCRUMB ===== -->
-  <nav class="breadcrumb container">
-  <a href="/jl-servicos-contabeis/">Início</a>
-  <span>›</span>
-  <a href="/jl-servicos-contabeis/">Serviços</a>
-  <span>›</span>
-  <strong>Pessoa Física</strong>
+<header class="category-header">
+  <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 90%;">
+    <a href="../../index.html" class="category-brand">J L Serviços Contábeis</a>
+
+    <nav class="category-nav">
+      <ul class="menu" style="display: flex; list-style: none; gap: 30px;">
+        <li class="menu-item"><a href="../../index.html" style="color: #fff; text-decoration: none; font-weight: 600; text-transform: uppercase;">Início</a></li>
+        <li class="menu-item"><a href="../../blog/index.html" style="color: #fff; text-decoration: none; font-weight: 600; text-transform: uppercase;">Blog</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<nav class="breadcrumb container" style="margin-top: 30px; font-size: 0.85rem; color: rgba(255,255,255,0.6);">
+  <span style="color: #bd9617;">Início</span> / <span>Serviços</span> / <span style="color: #fff;">Pessoa Física</span>
 </nav>
 
-  <main class="container mei-page">
+<main class="container">
 
-    <!-- ===== TÍTULO ===== -->
-    <header class="mei-header">
-      <h1>Serviços para Pessoa Física</h1>
-      <p>Organização fiscal, regularização e orientação para sua vida financeira pessoal.</p>
-    </header>
+  <div style="text-align: center; margin: 60px 0;">
+    <h1 style="font-family: 'Montserrat', sans-serif; font-size: 2.5rem; color: #bd9617; text-transform: uppercase; font-weight: 800; letter-spacing: 2px;">
+      Serviços para Pessoa Física
+    </h1>
+  </div>
 
-    <!-- ===== SERVIÇOS ===== -->
-    <section class="mei-section mei-servicos">
-      <h2>Serviços Disponíveis</h2>
+  <section class="pf-section">
+    <div class="services-grid">
 
-      <div class="services-grid">
+      <a class="service-card" href="../compra/?categoria=pessoa-fisica&servico=irpf">
+        <span class="service-title">Declaração de Imposto de Renda</span>
+        <span class="service-price">R$ 139,99</span>
+        <span>Ver detalhes →</span>
+      </a>
 
-        <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=pessoa-fisica&servico=irpf">
-         <span class="service-title"> Declaração de Imposto de Renda</span>
-          <span class="service-price">R$ 139,99</span>
-          </a>
-
-        <a class="service-card"
-        href="/jl-servicos-contabeis/servicos/compra/?categoria=pessoa-fisica&servico=cpf-regularizacao">
+      <a class="service-card" href="../compra/?categoria=pessoa-fisica&servico=cpf-regularizacao">
         <span class="service-title">Regularização de CPF</span>
         <span class="service-price">R$ 79,99</span>
-        </a>
+        <span>Ver detalhes →</span>
+      </a>
 
-        <a class="service-card"
-           href="/jl-servicos-contabeis/servicos/compra/?categoria=pessoa-fisica&servico=orientacao-fiscal-pf">
-          <span class="service-title">Orientação Fiscal Pessoa Física</span>
-          <span class="service-price">R$ 119,99</span>
-          </a>
+      <a class="service-card" href="../compra/?categoria=pessoa-fisica&servico=orientacao-fiscal-pf">
+        <span class="service-title">Orientação Fiscal Pessoa Física</span>
+        <span class="service-price">R$ 119,99</span>
+        <span>Ver detalhes →</span>
+      </a>
 
-      </div>
-    </section>
+    </div>
+  </section>
 
-  </main>
+</main>
   
-  <footer class="site-footer">
+<footer class="site-footer">
   <div class="footer-container container">
     <div class="footer-col">
       <h3>J L Serviços Contábeis</h3>
-      <p>Soluções contábeis com transparência, segurança e foco em resultados para MEI, Pessoa Física e Empresas.</p>
+      <p>Soluções contábeis com transparência e segurança.</p>
     </div>
 
     <div class="footer-col">
       <h4>Links Rápidos</h4>
       <ul>
         <li><a href="../../index.html">Início</a></li>
-        <li><a href="../../index.html#servicos">Serviços</a></li>
-        <li><a href="../../sobre/index.html">Quem Somos</a></li>
-        <li><a href="../../lgpd/index.html">Política de Privacidade</a></li>
+        <li><a href="../index.html">Serviços</a></li>
       </ul>
     </div>
 
     <div class="footer-col">
       <h4>Contato</h4>
       <a href="https://wa.me/5561920041427" target="_blank" class="btn-whatsapp-footer">
-        Falar no WhatsApp
+        WhatsApp
       </a>
-      <p class="footer-email">jlservicoscontabeis0@gmail.com</p>
     </div>
   </div>
 
@@ -89,11 +115,6 @@
     <p>© 2026 J L Serviços Contábeis — Todos os direitos reservados</p>
   </div>
 </footer>
-
-  <!-- CTA FIXO -->
-  <a href="https://wa.me/5561920041427" class="cta-fixed" target="_blank">
-    Falar sobre Pessoa Física
-  </a>
 
 </body>
 </html>
