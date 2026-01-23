@@ -1,5 +1,5 @@
 /* ==========================================================================
-   PAGE LAYOUT & TYPOGRAPHY
+   LAYOUT BASE (Página de Compra)
    ========================================================================== */
 body {
     background: #0b1c2d;
@@ -13,26 +13,32 @@ body {
     padding: 0 20px;
 }
 
-.page-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.8rem;
-    color: #bd9617;
-    margin-bottom: 40px;
+/* ===== HEADER ESTILO MEI (UNIFICADO) ===== */
+/* Esta regra agora é única e não conflita com a .page-title antiga */
+.mei-header {
     text-align: center;
+    margin: 40px 0 60px;
 }
 
-.section-subtitle {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.3rem;
-    color: #fff;
-    margin-bottom: 25px;
-    border-left: 4px solid #bd9617;
-    padding-left: 15px;
+.mei-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #bd9617;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    font-weight: 800;
 }
 
-/* ==========================================================================
-   GRID & CARDS
-   ========================================================================== */
+.mei-header p {
+    color: #ffffff;
+    opacity: 0.9;
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.6;
+}
+
+/* ===== GRID & CARDS ===== */
 .compra-grid {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
@@ -48,7 +54,16 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-/* Summary Details */
+.section-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: 25px;
+    border-left: 4px solid #bd9617;
+    padding-left: 15px;
+}
+
+/* Detalhes do Resumo */
 .service-desc {
     font-size: 1rem;
     color: rgba(255,255,255,0.8);
@@ -86,7 +101,7 @@ body {
 .price-box strong { font-size: 1.8rem; font-weight: 800; color: #fff; }
 
 /* ==========================================================================
-   FORM ELEMENTS
+   FORMULÁRIO (IDENTIDADE JL)
    ========================================================================== */
 .input-group {
     position: relative;
@@ -99,12 +114,13 @@ body {
     top: 50%;
     transform: translateY(-50%);
     color: #bd9617;
+    z-index: 2;
 }
 
 input, textarea {
     width: 100%;
     padding: 15px 15px 15px 45px;
-    background: #102a44;
+    background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
     color: #fff;
@@ -113,11 +129,7 @@ input, textarea {
     transition: 0.3s;
 }
 
-textarea {
-    padding-left: 15px;
-    min-height: 120px;
-    resize: none;
-}
+textarea { padding-left: 15px; min-height: 120px; resize: none; }
 
 input:focus, textarea:focus {
     border-color: #bd9617;
@@ -132,7 +144,7 @@ input:focus, textarea:focus {
 }
 
 /* ==========================================================================
-   BUTTONS
+   BOTÕES & RESPONSIVIDADE
    ========================================================================== */
 .btn-checkout {
     width: 100%;
@@ -163,89 +175,8 @@ input:focus, textarea:focus {
     cursor: not-allowed;
 }
 
-/* RESPONSIVIDADE */
 @media (max-width: 768px) {
     .compra-grid { grid-template-columns: 1fr; }
-    .page-title { font-size: 2rem; }
     .row-inputs { grid-template-columns: 1fr; }
-}
-/* ===== HEADER ESTILO MEI (UNIFICADO) ===== */
-.mei-header {
-    text-align: center;
-    margin: 40px 0 60px;
-}
-
-.mei-header h1 {
-    font-size: 3rem;
-    color: #bd9617;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 15px;
-    font-weight: 800;
-}
-
-.mei-header p {
-    color: #ffffff;
-    opacity: 0.9;
-    max-width: 700px;
-    margin: auto;
-    line-height: 1.6;
-}
-
-/* ===== REGRAS PARA OS INPUTS (CORRIGINDO VISUAL) ===== */
-input, textarea {
-    width: 100%;
-    padding: 15px 15px 15px 45px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    color: white;
-    font-family: 'Montserrat', sans-serif;
-    transition: 0.3s;
-}
-
-.input-group i {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #bd9617;
-    z-index: 2;
-}
-
-.breadcrumb-custom {
-    margin-top: 30px; 
-    font-size: 0.9rem; 
-    color: rgba(255,255,255,0.6); 
-    font-family: 'Montserrat', sans-serif;
-}
-
-.breadcrumb-custom a { color: #bd9617; text-decoration: none; }
-.breadcrumb-custom span { margin: 0 8px; }
-
-@media (max-width: 768px) {
-    .mei-header h1 { font-size: 2rem; }
-}
-/* Remova qualquer menção a .page-title e adicione estas regras específicas */
-
-.mei-header {
-    text-align: center;
-    margin: 40px 0 60px;
-}
-
-.mei-header h1 {
-    font-size: 3rem;
-    color: #bd9617;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 15px;
-    font-weight: 800;
-}
-
-.mei-header p {
-    color: #ffffff;
-    opacity: 0.9;
-    max-width: 700px;
-    margin: auto;
-    line-height: 1.6;
+    .mei-header h1 { font-size: 2.2rem; }
 }
