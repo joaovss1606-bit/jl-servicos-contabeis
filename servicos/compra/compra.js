@@ -36,14 +36,19 @@ document.addEventListener("DOMContentLoaded", () => {
   servicosMock["outros-servicos"] = servicosMock.outros;
   servicosMock["certidoes"] = servicosMock["certidoes-regularizacoes"];
 
-  // --- CAPTURA DE PARÂMETROS DA URL ---
+ // --- CAPTURA DE PARÂMETROS DA URL (CORRIGIDO) ---
   const params = new URLSearchParams(window.location.search);
   const cat = params.get("categoria");
-  const serv = params.get("servico") || params.get("plano") || params.get("slug");
+  const serv = params.get("servico"); // Garanta que o link seja ?categoria=xxx&servico=yyy
+  
+  // Busca os dados no Mock
   const dados = servicosMock[cat]?.[serv];
 
   if (!dados) {
-      console.error("Dados do serviço não encontrados na URL.");
+      console.error("Serviço não encontrado. Verifique se a URL tem ?categoria=...&servico=...");
+      // Opcional: mostrar mensagem amigável no HTML se quiser
+      const elDesc = document.getElementById("descricaoServico");
+      if(elDesc) elDesc.innerText = "Erro: Detalhes do serviço não localizados. Por favor, volte ao catálogo.";
       return;
   }
 
