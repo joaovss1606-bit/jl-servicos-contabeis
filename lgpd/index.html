@@ -8,21 +8,48 @@
   <link rel="stylesheet" href="../style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Estilos específicos para manter o layout de duas colunas */
-    .sobre-main {
-      display: flex;
-      gap: 40px;
-      flex-wrap: wrap;
-      padding: 40px 0;
-    }
+    /* LAYOUT DE DUAS COLUNAS */
+    .sobre-main { display: flex; gap: 40px; flex-wrap: wrap; padding: 40px 0; }
     .sobre-conteudo { flex: 2; min-width: 300px; }
     .sobre-perfil { flex: 1; min-width: 300px; }
     
-    /* Padronização do Breadcrumb via CSS */
+    /* BREADCRUMB PADRONIZADO */
     .breadcrumb { padding: 20px 0; font-size: 0.9rem; }
     .breadcrumb a { color: #bd9617; text-decoration: none; font-weight: 600; }
     .breadcrumb span { color: #bd9617; margin: 0 8px; }
     .breadcrumb strong { color: #ffffff; font-weight: 700; }
+
+    /* TEXTO LGPD */
+    .bloco-texto { margin-bottom: 30px; line-height: 1.6; color: #ccc; }
+    .bloco-texto h2 { color: #bd9617; font-size: 1.1rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .lista-custom li { margin-bottom: 10px; position: relative; padding-left: 25px; list-style: none; }
+    .lista-custom li::before { content: '✔'; position: absolute; left: 0; color: #bd9617; }
+    
+    .link-lei { display: inline-block; margin-top: 15px; color: #bd9617; font-weight: 600; text-decoration: underline; transition: 0.3s; }
+    .link-lei:hover { color: #fff; }
+
+    /* CORREÇÃO DO RODAPÉ (REMOÇÃO DO AZUL) */
+    .site-footer { background: #0b1c2d; color: #fff; padding: 60px 0 20px; border-top: 1px solid rgba(189,150,23,0.2); }
+    .footer-col h3, .footer-col h4 { color: #bd9617; margin-bottom: 20px; }
+    .footer-col ul { list-style: none; padding: 0; }
+    .footer-col ul li { margin-bottom: 10px; }
+    /* Links do rodapé em cinza claro, mudando para dourado no hover */
+    .footer-col ul li a { color: #ccc; text-decoration: none; transition: 0.3s; }
+    .footer-col ul li a:hover { color: #bd9617; padding-left: 5px; }
+    .footer-email { color: #bd9617; margin-top: 15px; font-weight: 600; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px; padding-top: 20px; text-align: center; font-size: 0.8rem; color: #666; }
+    
+    .btn-whatsapp-footer {
+        display: inline-block;
+        background: #25D366;
+        color: #fff !important; /* Força o branco para não ficar azul */
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+    .btn-whatsapp-footer:hover { transform: scale(1.05); filter: brightness(1.1); }
   </style>
 </head>
 
@@ -48,52 +75,43 @@
         <a href="/jl-servicos-contabeis/">Início</a> <span>/</span> <strong>Política de Privacidade</strong>
       </nav>
 
-      <h1 class="titulo-sessao" style="color:#bd9617; font-family:'Playfair Display', serif; margin-bottom:30px;">Política de Privacidade</h1>
+      <h1 class="titulo-sessao" style="color:#bd9617; font-family:'Playfair Display', serif; margin-bottom:30px; font-size: 2.5rem;">Política de Privacidade</h1>
 
       <div class="bloco-texto">
-        <h2 style="color:#bd9617; font-size: 1.2rem;">🔹 COMPROMISSO</h2>
-        <p>A J L Serviços Contábeis respeita a sua privacidade e está comprometida com a proteção dos dados pessoais coletados por meio deste site. Esta Política explica como os dados são tratados conforme a Lei Geral de Proteção de Dados (LGPD).</p>
+        <h2>🔹 Compromisso e Transparência</h2>
+        <p>A J L Serviços Contábeis reafirma seu compromisso com a segurança e a transparência no tratamento dos dados pessoais de seus clientes. Esta política detalha como coletamos e protegemos suas informações de acordo com a <strong>LGPD (Lei nº 13.709/2018)</strong>.</p>
       </div>
 
-      <div class="bloco-texto" style="margin-top: 25px;">
-        <h2 style="color:#bd9617; font-size: 1.2rem;">🔹 QUAIS DADOS COLETAMOS</h2>
-        <ul class="lista-custom" style="list-style: none; padding: 0; color: #ccc; line-height: 1.8;">
-          <li>✔ Nome completo e E-mail</li>
-          <li>✔ Telefone / WhatsApp</li>
-          <li>✔ CPF (para prestação de serviços específicos)</li>
-          <li>✔ Informações voluntárias em formulários</li>
-        </ul>
+      <div class="bloco-texto">
+        <h2>🔹 Coleta e Finalidade</h2>
+        <p>Coletamos dados como Nome, CPF, E-mail e WhatsApp exclusivamente para a execução de serviços contábeis e cumprimento de obrigações legais junto à Receita Federal.</p>
       </div>
 
-      <div class="bloco-texto" style="margin-top: 25px;">
-        <h2 style="color:#bd9617; font-size: 1.2rem;">🔹 FINALIDADE</h2>
-        <p>Os dados são utilizados exclusivamente para entrar em contato com o cliente, prestar serviços contábeis, emitir guias fiscais e cumprir exigências legais junto aos órgãos públicos.</p>
-      </div>
-
-      <div class="bloco-texto" style="margin-top: 25px;">
-        <h2 style="color:#bd9617; font-size: 1.2rem;">🔹 SEUS DIREITOS</h2>
-        <p>Conforme o Art. 18 da LGPD, você pode solicitar a qualquer momento a confirmação da existência de tratamento, correção de dados ou revogação de consentimento através dos nossos canais oficiais.</p>
+      <div class="bloco-texto">
+        <h2>🔹 Seus Direitos</h2>
+        <p>Você pode solicitar a correção ou exclusão de seus dados a qualquer momento, desde que não impacte obrigações fiscais vigentes.</p>
+        <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" class="link-lei">
+          Consulte o texto completo da Lei LGPD →
+        </a>
       </div>
     </section>
 
     <aside class="sobre-perfil">
-      <div class="card-autoridade" style="background: rgba(14,42,71,0.5); border: 1px solid #bd9617; padding: 30px; border-radius: 15px; text-align: center;">
+      <div class="card-autoridade" style="background: rgba(14,42,71,0.5); border: 1px solid #bd9617; padding: 30px; border-radius: 15px; text-align: center; position: sticky; top: 20px;">
         <div class="foto-placeholder" style="margin-bottom: 20px;">
-          <img src="../minha-foto.jpeg" alt="JOÃO VITOR SANTOS SILVA" style="width: 150px; height: 150px; border-radius: 50%; border: 2px solid #bd9617; object-fit: cover;">
+          <img src="../minha-foto.jpeg" alt="JOÃO VITOR SANTOS SILVA" style="width: 160px; height: 160px; border-radius: 50%; border: 3px solid #bd9617; object-fit: cover; box-shadow: 0 0 15px rgba(189,150,23,0.3);">
         </div>
         <div class="perfil-info">
-          <h3 style="color:#bd9617; margin-bottom: 5px;">JOÃO VITOR SANTOS SILVA</h3>
-          <p class="cargo" style="color: #fff; font-weight: 600; font-size: 0.9rem;">Contador Responsável</p>
+          <h3 style="color:#bd9617; margin-bottom: 5px; font-family: 'Playfair Display', serif;">JOÃO VITOR SANTOS SILVA</h3>
+          <p class="cargo" style="color: #fff; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Contador Responsável</p>
           
-          <div class="registro-box" style="background: rgba(189,150,23,0.1); padding: 10px; border-radius: 8px; margin: 15px 0; color: #bd9617; font-size: 0.85rem;">
+          <div class="registro-box" style="background: rgba(189,150,23,0.1); padding: 12px; border-radius: 8px; margin: 15px 0; color: #bd9617; font-size: 0.85rem; border: 1px dashed rgba(189,150,23,0.4);">
             <strong>Registro Profissional</strong><br>
             CRC DF-031580/O
           </div>
 
-          <p class="bio-curta" style="font-size: 0.85rem; color: #ccc; margin-bottom: 20px;">Garantindo a segurança dos seus dados e a regularidade do seu negócio.</p>
-
-          <a href="https://wa.me/5561920041427" target="_blank" class="btn-whats-card" style="display: block; background: #25D366; color: #fff; text-decoration: none; padding: 12px; border-radius: 5px; font-weight: 700; font-size: 0.9rem;">
-            Tirar dúvidas sobre dados
+          <a href="https://wa.me/5561920041427" target="_blank" class="btn-whats-card" style="display: block; background: #25D366; color: #fff; text-decoration: none; padding: 15px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; transition: 0.3s;">
+            Dúvidas sobre privacidade?
           </a>
         </div>
       </div>
@@ -102,13 +120,13 @@
   </main>
 
   <footer class="site-footer">
-    <div class="footer-container container">
-      <div class="footer-col">
+    <div class="footer-container container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px;">
+      <div class="footer-col" style="flex: 1; min-width: 250px;">
         <h3>J L Serviços Contábeis</h3>
-        <p>Soluções contábeis com transparência, segurança e foco em resultados para MEI, Pessoa Física e Empresas.</p>
+        <p style="color: #ccc; font-size: 0.9rem;">Soluções contábeis com transparência e foco em resultados para MEI e Pessoa Física.</p>
       </div>
 
-      <div class="footer-col">
+      <div class="footer-col" style="flex: 1; min-width: 200px;">
         <h4>Links Rápidos</h4>
         <ul>
           <li><a href="../../index.html">Início</a></li>
@@ -118,7 +136,7 @@
         </ul>
       </div>
 
-      <div class="footer-col">
+      <div class="footer-col" style="flex: 1; min-width: 250px;">
         <h4>Contato</h4>
         <a href="https://wa.me/5561920041427" target="_blank" class="btn-whatsapp-footer">
           Falar no WhatsApp
