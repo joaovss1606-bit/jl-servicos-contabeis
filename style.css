@@ -39,50 +39,51 @@ body { font-family: 'Montserrat', sans-serif; background: #0b1c2d; color: #fffff
 }
 
 /* ==========================================================================
-   VISUAL EXCLUSIVO DA HOME (Logo à Esquerda, Texto à Direita)
+   VISUAL EXCLUSIVO DA HOME (Ajustado para sua estrutura HTML)
    ========================================================================== */
 
-/* Ajusta o container para colocar os itens lado a lado */
+/* Removemos o flex do header-content para deixar a brand-identity mandar */
 body.home-page .header-content {
-    flex-direction: row !important; /* Força ficar em linha */
-    justify-content: center;       /* Centraliza o grupo no meio da página */
-    align-items: center;           /* Alinha a logo e o texto pelo meio */
-    gap: 30px;                     /* Espaço entre a logo e o texto */
-    text-align: left;              /* Alinha o texto para a esquerda */
+    display: block !important;
 }
 
-/* Ajusta a Logo para não ter margem automática que a empurre */
+/* É aqui que a mágica do "lado a lado" acontece */
+body.home-page .brand-identity {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 30px;
+}
+
+/* Formatação da Logo */
 body.home-page .site-logo-circle {
     display: block !important;
     width: 150px !important;
     height: 150px !important;
-    object-fit: cover;
     border-radius: 50% !important;
     border: 4px solid #bd9617 !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    margin: 0 !important; /* Remove as margens automáticas */
-    transition: 0.3s ease;
-    flex-shrink: 0;        /* Impede que a logo "amasse" se a tela diminuir */
+    margin: 0 !important;
+    flex-shrink: 0;
 }
 
-body.home-page .site-logo-circle:hover { 
-    transform: scale(1.05); 
+/* Organiza o Texto (Título e Subtítulo) um sobre o outro */
+body.home-page .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    text-align: left !important;
 }
 
-/* O título GIGANTE à direita da logo */
 body.home-page .site-title-header {
-    display: block !important;
     font-size: 3.8rem !important;
     font-weight: 900;
     line-height: 1.1;
     margin: 0 !important;
 }
 
-/* O subtítulo logo abaixo do título */
 body.home-page .site-subtitle-header {
     display: block !important;
     font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.9);
     margin-top: 5px !important;
 }
 /* ==========================================================================
