@@ -45,6 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  const nomesCategorias = {
+    "mei": "MEI",
+    "pessoa-fisica": "Pessoa Física",
+    "contabeis": "Serviços Contábeis",
+    "certidoes-regularizacoes": "Certidões",
+    "certificado-digital": "Certificado Digital",
+    "outros": "Outros"
+  };
+
   // --- CAPTURA DE PARÂMETROS DA URL ---
   const params = new URLSearchParams(window.location.search);
   const cat = params.get("categoria")?.trim();
@@ -60,74 +69,63 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- PREENCHIMENTO DO HTML ---
-  const elNome = document.getElementById("nomeServico");
-  const elDesc = document.getElementById("descricaoServico");
-  const elValor = document.getElementById("valorServico");
-  const elInclu = document.getElementById("inclusosServico");
+  document.getElementById("nomeServico") && (document.getElementById("nomeServico").innerText = dados.titulo);
+  document.getElementById("descricaoServico") && (document.getElementById("descricaoServico").innerText = dados.descricao);
+  document.getElementById("valorServico") && (document.getElementById("valorServico").innerText = dados.valor);
+  document.getElementById("inclusosServico") && (document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join(""));
 
-  if(elNome) elNome.innerText = dados.titulo;
-  if(elDesc) elDesc.innerText = dados.descricao;
-  if(elValor) elValor.innerText = dados.valor;
-  if(elInclu) elInclu.innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join("");
-
-  // --- BREADCRUMB DINÂMICO (NOVO) ---
+  // --- BREADCRUMB DINÂMICO ---
   const bread = document.getElementById("breadcrumb");
- if (bread) {
+  if (bread) {
+    const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
+    const linkCategoria = `../servicos/${cat}/index.html`;
+
     bread.innerHTML = `
       <a href="../index.html" style="color: #bd9617; text-decoration: none;">Início</a> 
       <span style="margin: 0 8px;">›</span> 
       <a href="../servicos/index.html" style="color: #bd9617; text-decoration: none;">Serviços</a> 
       <span style="margin: 0 8px;">›</span> 
+      <a href="${linkCategoria}" style="color: #bd9617; text-decoration: none;">${nomeCatAmigavel}</a> 
+      <span style="margin: 0 8px;">›</span> 
       <strong style="color: #ffffff;">${dados.titulo}</strong>
     `;
   }
 
-    const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
-    // O link abaixo aponta para a pasta da categoria dentro de /servicos/
-    const linkCategoria = `../servicos/${cat}/index.html`;
-
-    bread.innerHTML = `
-      <a href="../index.html">Início</a> <span>›</span> 
-      <a href="../servicos/index.html">Serviços</a> <span>›</span> 
-      <a href="${linkCategoria}">${nomeCatAmigavel}</a> <span>›</span> 
-      <strong>${dados.titulo}</strong>
-    `;
-  }
-
-  // --- MÁSCARAS E VALIDAÇÕES ---
-  const maskWhatsApp = (val) => {
-    val = val.replace(/\D/g, "").slice(0, 11);
-    if (val.length > 0) val = "(" + val;
-    if (val.length > 3) val = val.slice(0, 3) + ") " + val.slice(3);
-    if (val.length > 10) val = val.slice(0, 10) + "-" + val.slice(10);
-    return val;
+  // --- MÁSCARAS ---
+  const handleWhatsApp = (e) => {
+    let v = e.target.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    if (v.length > 2) v = "(" + v.slice(0, 2) + ") " + v.slice(2);
+    if (v.length > 9) v = v.slice(0, 9) + "-" + v.slice(9);
+    e.target.value = v;
+    validarFormulario();
   };
 
-  const maskCPF = (val) => {
-    val = val.replace(/\D/g, "").slice(0, 11);
-    if (val.length > 9) val = val.slice(0, 3) + "." + val.slice(3, 6) + "." + val.slice(6, 9) + "-" + val.slice(9);
-    else if (val.length > 6) val = val.slice(0, 3) + "." + val.slice(3, 6) + "." + val.slice(6);
-    else if (val.length > 3) val = val.slice(0, 3) + "." + val.slice(3);
-    return val;
+  const handleCPF = (e) => {
+    let v = e.target.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    e.target.value = v;
+    validarFormulario();
   };
 
-  document.getElementById("whatsapp")?.addEventListener("input", (e) => {
-    e.target.value = maskWhatsApp(e.target.value);
-    validarFormulario();
-  });
-
-  document.getElementById("cpf")?.addEventListener("input", (e) => {
-    e.target.value = maskCPF(e.target.value);
-    validarFormulario();
-  });
+  document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
+  document.getElementById("cpf")?.addEventListener("input", handleCPF);
 
   function validarFormulario() {
     const emailEl = document.getElementById("email");
     if(!emailEl || !botao) return;
+    
     const email = emailEl.value;
-    const obrigatoriosOk = camposObrigatorios.every(id => document.getElementById(id)?.value.trim().length >= 3);
+    const obrigatoriosOk = camposObrigatorios.every(id => {
+        const el = document.getElementById(id);
+        return el && el.value.trim().length >= 8; // Aumentado para validar máscaras
+    });
+    
     const emailOk = email.includes("@") && email.includes(".");
-    botao.disabled = !(obrigatoriosOk && emailOk) || botao.classList.contains("btn-loading");
+    botao.disabled = !(obrigatoriosOk && emailOk);
   }
 
   ["nome", "email"].forEach(id => document.getElementById(id)?.addEventListener("input", validarFormulario));
@@ -135,9 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (form) {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-        if (botao.classList.contains("btn-loading")) return;
-
-        botao.classList.add("btn-loading");
+        
         botao.disabled = true;
         const textoOriginal = botao.innerHTML;
         botao.innerHTML = `Enviando pedido...`;
@@ -158,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
 
         setTimeout(() => {
-          botao.classList.remove("btn-loading");
+          botao.disabled = false;
           botao.innerHTML = textoOriginal;
           validarFormulario();
         }, 3000);
