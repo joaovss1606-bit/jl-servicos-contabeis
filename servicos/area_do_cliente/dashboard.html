@@ -199,6 +199,14 @@
 
         // Executa ao carregar
         verificarAcesso();
+        function abrirWhatsapp() {
+    // COLOQUE SEU NÚMERO AQUI (DDD + NÚMERO, sem espaços ou traços)
+    const telefone = "5561920041427"; 
+    const mensagem = encodeURIComponent("Olá! Sou cliente da JL Serviços Contábeis e preciso de suporte.");
+    const url = `https://wa.me/${telefone}?text=${mensagem}`;
+    
+    window.open(url, '_blank');
+}
     </script>
 </body>
 </html>
