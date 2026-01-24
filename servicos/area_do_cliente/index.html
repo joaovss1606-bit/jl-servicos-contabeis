@@ -127,32 +127,51 @@
 </head>
 <body>
 
-    <div class="login-container">
-        <img src="../../logo.png" alt="Logo JL">
+   <div class="login-container">
+    <img src="../../logo.png" alt="Logo JL">
+    
+    <h2>Bem-vindo</h2>
+    <p>Acesse sua área exclusiva</p>
+
+    <div id="error-msg">Usuário ou senha inválidos.</div>
+
+    <form id="login-form">
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" placeholder="Seu e-mail" required>
+        </div>
         
-        <h2>Bem-vindo</h2>
-        <p>Acesse sua área exclusiva</p>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="Sua senha" required>
+        </div>
 
-        <div id="error-msg">Usuário ou senha inválidos.</div>
+        <button type="submit" class="btn-login">Entrar no Painel</button>
+    </form>
+    <p style="margin-top: 20px; font-size: 0.85rem; color: #ccc;">
+        Novo por aqui? <a href="cadastro.html" id="link-cadastro" style="color: #bd9617; text-decoration: none; font-weight: bold;">Crie sua conta</a>
+    </p>
 
-        <form id="login-form">
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="email" placeholder="Seu e-mail" required>
-            </div>
-            
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="Sua senha" required>
-            </div>
+    <a href="../../index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Voltar para o site
+    </a>
+</div>
 
-            <button type="submit" class="btn-login">Entrar no Painel</button>
-        </form>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="cliente.js"></script>
 
-        <a href="../../index.html" class="back-link">
-            <i class="fas fa-arrow-left"></i> Voltar para o site
-        </a>
-    </div>
+<script>
+    // Mantendo a inteligência de levar o serviço para a página de cadastro
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const servico = urlParams.get('servico');
+        const linkCadastro = document.getElementById('link-cadastro');
+
+        if (servico && linkCadastro) {
+            linkCadastro.href = `cadastro.html?servico=${servico}`;
+        }
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="cliente.js"></script>
 </body>
