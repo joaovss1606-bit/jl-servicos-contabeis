@@ -180,22 +180,40 @@
             window.location.href = 'index.html';
         }
 
-        // 4. Verificação de Acesso e Preenchimento de Dados
-        async function verificarAcesso() {
-            const { data: { user }, error } = await dashClient.auth.getUser();
+      // 4. Verificação de Acesso e Busca de Perfil Real
+async function verificarAcesso() {
+    const { data: { user }, error } = await dashClient.auth.getUser();
 
-            if (error || !user) {
-                window.location.href = 'index.html';
-            } else {
-                // Preenche o nome/email no Dashboard
-                document.getElementById('user-name').innerText = "Olá, " + user.email.split('@')[0];
-                document.getElementById('user-email').innerText = user.email;
-                
-                // Simulação de status de assinatura
-                document.getElementById('sub-status').innerText = "Ativo";
-                document.getElementById('sub-details').innerText = "Plano Contábil Premium";
-            }
+    if (error || !user) {
+        window.location.href = 'index.html';
+    } else {
+        // 1. Busca o nome na sua tabela 'profiles'
+        // IMPORTANTE: Se sua coluna for 'nome', mude 'full_name' para 'nome' abaixo
+        const { data: profile } = await dashClient
+            .from('profiles')
+            .select('full_name') 
+            .eq('id', user.id)
+            .single();
+
+        // 2. Define o nome que será exibido
+        let nomeParaExibir;
+        if (profile && profile.full_name) {
+            // Pega apenas o primeiro nome para ficar elegante
+            nomeParaExibir = profile.full_name.split(' ')[0];
+        } else {
+            // Se não achar no perfil, usa o apelido do e-mail como reserva
+            nomeParaExibir = user.email.split('@')[0];
         }
+
+        // 3. Atualiza os elementos na tela
+        document.getElementById('user-name').innerText = "Olá, " + nomeParaExibir;
+        document.getElementById('user-email').innerText = user.email;
+        
+        // Mantemos a simulação por enquanto (ou você pode puxar do banco depois)
+        document.getElementById('sub-status').innerText = "Ativo";
+        document.getElementById('sub-details').innerText = "Plano Contábil Premium";
+    }
+}
 
         // Executa ao carregar
         verificarAcesso();
