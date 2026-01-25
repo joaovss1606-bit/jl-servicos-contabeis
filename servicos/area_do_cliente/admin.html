@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin | JL Serviços</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --gold: #bd9617; --dark-blue: #0a192f; --glass: rgba(255, 255, 255, 0.05); }
+        body { background: var(--dark-blue); color: white; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { font-family: 'Playfair Display', serif; color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+        .section { background: var(--glass); padding: 20px; border-radius: 15px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; }
+        th { color: var(--gold); }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-right: 5px; }
+        .btn-approve { background: #25d366; color: black; }
+        .btn-cancel { background: #ff4444; color: white; }
+        .btn-copy { background: rgba(255,255,255,0.1); color: white; font-size: 10px; padding: 4px 6px; }
+        .btn-doc { background: var(--gold); color: white; margin-top: 5px; width: 100%; }
+        input { padding: 8px; border-radius: 5px; border: 1px solid #333; background: #000; color: white; margin-bottom: 10px; width: 100%; box-sizing: border-box; }
+        .btn:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Painel de Controle Administrativo</h1>
+
+    <div class="section">
+        <h2><i class="fas fa-users"></i> Gerenciar Clientes e Pedidos</h2>
+        <table id="tabela-pedidos">
+            <thead>
+                <tr>
+                    <th>Cliente / ID</th>
+                    <th>Serviço</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="lista-pedidos">
+                <tr><td colspan="4">Carregando dados...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2><i class="fas fa-upload"></i> Enviar Novo Documento</h2>
+        <div style="max-width: 450px;">
+            <label style="font-size: 0.8rem; color: var(--gold);">ID do Cliente (Cole aqui):</label>
+            <input type="text" id="doc-cliente-id" placeholder="Ex: 550e8400-e29b-41d4-a716...">
+            
+            <label style="font-size: 0.8rem; color: var(--gold);">Nome do Arquivo:</label>
+            <input type="text" id="doc-nome" placeholder="Ex: Guia DAS - Fevereiro/2026">
+            
+            <label style="font-size: 0.8rem; color: var(--gold);">Link do Arquivo (Public URL):</label>
+            <input type="text" id="doc-url" placeholder="Cole o link gerado no Storage">
+            
+            <button class="btn btn-doc" onclick="enviarDoc()">REGISTRAR NO PAINEL DO CLIENTE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configurações Supabase
+    const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
+    const SB_KEY = 'SUA_SERVICE_ROLE_KEY_AQUI'; // IMPORTANTE: Use a service_role para ter permissão de admin
+    const adminClient = supabase.createClient(SB_URL, SB_KEY);
+
+    // 1. Carregar todos os pedidos e dados dos perfis
+    async function carregarPedidos() {
+        const { data: pedidos, error } = await adminClient
+            .from('Assinaturas')
+            .select(`*, profiles(nome, email)`)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error("Erro ao carregar pedidos:", error);
+            return;
+        }
+
+        const lista = document.getElementById('lista-pedidos');
+        lista.innerHTML = pedidos.map(p => {
+            // Define a cor do badge de status
+            let corBadge = '#f1c40f'; // Pendente (Amarelo)
+            if (p.status === 'Ativo') corBadge = '#25d366'; // Ativo (Verde)
+            if (p.status === 'Cancelado') corBadge = '#ff4444'; // Cancelado (Vermelho)
+
+            return `
+                <tr>
+                    <td>
+                        <strong>${p.profiles?.nome || 'Cliente sem nome'}</strong><br>
+                        <small style="color:#888">${p.cliente_id}</small>
+                        <button class="btn btn-copy" onclick="copiarID('${p.cliente_id}')">📋 Copiar ID</button>
+                    </td>
+                    <td>${p.plano_id}</td>
+                    <td><span class="badge" style="background:${corBadge}; color:black">${p.status}</span></td>
+                    <td>
+                        ${p.status !== 'Ativo' ? 
+                            `<button class="btn btn-approve" onclick="alterarStatus('${p.id}', 'Ativo')">Ativar</button>` : ''
+                        }
+                        ${p.status !== 'Cancelado' ? 
+                            `<button class="btn btn-cancel" onclick="alterarStatus('${p.id}', 'Cancelado')">Cancelar</button>` : ''
+                        }
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 2. Função para Copiar ID do cliente para a área de transferência
+    function copiarID(id) {
+        navigator.clipboard.writeText(id);
+        alert("ID Copiado! Agora basta colar no campo de envio de documentos.");
+        document.getElementById('doc-cliente-id').value = id; // Já cola automaticamente no campo pra você
+    }
+
+    // 3. Alterar Status (Ativar ou Cancelar)
+    async function alterarStatus(idPedido, novoStatus) {
+        const confirmar = confirm(`Tem certeza que deseja mudar o status para ${novoStatus}?`);
+        if (!confirmar) return;
+
+        const { error } = await adminClient
+            .from('Assinaturas')
+            .update({ status: novoStatus })
+            .eq('id', idPedido);
+
+        if (!error) {
+            alert('Status atualizado com sucesso!');
+            carregarPedidos();
+        } else {
+            alert('Erro ao atualizar status.');
+        }
+    }
+
+    // 4. Registrar Documento para o Cliente
+    async function enviarDoc() {
+        const cid = document.getElementById('doc-cliente-id').value;
+        const nome = document.getElementById('doc-nome').value;
+        const url = document.getElementById('doc-url').value;
+
+        if(!cid || !nome || !url) return alert('Por favor, preencha todos os campos do documento.');
+
+        const { error } = await adminClient.from('documentos').insert({
+            cliente_id: cid,
+            nome_arquivo: nome,
+            url_arquivo: url
+        });
+
+        if (!error) {
+            alert('Documento enviado com sucesso para o painel do cliente!');
+            document.getElementById('doc-nome').value = '';
+            document.getElementById('doc-url').value = '';
+        } else {
+            console.error(error);
+            alert('Erro ao registrar documento no banco de dados.');
+        }
+    }
+
+    // Inicialização
+    carregarPedidos();
+</script>
+</body>
+</html>
