@@ -21,7 +21,7 @@ if (loginForm) {
             alert("Erro no login: " + error.message);
         } else {
             // --- CONFIGURAÇÃO DE ADMIN ---
-            const EMAIL_ADMIN = "seu-email-aqui@exemplo.com"; // <-- COLOQUE SEU E-MAIL EXATO AQUI
+            const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com"; // <-- COLOQUE SEU E-MAIL EXATO AQUI
 
             if (data.user.email === EMAIL_ADMIN) {
                 // Se for você, vai direto para o painel de controle
