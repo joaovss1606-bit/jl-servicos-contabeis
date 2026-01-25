@@ -297,22 +297,48 @@ function iniciarFluxoContratacao(user, idServico, profile) {
     document.body.appendChild(modal);
 
     document.getElementById('btn-confirmar').onclick = async () => {
-        const n = document.getElementById('comp-nome').value;
-        const c = document.getElementById('comp-cpf').value;
-        const t = document.getElementById('comp-tel').value;
+    const n = document.getElementById('comp-nome').value;
+    const c = document.getElementById('comp-cpf').value;
+    const t = document.getElementById('comp-tel').value;
 
-        if(!n || !c || !t) return alert("Preencha todos os campos!");
+    if(!n || !c || !t) return alert("Preencha todos os campos!");
 
-        // Salva no Supabase
-        await dashClient.from('profiles').upsert({ id: user.id, nome: n, cpf_cnpj: c, telefone: t });
-        await dashClient.from('Assinaturas').insert({ cliente_id: user.id, plano_id: idServico, status: 'Pendente' });
+    // Bloqueia o botão para evitar cliques duplos
+    document.getElementById('btn-confirmar').innerText = "Processando...";
+    document.getElementById('btn-confirmar').disabled = true;
 
-        // Avisa no WhatsApp
-        const msg = `Olá! Acabei de solicitar o serviço *${nomeServico}* pelo site.\n\nNome: ${n}\nCPF: ${c}\nWhatsApp: ${t}`;
-        abrirWhatsapp(msg);
-        window.location.href = 'dashboard.html';
-    };
-}
+    try {
+        // 1. Atualiza o perfil do usuário
+        await dashClient.from('profiles').upsert({ 
+            id: user.id, 
+            nome: n, 
+            cpf_cnpj: c, 
+            telefone: t 
+        });
+
+        // 2. Registra a intenção de assinatura (Status Pendente)
+        // Importante: Verifique se o nome da tabela no Supabase é 'Assinaturas' com 'A' maiúsculo
+        await dashClient.from('Assinaturas').insert({ 
+            cliente_id: user.id, 
+            plano_id: idServico, 
+            status: 'Pendente' 
+        });
+
+        // 3. Monta a mensagem e abre o WhatsApp
+        const msg = `Olá! Acabei de solicitar o serviço *${nomeServico}* pelo site.\n\nNome: ${n}\nCPF/CNPJ: ${c}\nWhatsApp: ${t}`;
+        
+        // Pequeno delay para garantir o salvamento antes de sair da página
+        setTimeout(() => {
+            abrirWhatsapp(msg);
+            // Redireciona para o dashboard limpo (sem o ?contratar=) para atualizar o card
+            window.location.href = 'dashboard.html';
+        }, 800);
+
+    } catch (err) {
+        alert("Erro ao salvar dados. Tente novamente.");
+        console.error(err);
+    }
+};
 
 // Executa ao carregar
 verificarAcesso();
