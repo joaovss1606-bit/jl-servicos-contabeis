@@ -137,37 +137,59 @@
         alert("ID Copiado para o formulário!");
     }
 
-    // 4. UPLOAD E REGISTRO
-    async function uploadEEnviar() {
-        const fileInput = document.getElementById('doc-file');
-        const clienteId = document.getElementById('doc-cliente-id').value;
-        const nomeManual = document.getElementById('doc-nome-manual').value;
-        const btn = document.getElementById('btn-upload');
-        const statusMsg = document.getElementById('upload-status');
+   // 4. UPLOAD E REGISTRO (Versão Refinada pelo Especialista)
+async function uploadEEnviar() {
+    const fileInput = document.getElementById('doc-file');
+    const clienteId = document.getElementById('doc-cliente-id').value.trim();
+    const nomeManual = document.getElementById('doc-nome-manual').value.trim();
+    const btn = document.getElementById('btn-upload');
+    const statusMsg = document.getElementById('upload-status');
 
-        if (!fileInput.files[0] || !clienteId || !nomeManual) return alert("Preencha todos os campos!");
-
-        const file = fileInput.files[0];
-        const filePath = `${clienteId}/${Date.now()}_${file.name}`;
-
-        try {
-            btn.disabled = true; btn.innerText = "Subindo...";
-            
-            const { error: upErr } = await adminClient.storage.from('documentos').upload(filePath, file);
-            if (upErr) throw upErr;
-
-            const { data: { publicUrl } } = adminClient.storage.from('documentos').getPublicUrl(filePath);
-
-            const { error: dbErr } = await adminClient.from('documentos').insert({
-                cliente_id: clienteId, nome_arquivo: nomeManual, url_arquivo: publicUrl
-            });
-            if (dbErr) throw dbErr;
-
-            alert("Enviado com sucesso!");
-            location.reload();
-        } catch (e) { alert("Erro: " + e.message); }
+    if (!fileInput.files[0] || !clienteId || !nomeManual) {
+        return alert("Preencha todos os campos: ID, Nome do Arquivo e selecione o PDF!");
     }
 
+    const file = fileInput.files[0];
+    // Criamos um nome limpo para o arquivo no storage
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+    const filePath = `${clienteId}/${fileName}`;
+
+    try {
+        btn.disabled = true; 
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        
+        // 1. Upload para o Storage
+        const { error: upErr } = await adminClient.storage
+            .from('documentos')
+            .upload(filePath, file, { cacheControl: '3600', upsert: false });
+        
+        if (upErr) throw upErr;
+
+        // 2. Pegar a URL Pública
+        const { data: { publicUrl } } = adminClient.storage
+            .from('documentos')
+            .getPublicUrl(filePath);
+
+        // 3. Registrar na tabela 'documentos'
+        // IMPORTANTE: O nome das colunas deve ser exatamente como no seu banco
+        const { error: dbErr } = await adminClient.from('documentos').insert({
+            cliente_id: clienteId, 
+            nome_arquivo: nomeManual, 
+            url_arquivo: publicUrl
+        });
+
+        if (dbErr) throw dbErr;
+
+        alert("Documento enviado e registrado com sucesso!");
+        location.reload();
+
+    } catch (e) { 
+        alert("Erro no processo: " + e.message);
+        btn.disabled = false;
+        btn.innerText = "SUBIR E NOTIFICAR CLIENTE";
+    }
+}
     // 5. LISTAR E DELETAR DOCUMENTOS
     async function carregarDocumentos() {
         const { data: docs } = await adminClient.from('documentos').select('*, profiles(nome)').order('created_at', { ascending: false }).limit(10);
