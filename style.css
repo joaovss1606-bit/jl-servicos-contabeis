@@ -871,3 +871,16 @@ body.home-page .site-subtitle-header {
         /* A LINHA DO PADDING FOI EXCLUÍDA DAQUI */
     }
 }
+/* EFEITO DE SALTO EXCLUSIVO PARA CARDS DO MEI */
+.service-link-card {
+    /* Prepara o card para o movimento suave */
+    transition: transform 0.2s ease !important;
+}
+
+.service-link-card:hover {
+    /* Faz o card saltar 10px para cima */
+    transform: translateY(-10px) !important;
+    
+    /* Opcional: uma sombra suave para realçar o salto */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3) !important;
+}
