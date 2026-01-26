@@ -630,43 +630,48 @@ body.home-page .site-subtitle-header {
     color: var(--gold);
 }
 
-/* Responsividade Mobile (Telas até 992px) */
 @media (max-width: 992px) {
-    .menu-toggle {
-        display: block;
-        background: none;
-        border: none;
-        color: #bd9617;
-        font-size: 1.8rem;
-        cursor: pointer;
-    }
-
     .nav-links {
-        display: none; /* Esconde por padrão */
+        display: none; 
         flex-direction: column;
+        background: #0a192f; /* Cor do fundo do seu site */
+        
+        /* O segredo está aqui: */
         position: absolute;
-        top: 100%;
+        top: 100%; /* Isso faz ele começar exatamente onde o header termina */
         left: 0;
         width: 100%;
-        background: #0a192f;
-        padding: 20px;
-        border-top: 2px solid #bd9617;
-        z-index: 999;
+        
+        padding: 20px 0;
+        margin: 0;
+        border-bottom: 3px solid #bd9617;
+        box-shadow: 0 15px 25px rgba(0,0,0,0.6);
+        z-index: 9999;
     }
 
     .nav-links.active {
-        display: flex; /* Mostra ao clicar */
+        display: flex !important;
     }
 
-    .brand-identity {
-        flex-direction: column;
+    .nav-links li {
+        width: 100%;
         text-align: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 }
 
-/* Esconde o botão no Desktop */
-@media (min-width: 993px) {
-    .menu-toggle {
-        display: none;
-    }
+/* No seu style.css, localize ou adicione: */
+.site-header {
+    position: relative; /* Fundamental para o menu mobile não flutuar */
+    width: 100%;
+    z-index: 1000;
+}
+
+.header-stack {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
 }
