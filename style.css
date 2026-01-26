@@ -707,77 +707,27 @@ body.home-page .site-subtitle-header {
 }
 
 /* ==========================================================================
-   REPARO FINAL: DESKTOP POR CAMADAS E MOBILE LOGO/NOME/HAMBURGUER
+ /* ==========================================================================
+   CONFIGURAÇÃO DESKTOP UNIFICADA (CAMADAS + VISUAL)
    ========================================================================== */
-
-/* 1. BLINDAGEM DO DESKTOP (Telas > 992px) */
 @media (min-width: 993px) {
-    .menu-toggle { display: none !important; }
-
-    /* Força o Header a se comportar como uma pilha (Stack) vertical */
-    .site-header .container, .header-stack {
+    /* 1. ESTRUTURA EM CAMADAS */
+    .header-stack, .site-header .container {
         display: flex !important;
         flex-direction: column !important; 
         align-items: center !important;
-        width: 100% !important;
     }
 
-    /* CAMADA 1: Identidade (Logo/Nome) */
-    .brand-identity {
-        width: 100% !important;
-        justify-content: center !important;
-        margin-bottom: 20px !important;
-    }
-
-    /* CAMADA 2: Botão de Login na Direita */
+    /* Camada 2: Botão de Login na Direita */
     .client-access-row, .header-top-row {
-        display: flex !important;
-        width: 100% !important;
-        justify-content: flex-end !important; /* Manda o login para a direita */
-        margin-bottom: 15px !important;
-    }
-
-    /* CAMADA 3: Menu Centralizado */
-    .main-nav, .main-nav-row {
-        display: flex !important;
-        width: 100% !important;
-        justify-content: center !important; /* Centraliza o menu */
-        border-top: 1px solid rgba(189, 150, 23, 0.1);
-        padding-top: 10px;
-    }
-
-    /* Garante que o menu não flutue para os lados */
-    .menu {
-        display: flex !important;
-        justify-content: center !important;
-        width: auto !important;
-    }
-}
-
-/* ==========================================================================
-   REPARO DEFINITIVO: DESKTOP (LOGO > LOGIN > MENU) | MOBILE (LOGO E HAMB)
-   ========================================================================== */
-
-/* 1. CONFIGURAÇÃO DESKTOP */
-@media (min-width: 993px) {
-    .header-stack {
-        display: flex !important;
-        flex-direction: column !important; /* Cria as 3 camadas */
-        align-items: center !important;
-    }
-
-    .brand-identity { margin-bottom: 15px !important; }
-
-    /* Login na direita */
-    .client-access-row {
         width: 100% !important;
         display: flex !important;
         justify-content: flex-end !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 15px !important;
     }
 
-    /* Menu Centralizado */
-    .navbar {
+    /* Camada 3: Menu Centralizado */
+    .main-nav, .main-nav-row, .navbar {
         width: 100% !important;
         display: flex !important;
         justify-content: center !important;
@@ -785,15 +735,37 @@ body.home-page .site-subtitle-header {
         padding-top: 15px !important;
     }
 
-    .nav-links {
-        display: flex !important;
-        gap: 30px !important;
-        list-style: none;
+    /* 2. REMOVE O HAMBÚRGUER */
+    .menu-toggle { 
+        display: none !important; 
     }
 
-    .menu-toggle { display: none !important; }
-}
+    /* 3. ESTILO DOS BOTÕES (MAIÚSCULO, GRANDE E SEM SALTO) */
+    .menu-item a, 
+    .menu-item button.dropdown-toggle,
+    .nav-links a {
+        font-size: 17px !important;            /* Fonte maior */
+        text-transform: uppercase !important;  /* Tudo Maiúsculo */
+        letter-spacing: 1px !important;
+        padding: 12px 25px !important;         /* Botão encorpado */
+        border: 1px solid transparent !important; /* Borda invisível para evitar salto */
+        color: #ffffff !important;
+        text-decoration: none !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.3s ease !important;
+    }
 
+    /* 4. EFEITO DE COR NO HOVER */
+    .menu-item a:hover, 
+    .menu-item button.dropdown-toggle:hover,
+    .nav-links a:hover { 
+        color: #bd9617 !important; 
+        background: rgba(189, 150, 23, 0.1) !important; 
+        border-color: rgba(189, 150, 23, 0.5) !important; /* Apenas pinta a borda */
+        border-radius: 6px !important;
+    }
+}
 /* ==========================================================================
    REPARO DE QUEBRA EXCLUSIVO PARA MOBILE (SEM ALTERAR HTML)
    ========================================================================== */
