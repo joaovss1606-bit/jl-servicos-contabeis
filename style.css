@@ -840,12 +840,15 @@ body.home-page .site-subtitle-header {
         white-space: normal !important;
     }
 
-    /* Subtítulo centralizado */
+    /* Subtítulo totalmente centralizado */
     .site-subtitle-header {
         display: block !important;
+        width: 100% !important;         /* Ocupa a largura total para poder centralizar o texto */
+        text-align: center !important;   /* Centraliza o texto */
+        margin: 10px auto !important;    /* Garante margens iguais nas laterais */
         font-size: 0.85rem !important;
-        margin: 10px 0 !important;
-        width: 100% !important;
+        line-height: 1.4 !important;
+        white-space: normal !important;  /* Permite que ele quebre linha se o celular for muito pequeno */
     }
 
     /* 4. HAMBURGUER (Abaixo de tudo, na Direita) */
