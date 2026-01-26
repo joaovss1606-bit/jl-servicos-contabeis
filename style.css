@@ -1,27 +1,55 @@
 /* ==========================================================================
-   RESET E BASE GLOBAL
+   1. RESET, BASE E SEGURANÇA (ESTRUTURA)
    ========================================================================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Montserrat', sans-serif; background: #0b1c2d; color: #ffffff; line-height: 1.6; }
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden; /* O segredo para parar a rolagem lateral */
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+    background: #0b1c2d;
+    color: #ffffff;
+    line-height: 1.6;
+}
+
 .container { width: 90%; max-width: 1200px; margin: auto; }
 
 /* ==========================================================================
-   HEADER GLOBAL (Padronizado para Compra, Blog, Serviços)
+   2. HEADER E IDENTIDADE (DESKTOP)
    ========================================================================== */
 .site-header { 
     padding: 20px 0; 
     background: #0b1c2d; 
     border-bottom: 1px solid rgba(189, 150, 23, 0.1);
+    position: relative;
+    width: 100%;
+    z-index: 1000;
 }
 
-.header-content {
+.header-stack {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
+    padding: 10px 20px;
 }
 
-/* O título fica menor e elegante em todas as páginas internas */
+.brand-identity {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 1;
+}
+
+.site-logo-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #bd9617;
+    transition: 0.3s;
+}
+
 .site-title-header {
     font-family: 'Playfair Display', serif !important;
     font-size: 1.8rem !important; 
@@ -32,713 +60,82 @@ body { font-family: 'Montserrat', sans-serif; background: #0b1c2d; color: #fffff
     margin: 0;
 }
 
-/* ESCONDE A LOGO E O SUBTÍTULO POR PADRÃO */
-.site-logo-circle, 
-.site-subtitle-header { 
-    display: none !important; 
-}
-
-/* ==========================================================================
-   VISUAL EXCLUSIVO DA HOME (Ajustado para sua estrutura HTML)
-   ========================================================================== */
-
-/* Removemos o flex do header-content para deixar a brand-identity mandar */
-body.home-page .header-content {
-    display: block !important;
-}
-
-/* É aqui que a mágica do "lado a lado" acontece */
-body.home-page .brand-identity {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 30px;
-}
-
-/* Formatação da Logo */
-body.home-page .site-logo-circle {
-    display: block !important;
-    width: 150px !important;
-    height: 150px !important;
-    border-radius: 50% !important;
-    border: 4px solid #bd9617 !important;
-    margin: 0 !important;
-    flex-shrink: 0;
-}
-
-/* Organiza o Texto (Título e Subtítulo) um sobre o outro */
-body.home-page .brand-text {
-    display: flex !important;
-    flex-direction: column !important;
-    text-align: left !important;
-}
-
-body.home-page .site-title-header {
-    font-size: 3.8rem !important;
-    font-weight: 900;
-    line-height: 1.1;
-    margin: 0 !important;
-}
-
-body.home-page .site-subtitle-header {
-    display: block !important;
-    font-size: 1.2rem;
-    margin-top: 5px !important;
-}
-/* ==========================================================================
-   MENU E NAVEGAÇÃO
-   ========================================================================== */
-.menu { 
-    display: flex !important; 
-    justify-content: center !important; 
-    align-items: stretch !important;
-    list-style: none !important; 
-    padding: 0 !important; 
-    margin: 0 !important;
-}
-
-.menu-item { 
-    display: flex !important; 
-    align-items: center !important; 
-}
-
-.menu-item a, 
-.menu-item button.dropdown-toggle {
-    background: transparent !important;
-    border: 1px solid transparent !important; /* Borda invisível para evitar que o botão "pule" no hover */
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 15px !important; 
-    font-weight: 600 !important;
-    color: #ffffff !important;
-    text-transform: uppercase !important;
-    text-decoration: none !important;
-    letter-spacing: 1px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    height: 45px !important; /* Reduzi um pouco a altura para o quadrado ficar mais proporcional */
-    padding: 0 20px !important; 
-    transition: all 0.3s ease !important;
-    border-radius: 4px !important; /* Define o formato do quadrado de seleção */
-}
-
-/* Efeito de Seleção: Fundo escurecido, borda dourada e letra dourada */
-.menu-item a:hover, 
-.menu-item button.dropdown-toggle:hover { 
-    color: #bd9617 !important; 
-    background: rgba(189, 150, 23, 0.1) !important; /* Fundo levemente dourado/escuro */
-    border: 1px solid rgba(189, 150, 23, 0.5) !important; /* Borda do quadrado */
-}
-
-.menu-item.dropdown { 
-    position: relative !important; 
-    display: flex !important;
-    align-items: center !important;
-}
-
-.dropdown-menu {
-    position: absolute !important;
-    top: 100% !important; 
-    left: 0 !important;
-    width: 260px !important;
-    background: #0e2a47 !important; 
-    border: 1px solid #bd9617 !important;
-    list-style: none !important;
-    padding: 10px 0 !important;
-    z-index: 9999 !important;
-    display: none !important;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.5) !important;
-}
-
-.menu-item:hover .dropdown-menu { display: block !important; }
-
-.dropdown-menu li a {
-    display: block !important;
-    padding: 12px 20px !important;
-    font-size: 14px !important;
-    text-transform: none !important;
-    text-align: left !important;
-    height: auto !important; 
-    color: #ffffff !important;
-}
-
-.dropdown-menu li a:hover {
-    background: #bd9617 !important;
-    color: #0b1c2d !important;
-}
-
-/* ==========================================================================
-   DESIGN DO CATÁLOGO DE SERVIÇOS (CARDS PROFISSIONAIS)
-   ========================================================================== */
-.pf-section { margin-bottom: 50px; }
-
-.pf-section h2 {
-    color: #bd9617 !important;
-    border-left: 5px solid #bd9617;
-    padding-left: 15px;
-    margin-bottom: 25px;
-    text-align: left;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-/* O Card que substitui o link azul */
-.service-card {
-    background: linear-gradient(145deg, #0e2a47, #0b1c2d) !important;
-    border: 1px solid rgba(189, 150, 23, 0.2) !important;
-    border-radius: 12px !important;
-    padding: 30px !important;
-    text-decoration: none !important; /* REMOVE O AZUL */
-    display: flex !important;
-    flex-direction: column !important;
-    transition: all 0.4s ease !important;
-}
-
-.service-card:hover {
-    transform: translateY(-8px) !important;
-    border-color: #bd9617 !important;
-    box-shadow: 0 12px 25px rgba(0,0,0,0.4) !important;
-}
-
-.service-title {
-    font-family: 'Montserrat', sans-serif !important;
-    font-weight: 700 !important;
-    font-size: 1.1rem !important;
-    color: #ffffff !important;
-    margin-bottom: 8px !important;
-    display: block !important;
-}
-
-.service-price {
-    font-family: 'Montserrat', sans-serif !important;
-    color: #bd9617 !important; /* DOURADO */
-    font-weight: 800 !important;
-    font-size: 1.4rem !important;
-    display: block !important;
-}
-
-.service-card span:last-child {
-    margin-top: 15px;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.5);
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-/* ==========================================================================
-   BLOG E FOOTER
-   ========================================================================== */
-.blog-home { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
-.blog-highlight { background: #0e2a47; border-radius: 12px; overflow: hidden; border: 1px solid rgba(189, 150, 23, 0.1); transition: 0.3s; }
-.blog-highlight:hover { transform: translateY(-5px); border-color: #bd9617; }
-.blog-highlight img { width: 100%; height: 200px; object-fit: cover; }
-.blog-content { padding: 20px; }
-
-.site-footer { background: #050c16; border-top: 2px solid #bd9617; padding: 60px 0 30px; margin-top: 80px; }
-.footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
-.footer-col h3, .footer-col h4 { color: #bd9617; margin-bottom: 20px; }
-
-.btn-whatsapp-footer {
-    display: flex; align-items: center; justify-content: center;
-    background: #25D366 !important; color: #000 !important;
-    padding: 15px 25px; border-radius: 8px; font-weight: 800; text-decoration: none;
-    text-transform: uppercase;
-}
-
-.footer-email {
-    margin-top: 15px; display: block; background: rgba(189, 150, 23, 0.1);
-    border: 1px solid #bd9617; padding: 12px; border-radius: 5px; text-align: center;
-    color: #bd9617 !important; font-weight: 700;
-}
-
-.footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; }
-
-/* ==========================================================================
-   RESPONSIVIDADE (MOBILE)
-   ========================================================================== */
-@media (max-width: 768px) {
-    .brand-identity { flex-direction: column; text-align: center; }
-    .brand-text { text-align: center; }
-    .site-logo-circle { width: 120px !important; height: 120px !important; }
-    .site-title-header { font-size: 2.2rem !important; }
-    .menu { flex-direction: column; display: none !important; } /* Escondido até o toggle */
-    .menu.open { display: flex !important; }
-    
-    .menu-item.dropdown.active .dropdown-menu {
-        display: block !important;
-        position: static !important;
-        width: 100% !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-    }
-}
-/* PADRONIZAÇÃO DO BREADCRUMB */
-.breadcrumb, .breadcrumb-custom {
-    padding: 20px 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    color: #bd9617; /* Cor do separador / e links */
-}
-
-.breadcrumb a, .breadcrumb-custom a {
-    color: #bd9617;
-    text-decoration: none;
-    font-weight: 600;
-    transition: opacity 0.3s;
-}
-
-.breadcrumb a:hover, .breadcrumb-custom a:hover {
-    opacity: 0.7;
-}
-
-/* Cor da página atual (sempre a última) */
-.breadcrumb strong, .breadcrumb span.current, .breadcrumb-custom strong {
-    color: #ffffff !important;
-    font-weight: 700;
-    margin-left: 5px;
-}
-
-/* Espaçamento dos separadores */
-.breadcrumb span, .breadcrumb-custom span {
-    margin: 0 8px;
-    color: #bd9617;
-}
-/* CORREÇÃO GLOBAL DO RODAPÉ */
-.site-footer {
-    background-color: #0b1c2d; /* Garante o fundo escuro padrão */
-    color: #ffffff;
-    padding: 60px 0 30px;
-}
-
-/* Remove o azul de todos os links do rodapé */
-.site-footer a {
-    color: #cccccc !important; /* Cinza claro para não cansar a vista */
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-/* Cor ao passar o mouse (Hover) */
-.site-footer a:hover {
-    color: #bd9617 !important; /* Dourado no hover */
-    text-decoration: none;
-}
-
-/* Estilo específico para os títulos do rodapé */
-.site-footer h3, 
-.site-footer h4 {
-    color: #bd9617;
-    margin-bottom: 20px;
-    font-family: 'Playfair Display', serif;
-}
-
-/* Garante que o botão do WhatsApp não mude de cor */
-.btn-whatsapp-footer {
-    background-color: #25D366 !important;
-    color: #ffffff !important;
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: inline-block;
-    font-weight: 700;
-    margin-bottom: 15px;
-}
-
-.btn-whatsapp-footer:hover {
-    filter: brightness(1.1);
-    transform: translateY(-2px);
-}
-
-/* Ajuste do e-mail no rodapé */
-.footer-email {
-    color: #bd9617 !important;
-    font-weight: 600;
-    display: block;
-    margin-top: 10px;
-}
-/* Correção de Contraste nos botões do topo */
-.menu-item a:hover {
-    color: #bd9617 !important; /* Força o Dourado no Início/Blog */
-    background: rgba(255,255,255,0.05) !important;
-}
-
-/* Garante contraste nos links simples do cabeçalho de compra */
-.category-header a {
-    color: #ffffff !important;
-    transition: 0.3s !important;
-}
-
-.category-header a:hover {
-    color: #bd9617 !important;
-}
-.btn-area-cliente {
-    border: 1px solid #bd9617;
-    color: #bd9617 !important;
-    padding: 8px 18px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-area-cliente:hover {
-    background: #bd9617;
-    color: #fff !important;
-}
-
-/* Remove qualquer estilo de lista do item do botão */
-.menu .menu-item {
-    list-style: none;
-    display: inline-block; /* Mantém um ao lado do outro */
-    vertical-align: middle;
-}
-
-/* Garante que o ícone e o texto fiquem alinhados */
-.btn-area-cliente {
-    display: inline-flex !important;
-    align-items: center;
-    text-transform: none; /* Evita que o botão fique todo em maiúsculo se o menu for */
-}
-/* Garante que a lista ocupe a largura total e alinhe os itens */
-.menu {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.menu-item {
-    margin: 0 15px; /* Espaço entre os botões */
-}
-
-/* Isso empurra o ÚLTIMO item (Área do Cliente) para a direita */
-.menu-item:last-child {
-    margin-left: auto; 
-}
-
-/* Estilo do botão para ele não parecer um link comum */
-.btn-area-cliente {
-    border: 1px solid #bd9617;
-    padding: 8px 18px;
-    border-radius: 5px;
-    color: #bd9617 !important;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.3s;
-}
-
-.btn-area-cliente:hover {
-    background: #bd9617;
-    color: white !important;
-}
-/* Container do Header para garantir que as camadas fiquem uma sobre a outra */
-.main-header .container {
-    display: flex;
-    flex-direction: column; /* Faz as camadas ficarem em pilhas */
-    gap: 15px; /* Espaço entre a linha de cima e a de baixo */
-    padding: 10px 0;
-}
-
-/* Camada Superior: Alinha o botão à direita */
-.header-top {
-    display: flex;
-    justify-content: flex-end; /* Empurra tudo para a direita */
-    width: 100%;
-}
-
-/* Camada Inferior: Centraliza o Menu */
-.main-nav {
-    display: flex;
-    justify-content: center; /* Centraliza os itens do menu */
-    width: 100%;
-}
-
-.menu {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 30px; /* Espaço entre os links do menu */
-}
-
-/* Estilo do Botão Área do Cliente (ajustado para ser mais discreto no topo) */
-.btn-area-cliente {
-    border: 1px solid #bd9617;
-    color: #bd9617 !important;
-    padding: 5px 15px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.3s;
-}
-
-.btn-area-cliente:hover {
-    background: #bd9617;
-    color: white !important;
-}
-
-/* Container principal do header */
-.site-header .container {
-    display: flex;
-    flex-direction: column; /* Faz as linhas empilharem */
-    gap: 20px;
-    padding: 20px 0;
-}
-
-/* Linha de cima: Logo na esquerda e Botão na direita */
-.header-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-/* Linha de baixo: Menu totalmente centralizado */
-.main-nav-row {
-    display: flex;
-    justify-content: center; /* Aqui acontece a mágica da centralização */
-    border-top: 1px solid rgba(189, 150, 23, 0.2); /* Linha divisória sutil */
-    padding-top: 15px;
-}
-
-.menu {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 40px; /* Espaço generoso entre os links */
-}
-
-.menu-item a {
-    text-decoration: none;
-    font-weight: 600;
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    transition: 0.3s;
-}
-
-.menu-item a:hover {
-    color: #bd9617;
-}
-
-/* Ajuste do Botão de Login para ficar no topo */
-.btn-area-cliente {
-    border: 1px solid #bd9617;
-    padding: 8px 16px;
-    border-radius: 5px;
-    color: #bd9617 !important;
-    font-size: 0.85rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.header-top-row {
-    display: flex;
-    justify-content: flex-end; /* Isso joga o botão para a ponta direita */
-    align-items: center;
-    width: 100%;
-}
-/* Organiza o cabeçalho em camadas (pilha) */
-.header-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Espaçamento entre as 3 linhas */
-    padding: 20px 0;
-}
-
-/* Identidade visual (pode manter o alinhamento atual ou deixar na esquerda) */
-.brand-identity {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* Linha do Botão: Joga para a direita */
-.client-access-row {
-    display: flex;
-    justify-content: flex-end; /* Alinha à direita */
-    width: 100%;
-}
-
-/* Linha do Menu: Centraliza tudo */
-.main-nav {
-    display: flex;
-    justify-content: center; /* Centraliza o menu principal */
-    border-top: 1px solid rgba(189, 150, 23, 0.1); /* Divisória opcional */
-    padding-top: 10px;
-}
-
-.menu {
-    display: flex;
-    list-style: none;
-    gap: 30px;
-}
-
-/* Estilo do Botão Área do Cliente */
-.btn-area-cliente {
-    border: 1px solid #bd9617;
-    padding: 6px 14px;
-    border-radius: 4px;
-    color: #bd9617 !important;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-/* Ajuste Geral Header */
-.header-stack {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-}
-
-/* Estilo do Menu Desktop */
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 20px;
-    align-items: center;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.nav-links a:hover {
-    color: var(--gold);
-}
-
-@media (max-width: 992px) {
-    .nav-links {
-        display: none; 
-        flex-direction: column;
-        background: #0a192f; /* Cor do fundo do seu site */
-        
-        /* O segredo está aqui: */
-        position: absolute;
-        top: 100%; /* Isso faz ele começar exatamente onde o header termina */
-        left: 0;
-        width: 100%;
-        
-        padding: 20px 0;
-        margin: 0;
-        border-bottom: 3px solid #bd9617;
-        box-shadow: 0 15px 25px rgba(0,0,0,0.6);
-        z-index: 9999;
-    }
-
-    .nav-links.active {
-        display: flex !important;
-    }
-
-    .nav-links li {
-        width: 100%;
-        text-align: center;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-}
-
-/* No seu style.css, localize ou adicione: */
-.site-header {
-    position: relative; /* Fundamental para o menu mobile não flutuar */
-    width: 100%;
-    z-index: 1000;
-}
-
-.header-stack {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-}
-/* Ajuste Geral da Identidade (Logo + Texto) */
-.brand-identity {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-shrink: 1; /* Permite que diminua se necessário */
-}
-
-.site-logo-circle {
-    width: 60px; /* Tamanho padrão no PC */
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--gold);
-    transition: 0.3s;
-}
-
-.site-title-header {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem; /* Tamanho padrão no PC */
-    margin: 0;
-    color: var(--gold);
-}
-
 .site-subtitle-header {
-    font-family: 'Montserrat', sans-serif;
     font-size: 0.85rem;
-    margin: 0;
     opacity: 0.8;
 }
 
-/* --- AJUSTES PARA CELULAR (Mobile) --- */
-@media (max-width: 768px) {
-    .header-stack {
-        padding: 10px 15px;
-        gap: 10px;
+/* VISUAL EXCLUSIVO HOME (DESKTOP) */
+body.home-page .brand-identity { gap: 30px; }
+body.home-page .site-logo-circle { width: 150px !important; height: 150px !important; border: 4px solid #bd9617 !important; display: block !important; }
+body.home-page .site-title-header { font-size: 3.8rem !important; font-weight: 900; }
+body.home-page .site-subtitle-header { display: block !important; font-size: 1.2rem; }
+
+/* ==========================================================================
+   3. MENU E NAVEGAÇÃO (DESKTOP)
+   ========================================================================== */
+.nav-links { display: flex; list-style: none; gap: 20px; align-items: center; }
+.nav-links a { color: white; text-decoration: none; font-weight: 600; transition: 0.3s; }
+.nav-links a:hover { color: #bd9617; }
+
+.btn-area-cliente {
+    border: 1px solid #bd9617;
+    padding: 8px 18px;
+    border-radius: 5px;
+    color: #bd9617 !important;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+.btn-area-cliente:hover { background: #bd9617; color: white !important; }
+
+/* Esconde o botão hamburguer no PC */
+.menu-toggle { display: none; background: none; border: none; color: #bd9617; font-size: 1.8rem; cursor: pointer; }
+
+/* ==========================================================================
+   4. COMPONENTES (SERVIÇOS E BLOG)
+   ========================================================================== */
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.blog-home { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+.blog-highlight img { width: 100%; height: 200px; object-fit: cover; }
+
+/* ==========================================================================
+   5. RESPONSIVIDADE (SÓ AFETA MOBILE)
+   ========================================================================== */
+@media (max-width: 992px) {
+    .menu-toggle { display: block; }
+
+    /* Menu vira cortina */
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: #0b1c2d;
+        padding: 20px 0;
+        border-bottom: 3px solid #bd9617;
+        z-index: 9999;
     }
 
-    .brand-identity {
-        gap: 10px; /* Reduz espaço entre logo e texto */
-    }
+    .nav-links.active { display: flex !important; }
+    .nav-links li { width: 100%; text-align: center; padding: 12px 0; }
 
-    .site-logo-circle {
-        width: 45px; /* Logo menor no celular */
-        height: 45px;
-    }
-
-    .site-title-header {
-        font-size: 1.1rem; /* Título menor para não quebrar linha */
-        line-height: 1.2;
-    }
-
-    .site-subtitle-header {
-        font-size: 0.7rem; /* Subtítulo menor */
-        display: block; /* Garante que fique embaixo do título */
-    }
+    /* Ajuste de Identidade Mobile */
+    body.home-page .brand-identity { flex-direction: column !important; text-align: center; gap: 15px; }
+    body.home-page .brand-text { text-align: center !important; }
+    body.home-page .site-logo-circle { width: 120px !important; height: 120px !important; }
+    body.home-page .site-title-header { font-size: 2.2rem !important; }
+    
+    /* Header Interno Mobile */
+    .site-logo-circle { width: 45px !important; height: 45px !important; }
+    .site-title-header { font-size: 1.1rem !important; }
 }
 
-/* Para telas muito pequenas (iPhone SE, etc) */
 @media (max-width: 400px) {
-    .site-title-header {
-        font-size: 0.95rem;
-    }
-    .site-subtitle-header {
-        display: none; /* Esconde o subtítulo em telas minúsculas para priorizar o nome */
-    }
+    .site-title-header { font-size: 0.95rem !important; }
+    .site-subtitle-header { display: none !important; }
 }
