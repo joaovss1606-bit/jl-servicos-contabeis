@@ -755,111 +755,86 @@ body.home-page .site-subtitle-header {
 }
 
 /* ==========================================================================
-   SUBSTITUIÇÃO FINAL: FOCO EM CAMADAS (PC) E LINHA ÚNICA (MOBILE)
+   REPARO DEFINITIVO: DESKTOP (LOGO > LOGIN > MENU) | MOBILE (LOGO E HAMB)
    ========================================================================== */
 
-/* 1. DESKTOP (Acima de 992px) */
+/* 1. CONFIGURAÇÃO DESKTOP */
 @media (min-width: 993px) {
-    .menu-toggle { display: none !important; }
-
-    /* FORÇA O EMPILHAMENTO: Logo (top) -> Login (mid) -> Menu (bottom) */
-    .header-stack, .site-header .container {
+    .header-stack {
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: column !important; /* Cria as 3 camadas */
         align-items: center !important;
-        width: 100% !important;
     }
 
-    /* CAMADA 1: Identidade Centralizada */
-    .brand-identity {
-        width: 100% !important;
-        justify-content: center !important;
-        margin-bottom: 15px !important;
-        display: flex !important;
-    }
+    .brand-identity { margin-bottom: 15px !important; }
 
-    /* CAMADA 2: Login na Direita */
-    .client-access-row, .header-top-row {
+    /* Login na direita */
+    .client-access-row {
         width: 100% !important;
         display: flex !important;
-        justify-content: flex-end !important; /* BOTÃO NA DIREITA */
-        padding-right: 20px !important;
+        justify-content: flex-end !important;
         margin-bottom: 10px !important;
     }
 
-    /* CAMADA 3: Menu Centralizado */
-    .main-nav, .main-nav-row {
+    /* Menu Centralizado */
+    .navbar {
         width: 100% !important;
         display: flex !important;
-        justify-content: center !important; /* MENU CENTRALIZADO */
-        border-top: 1px solid rgba(189, 150, 23, 0.1) !important;
+        justify-content: center !important;
+        border-top: 1px solid rgba(189, 150, 23, 0.1);
         padding-top: 15px !important;
     }
 
-    .menu {
+    .nav-links {
         display: flex !important;
         gap: 30px !important;
+        list-style: none;
     }
+
+    .menu-toggle { display: none !important; }
 }
 
-/* 2. MOBILE (Abaixo de 992px) */
+/* 2. CONFIGURAÇÃO MOBILE */
 @media (max-width: 992px) {
-    /* Impede que o nome empurre o hambúrguer para fora */
-    .header-stack, .site-header .container {
+    .header-stack {
         display: flex !important;
-        flex-direction: row !important;
+        flex-direction: row !important; /* Lado a lado no celular */
         justify-content: space-between !important;
         align-items: center !important;
-        flex-wrap: nowrap !important; /* PROIBIDO QUEBRAR LINHA */
-        padding: 10px !important;
-        width: 100% !important;
+        padding: 10px 15px !important;
     }
 
     .brand-identity {
         display: flex !important;
         align-items: center !important;
-        max-width: 75% !important; /* Limita o espaço do nome */
-        gap: 8px !important;
+        max-width: 70% !important;
     }
 
-    .site-logo-circle { width: 35px !important; height: 35px !important; flex-shrink: 0 !important; }
+    .site-logo-circle { width: 45px !important; height: 45px !important; }
+    .site-title-header { font-size: 1rem !important; white-space: nowrap !important; }
+    .site-subtitle-header { display: none !important; }
 
-    /* CORREÇÃO DO NOME CORTADO */
-    .site-title-header { 
-        font-size: 0.9rem !important; 
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important; /* Se não couber, ele põe ... em vez de quebrar o layout */
-    }
-
-    /* GARANTE QUE O HAMBURGUER APAREÇA */
+    /* No Mobile, o Login "entra" no menu ou some para dar espaço ao hambúrguer */
+    .btn-area-cliente { display: none !important; } 
+    
     .menu-toggle {
         display: block !important;
         color: #bd9617 !important;
-        font-size: 22px !important;
+        font-size: 1.8rem !important;
         background: none !important;
         border: none !important;
-        flex-shrink: 0 !important;
-        z-index: 9999 !important;
     }
 
-    /* MENU MOBILE (ESCONDIDO) */
-    .menu, .nav-links {
-        display: none !important;
+    .nav-links {
+        display: none; /* O seu JS vai controlar o .active aqui */
+        flex-direction: column !important;
         position: absolute !important;
         top: 100% !important;
         left: 0 !important;
         width: 100% !important;
         background: #0b1c2d !important;
-        flex-direction: column !important;
-        padding: 20px 0 !important;
-        border-bottom: 2px solid #bd9617 !important;
+        z-index: 999 !important;
     }
-
-    .menu.open, .menu.active { display: flex !important; }
-}
-
-/* 3. GRIDS */
-@media (max-width: 768px) {
-    .services-grid, .blog-home, .footer-container { grid-template-columns: 1fr !important; }
+    
+    .nav-links.active { display: flex !important; }
 }
