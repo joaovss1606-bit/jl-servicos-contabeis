@@ -851,18 +851,17 @@ body.home-page .site-subtitle-header {
 }
     }
 
-    /* 4. HAMBURGUER (Abaixo de tudo, na Direita) */
-   .client-access-row {
+  /* 4. HAMBURGUER (Abaixo de tudo, na Direita) */
+    .client-access-row {
         width: 100% !important;
         display: flex !important;
-        flex-direction: row-reverse !important; /* Inverte a ordem dos itens */
-        justify-content: space-between !important; /* Afasta um para cada ponta */
+        flex-direction: row-reverse !important;
+        justify-content: space-between !important;
         align-items: center !important;
         padding: 0 15px !important;
         margin-top: 15px !important;
     }
 
-    /* Garante que o Login apareça novamente no mobile */
     .btn-area-cliente { 
         display: flex !important; 
         font-size: 0.75rem !important;
@@ -870,29 +869,34 @@ body.home-page .site-subtitle-header {
     }
 
     .menu-toggle {
-        display: block !important;
-        color: #bd9617 !important;
-        font-size: 2.2rem !important;
-        background: none !important;
-        border: none !important;
-        order: 2; /* Garante que ele se comporte como o item da "esquerda" na inversão */
+        display: flex !important; /* Mudado de block para flex para centralizar as linhas */
+        align-items: center !important;
+        justify-content: center !important;
+        background: transparent !important;   /* Fundo removido */
+        color: #bd9617 !important;            /* Linhas douradas */
+        border: 2px solid #bd9617 !important; /* Quadrado dourado */
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 1.5rem !important;
+        border-radius: 4px !important;
+        order: 2;
     }
-}
-/* Esconde o hambúrguer em telas grandes (Desktop) */
+} /* <--- ESSA CHAVE FECHA O @MEDIA MAX-WIDTH 992PX E É O QUE IMPEDE O VAZAMENTO */
+
+/* ESCONDE O HAMBURGUER NO DESKTOP E RESTAURA O CONTRASTE BONITO */
 @media (min-width: 993px) {
     .menu-toggle {
         display: none !important;
     }
-}
-/* ==========================================================================
-   RESTAURAÇÃO DO CONTRASTE NO HOVER DO MENU (DESKTOP)
-   ========================================================================== */
-@media (min-width: 993px) {
+
+    /* Restaura o contraste de fundo e borda no hover */
     .menu-item a:hover, 
-    .menu-item button.dropdown-toggle:hover { 
+    .menu-item button.dropdown-toggle:hover,
+    .nav-links a:hover { 
         color: #bd9617 !important; 
-        background: rgba(189, 150, 23, 0.1) !important; /* O fundo suave */
-        border: 1px solid rgba(189, 150, 23, 0.5) !important; /* A borda que dá o destaque */
+        background: rgba(189, 150, 23, 0.1) !important; 
+        border: 1px solid rgba(189, 150, 23, 0.5) !important;
         border-radius: 4px !important;
+        padding: 10px 20px !important; /* Mantém o preenchimento para o fundo aparecer */
     }
 }
