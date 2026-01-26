@@ -31,7 +31,7 @@ if (loginForm) {
             // REDIRECIONAMENTO ESTRATÉGICO
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
                 // Se você estiver na raiz, esse caminho está correto:
-                window.location.href = 'servicos/area_do_cliente/admin.html';
+                window.location.href = 'admin.html';
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servicoEscolhido = urlParams.get('servico');
