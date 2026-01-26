@@ -878,3 +878,9 @@ body.home-page .site-subtitle-header {
         order: 2; /* Garante que ele se comporte como o item da "esquerda" na inversão */
     }
 }
+/* Esconde o hambúrguer em telas grandes (Desktop) */
+@media (min-width: 993px) {
+    .menu-toggle {
+        display: none !important;
+    }
+}
