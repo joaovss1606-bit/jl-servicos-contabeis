@@ -884,3 +884,15 @@ body.home-page .site-subtitle-header {
         display: none !important;
     }
 }
+/* ==========================================================================
+   RESTAURAÇÃO DO CONTRASTE NO HOVER DO MENU (DESKTOP)
+   ========================================================================== */
+@media (min-width: 993px) {
+    .menu-item a:hover, 
+    .menu-item button.dropdown-toggle:hover { 
+        color: #bd9617 !important; 
+        background: rgba(189, 150, 23, 0.1) !important; /* O fundo suave */
+        border: 1px solid rgba(189, 150, 23, 0.5) !important; /* A borda que dá o destaque */
+        border-radius: 4px !important;
+    }
+}
