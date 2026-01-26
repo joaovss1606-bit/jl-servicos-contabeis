@@ -19,7 +19,7 @@ if (loginForm) {
         if (error) {
             alert("Erro no login: " + error.message);
         } else {
-            // Especialista: Primeiro buscamos a ROLE no profile para não depender só do e-mail
+            // Buscamos a ROLE para garantir que o Admin sempre vá para o lugar certo
             const { data: profile } = await supabaseClient
                 .from('profiles')
                 .select('role')
@@ -28,14 +28,14 @@ if (loginForm) {
 
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
 
-            // Se for Admin (pela role ou pelo email)
+            // REDIRECIONAMENTO ESTRATÉGICO
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
+                // Se você estiver na raiz, esse caminho está correto:
                 window.location.href = 'servicos/area_do_cliente/admin.html';
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servicoEscolhido = urlParams.get('servico');
                 
-                // Se o login for feito na raiz, o caminho precisa ser completo
                 const basePath = 'servicos/area_do_cliente/dashboard.html';
                 window.location.href = servicoEscolhido 
                     ? `${basePath}?contratar=${servicoEscolhido}` 
@@ -45,36 +45,37 @@ if (loginForm) {
     });
 }
 
-// --- FUNÇÕES DE APOIO PARA O DASHBOARD ---
+// --- FUNÇÕES DE APOIO (PARA USO NO DASHBOARD) ---
 
 async function checkUser() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) {
-        window.location.href = '../../index.html'; // Volta para a raiz
+        // Se estiver dentro de /area_do_cliente/, precisa de ../../ para voltar
+        window.location.href = '../../index.html'; 
         return null;
     }
     return user;
 }
 
 async function getProfileName(userId) {
-    const { data } = await supabaseClient
-        .from('profiles')
-        .select('nome')
-        .eq('id', userId)
-        .single();
-    return data ? data.nome : null;
+    try {
+        const { data } = await supabaseClient
+            .from('profiles')
+            .select('nome')
+            .eq('id', userId)
+            .single();
+        return data ? data.nome : null;
+    } catch (e) { return null; }
 }
 
-// 3. Atualizado para a nova estrutura 'assinaturas' e 'cliente_id'
 async function getUltimaAssinatura(userId) {
     const { data } = await supabaseClient
-        .from('assinaturas') // Corrigido nome da tabela
+        .from('assinaturas')
         .select('*')
-        .eq('cliente_id', userId) // Corrigido nome da coluna
+        .eq('cliente_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
-        .maybeSingle(); // maybeSingle evita erro caso o cliente não tenha assinaturas
-    
+        .maybeSingle();
     return data;
 }
 
