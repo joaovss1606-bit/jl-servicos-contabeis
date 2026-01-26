@@ -795,77 +795,47 @@ body.home-page .site-subtitle-header {
 }
 
 /* ==========================================================================
-   REPARO: QUEBRA DE TEXTO MOBILE E ALINHAMENTO DO HAMBÚRGUER
+   REPARO DE QUEBRA EXCLUSIVO PARA MOBILE (SEM ALTERAR HTML)
    ========================================================================== */
 
-/* Mantemos sua regra de Desktop que já funcionou */
-@media (min-width: 993px) {
-    .header-stack { display: flex !important; flex-direction: column !important; align-items: center !important; }
-    .client-access-row { width: 100% !important; display: flex !important; justify-content: flex-end !important; }
-    .navbar { width: 100% !important; display: flex !important; justify-content: center !important; border-top: 1px solid rgba(189, 150, 23, 0.1); padding-top: 15px !important; }
-    .nav-links { display: flex !important; gap: 30px !important; list-style: none; }
-    .menu-toggle { display: none !important; }
-}
-
-/* AJUSTE MOBILE CRÍTICO */
 @media (max-width: 992px) {
-    /* Remove a rolagem lateral de vez */
-    html, body { overflow-x: hidden !important; width: 100% !important; }
-
     .header-stack {
         display: flex !important;
-        flex-direction: column !important; /* Faz a escada: Logo > Nome > Atendimento > Hamburguer */
+        flex-direction: column !important;
         align-items: center !important;
         text-align: center !important;
-        padding: 15px !important;
     }
 
-    .site-logo-circle { width: 60px !important; height: 60px !important; margin-bottom: 10px !important; }
-
+    /* O SEGREDO: Forçar a quebra por palavra no Mobile */
     .site-title-header {
-        font-size: 1.5rem !important;
-        white-space: normal !important; /* Permite a quebra de linha */
-        display: block !important;
+        font-size: 1.4rem !important;
         line-height: 1.2 !important;
+        display: block !important;
+        max-width: 200px !important; /* Força o texto a "dobrar" por falta de espaço lateral */
+        margin: 0 auto !important;
+        white-space: normal !important;
+        word-spacing: 100vw !important; /* Truque: força cada palavra a pular de linha */
     }
-
-    .site-title-header span { display: block !important; } /* Força "Contábeis" para baixo */
 
     .site-subtitle-header {
         display: block !important;
-        font-size: 0.9rem !important;
-        margin-top: 5px !important;
-        margin-bottom: 15px !important;
+        font-size: 0.85rem !important;
+        margin-top: 10px !important;
+        max-width: 250px !important; /* Também quebra o subtítulo se necessário */
     }
 
-    /* Posiciona o hamburguer abaixo, à direita */
+    /* Hambúrguer na direita no final da escada */
     .client-access-row {
         width: 100% !important;
         display: flex !important;
-        justify-content: flex-end !important; /* Alinha o botão na direita */
+        justify-content: flex-end !important;
+        padding-right: 15px !important;
+        margin-top: 10px !important;
     }
-
-    .btn-area-cliente { display: none !important; } /* Esconde o botão de login no topo mobile */
 
     .menu-toggle {
         display: block !important;
+        font-size: 2.2rem !important;
         color: #bd9617 !important;
-        font-size: 2rem !important;
-        background: none !important;
-        border: none !important;
-        padding: 10px !important;
     }
-
-    /* Menu Cortina */
-    .nav-links {
-        display: none;
-        flex-direction: column !important;
-        width: 100% !important;
-        background: #0b1c2d !important;
-        padding: 0 !important;
-        margin-top: 10px !important;
-    }
-    .nav-links.active { display: flex !important; }
-    .nav-links li { border-top: 1px solid rgba(189, 150, 23, 0.1); width: 100%; }
-    .nav-links li a { padding: 15px !important; display: block !important; }
 }
