@@ -794,50 +794,6 @@ body.home-page .site-subtitle-header {
     .menu-toggle { display: none !important; }
 }
 
-/* 2. CONFIGURAÇÃO MOBILE */
-@media (max-width: 992px) {
-    .header-stack {
-        display: flex !important;
-        flex-direction: row !important; /* Lado a lado no celular */
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 10px 15px !important;
-    }
-
-    .brand-identity {
-        display: flex !important;
-        align-items: center !important;
-        max-width: 70% !important;
-    }
-
-    .site-logo-circle { width: 45px !important; height: 45px !important; }
-    .site-title-header { font-size: 1rem !important; white-space: nowrap !important; }
-    .site-subtitle-header { display: none !important; }
-
-    /* No Mobile, o Login "entra" no menu ou some para dar espaço ao hambúrguer */
-    .btn-area-cliente { display: none !important; } 
-    
-    .menu-toggle {
-        display: block !important;
-        color: #bd9617 !important;
-        font-size: 1.8rem !important;
-        background: none !important;
-        border: none !important;
-    }
-
-    .nav-links {
-        display: none; /* O seu JS vai controlar o .active aqui */
-        flex-direction: column !important;
-        position: absolute !important;
-        top: 100% !important;
-        left: 0 !important;
-        width: 100% !important;
-        background: #0b1c2d !important;
-        z-index: 999 !important;
-    }
-    
-    .nav-links.active { display: flex !important; }
-}
 /* ==========================================================================
    REPARO: QUEBRA DE TEXTO MOBILE E ALINHAMENTO DO HAMBÚRGUER
    ========================================================================== */
