@@ -1,61 +1,58 @@
 import { supabase } from './supabase.js'
 
-const menuToggle = document.querySelector('.menu-toggle');
-const menu = document.querySelector('.menu');
+// Seletores ajustados para o seu HTML atual
+const menuToggle = document.getElementById('mobile-menu');
+const navList = document.getElementById('nav-list');
 const dropdownToggle = document.querySelector('.dropdown-toggle');
 const dropdown = document.querySelector('.menu-item.dropdown');
 
-/* MENU MOBILE (ABRIR/FECHAR O HAMBÚRGUER) */
-if (menuToggle) {
+/* --- MENU MOBILE --- */
+if (menuToggle && navList) {
   menuToggle.addEventListener('click', () => {
-    menu.classList.toggle('open');
+    // Alterna a classe que definimos no CSS
+    navList.classList.toggle('active');
+    
+    // Feedback visual no ícone (Barras vira X)
+    const icon = menuToggle.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-times');
+    }
   });
 }
 
-/* DROPDOWN INTELIGENTE (MOBILE) */
-if (dropdownToggle) {
+/* --- DROPDOWN (SERVIÇOS) --- */
+if (dropdownToggle && dropdown) {
   let isDropdownOpen = false;
 
   dropdownToggle.addEventListener('click', (e) => {
-    // Só aplica a lógica especial se a tela for menor que 768px
-    if (window.innerWidth <= 768) {
-      
-      // Se for o primeiro clique, ele abre a lista em vez de seguir o link
+    if (window.innerWidth <= 992) { // Ajustado para bater com o Media Query
       if (!isDropdownOpen) {
         e.preventDefault(); 
         e.stopPropagation();
-        
+
         dropdown.classList.add('active');
-        const subMenu = dropdown.querySelector('.dropdown-menu');
-        if (subMenu) {
-          subMenu.style.display = 'block';
-        }
-        
-        isDropdownOpen = true; // Agora o próximo clique funcionará como link
+        isDropdownOpen = true;
       }
-      // Se clicar de novo com ele aberto, o preventDefault não será chamado e ele seguirá o link para /servicos/index.html
     }
   });
 
-  // Fecha o dropdown se clicar fora dele
+  // Fecha ao clicar fora
   document.addEventListener('click', (e) => {
-    if (!dropdown.contains(e.target)) {
-      const subMenu = dropdown.querySelector('.dropdown-menu');
-      if (subMenu) subMenu.style.display = 'none';
+    if (dropdown && !dropdown.contains(e.target)) {
       dropdown.classList.remove('active');
       isDropdownOpen = false;
     }
   });
 }
 
-/* SUPABASE - TESTE SEGURO */
+/* --- TESTE SUPABASE --- */
 async function testSupabase() {
   try {
-    const { data, error } = await supabase.from('servicos').select('*');
-    if (error) throw error;
-    console.log('Supabase conectado com sucesso!');
+    const { data, error } = await supabase.from('assinaturas').select('*').limit(1);
+    console.log('Supabase: Conexão verificada.');
   } catch (error) {
-    console.warn('Supabase: Conexão ativa, mas verifique as tabelas.', error.message);
+    console.warn('Supabase: Verifique as chaves e tabelas.');
   }
 }
 
