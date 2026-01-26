@@ -851,7 +851,8 @@ body.home-page .site-subtitle-header {
 }
     }
 
- /* 4. HAMBURGUER (Abaixo de tudo, na Direita) */
+/* 4. HAMBURGUER (Abaixo de tudo, na Direita) */
+@media (max-width: 992px) {
     .client-access-row {
         width: 100% !important;
         display: flex !important;
@@ -861,6 +862,8 @@ body.home-page .site-subtitle-header {
         padding: 0 15px !important;
         margin-top: 15px !important;
     }
+
+    /* O hambúrguer agora só existe aqui dentro */
     .menu-toggle {
         display: flex !important;
         align-items: center !important;
@@ -873,16 +876,16 @@ body.home-page .site-subtitle-header {
         font-size: 1.5rem !important;
         border-radius: 4px !important;
     }
-} /* <--- ESSA CHAVE É O PONTO CRÍTICO. Ela fecha o Media Query do Mobile */
+} 
 
 /* RESOLUÇÃO DEFINITIVA DESKTOP */
 @media (min-width: 993px) {
-    /* 1. Remove o hambúrguer do Desktop */
+    /* Força o desaparecimento no desktop */
     .menu-toggle { 
         display: none !important; 
     }
 
-    /* 2. Recupera o contraste (Fundo + Borda) no Hover */
+    /* Contraste de COR (Fundo + Borda) no Hover */
     .menu-item a:hover, 
     .menu-item button.dropdown-toggle:hover,
     .nav-links a:hover { 
