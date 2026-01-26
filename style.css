@@ -743,52 +743,76 @@ body.home-page .site-subtitle-header {
     }
 }
 /* ==========================================================================
-   BLOCO DE REPARO DE RESPONSIVIDADE - VERSÃO BLINDADA
+   BLOCO DE REPARO DEFINITIVO - ORDEM: LOGO, NOME, HAMBÚRGUER (MOBILE)
    ========================================================================== */
 
-/* 1. TRAVA DE SEGURANÇA PARA DESKTOP (Telas maiores que 992px) */
+/* 1. BLINDAGEM DO DESKTOP (Telas > 992px) */
 @media (min-width: 993px) {
-    /* Esconde o hambúrguer no PC de qualquer jeito */
-    .menu-toggle { 
-        display: none !important; 
-    }
+    .menu-toggle { display: none !important; } /* Hambúrguer invisível no PC */
     
-    /* Garante que o menu e botões fiquem visíveis e na posição original */
-    .menu, .nav-links { 
-        display: flex !important; 
+    .header-stack {
+        display: flex !important;
+        flex-direction: column !important; /* Empilha: 1.Identidade, 2.Login, 3.Menu */
+        align-items: center !important;
     }
 
-    /* Impede que o botão de login seja centralizado no PC */
-    .btn-area-cliente {
-        margin: 0 !important;
-        position: relative !important;
+    .client-access-row {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: flex-end !important; /* Login na Direita */
+        margin: 10px 0 !important;
+    }
+
+    .main-nav {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important; /* Menu Centralizado */
+        border-top: 1px solid rgba(189, 150, 23, 0.1);
+        padding-top: 15px;
     }
 }
 
-/* 2. AJUSTES EXCLUSIVOS PARA MOBILE (Telas menores que 992px) */
+/* 2. CONFIGURAÇÃO MOBILE (Abaixo de 992px) */
 @media (max-width: 992px) {
-    
-    /* Impede a tela de "dançar" para os lados */
-    html, body {
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
+    /* Trava de segurança lateral */
+    html, body { max-width: 100vw !important; overflow-x: hidden !important; }
+
+    /* LINHA ÚNICA: LOGO + NOME (Esquerda) | HAMBÚRGUER (Direita) */
+    .header-stack {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important; /* Afasta os dois lados */
+        align-items: center !important;
+        padding: 10px 15px !important;
     }
 
-    /* Ajuste da Logo na Home (Mobile) */
-    body.home-page .brand-identity {
-        flex-direction: column !important;
-        gap: 15px !important;
+    /* Agrupa Logo e Nome na esquerda */
+    .brand-identity {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        text-align: left !important;
     }
 
-    body.home-page .site-logo-circle {
-        width: 100px !important;
-        height: 100px !important;
-        margin: 0 auto !important;
+    /* Logo menor para caber na linha */
+    .site-logo-circle {
+        width: 45px !important;
+        height: 45px !important;
+        display: block !important;
     }
 
-    /* O MENU MOBILE (Vira lista apenas aqui) */
+    /* Nome menor para não quebrar linha */
+    .site-title-header {
+        font-size: 1.1rem !important;
+        white-space: nowrap;
+    }
+
+    /* Esconde o subtítulo no celular para não bagunçar a linha */
+    .site-subtitle-header { display: none !important; }
+
+    /* MENU "CORTINA" (Escondido) */
     .menu, .nav-links {
-        display: none !important; /* Começa escondido */
+        display: none !important;
         flex-direction: column !important;
         position: absolute !important;
         top: 100% !important;
@@ -800,40 +824,28 @@ body.home-page .site-subtitle-header {
         z-index: 9999 !important;
     }
 
-    /* Classe que o JavaScript deve ativar ao clicar */
-    .menu.open, .menu.active, .nav-links.active {
-        display: flex !important;
-    }
+    /* Ativação do Menu */
+    .menu.open, .menu.active, .nav-links.active { display: flex !important; }
 
-    /* Ajuste dos itens do menu no celular */
-    .menu-item, .nav-links li {
-        width: 100% !important;
-        text-align: center !important;
-        margin: 10px 0 !important;
-    }
-
-    /* Botão de login vira um item do menu no celular */
+    /* Login dentro do menu no celular */
     .btn-area-cliente {
         display: flex !important;
         margin: 10px auto !important;
         width: fit-content !important;
     }
 
-    /* Botão Hambúrguer (Aparece apenas aqui) */
+    /* O HAMBÚRGUER (Posicionado na Direita pelo space-between) */
     .menu-toggle {
         display: block !important;
-        margin: 15px auto !important;
-        background: none;
-        border: none;
+        background: none !important;
+        border: none !important;
         color: #bd9617 !important;
-        font-size: 2rem;
-        cursor: pointer;
+        font-size: 1.8rem !important;
+        cursor: pointer !important;
     }
 }
 
-/* 3. Ajuste de Colunas (Blog e Serviços) */
+/* 3. Ajuste de Grades */
 @media (max-width: 768px) {
-    .services-grid, .blog-home, .footer-container {
-        grid-template-columns: 1fr !important;
-    }
+    .services-grid, .blog-home, .footer-container { grid-template-columns: 1fr !important; }
 }
