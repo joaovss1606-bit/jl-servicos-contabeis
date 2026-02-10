@@ -56,6 +56,14 @@ const App: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (location.pathname === '/') {
+      document.body.classList.add('home-page');
+    } else {
+      document.body.classList.remove('home-page');
+    }
+  }, [location.pathname]);
+
   const handleLogin = (user: User) => {
     const newState = { user, isAuthenticated: true };
     setAuth(newState);
@@ -76,10 +84,8 @@ const App: React.FC = () => {
     navigate('/');
   };
 
-  const isHomePage = location.pathname === '/';
-
   return (
-    <div className={isHomePage ? 'home-page' : ''}>
+    <div className="app-container">
       <Navbar 
         auth={auth} 
         onLogout={handleLogout} 
