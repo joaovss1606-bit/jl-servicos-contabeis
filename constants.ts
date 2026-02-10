@@ -11,18 +11,18 @@ export const MOCK_ADMIN_USER: User = {
 };
 
 export const DEFAULT_COMPANY_IDENTITY: CompanyIdentity = {
-  name: 'ContabSeguro',
-  slogan: 'Gestão contábil descomplicada para MEIs e Pessoas Físicas.',
-  primaryColor: '#0f172a',
-  email: 'contato@contabseguro.com.br',
-  phone: '(11) 4002-8922',
-  whatsapp: '5511999999999',
-  heroImageUrl: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=1200',
-  address: 'Av. Paulista, 1000 - São Paulo, SP',
+  name: 'J L Serviços Contábeis',
+  slogan: 'Atendimento Online para todo o Brasil',
+  primaryColor: '#bd9617',
+  email: 'jlservicoscontabeis0@gmail.com',
+  phone: '(61) 92004-1427',
+  whatsapp: '5561920041427',
+  heroImageUrl: '/logo.png',
+  address: 'Brasília, DF',
   socialLinks: {
-    instagram: 'https://instagram.com/contabseguro',
-    linkedin: 'https://linkedin.com/company/contabseguro',
-    facebook: 'https://facebook.com/contabseguro'
+    instagram: 'https://instagram.com/jlservicoscontabeis',
+    linkedin: '',
+    facebook: ''
   }
 };
 
