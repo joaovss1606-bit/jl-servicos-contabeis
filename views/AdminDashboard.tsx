@@ -27,7 +27,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   admin, services, setServices, clients, setClients, invoices, setInvoices, clientInvoiceData, identity, onUpdateIdentity, plans, onUpdatePlans, faqs, onUpdateFaqs, alerts, setAlerts
 }) => {
   const [activeView, setActiveView] = useState<'OVERVIEW' | 'SERVICES' | 'CLIENTS' | 'PLANS' | 'FAQ' | 'CONFIG'>('OVERVIEW');
-  const [editingPlan, setEditingPlan] = useState<SubscriptionPlan | null>(null);
 
   const stats = {
     revenue: invoices.reduce((a, b) => a + b.value, 0),
@@ -66,12 +65,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="admin-dashboard" style={{ display: 'flex', height: '100vh', background: '#0b1c2d', color: '#ffffff', overflow: 'hidden' }}>
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-slate-400 flex flex-col hidden lg:flex border-r border-slate-800">
-        <div className="p-6">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-6">Administração</p>
-          <nav className="space-y-1">
+      <aside style={{ width: '260px', background: '#0e2a47', borderRight: '1px solid rgba(189, 150, 23, 0.2)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: '30px 20px' }}>
+          <p style={{ fontSize: '0.65rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '30px' }}>Administração</p>
+          <nav style={{ display: 'grid', gap: '10px' }}>
             {[
               { id: 'OVERVIEW', icon: 'fa-chart-pie', label: 'Dashboard' },
               { id: 'SERVICES', icon: 'fa-folder-open', label: 'Serviços' },
@@ -82,10 +81,23 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             ].map(item => (
               <button 
                 key={item.id} onClick={() => setActiveView(item.id as any)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeView === item.id ? 'text-white' : 'hover:bg-white/5 hover:text-white'}`}
-                style={activeView === item.id ? { backgroundColor: identity.primaryColor } : {}}
+                style={{ 
+                  width: '100%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '15px', 
+                  padding: '12px 20px', 
+                  borderRadius: '10px', 
+                  fontSize: '0.9rem', 
+                  fontWeight: 'bold', 
+                  border: 'none', 
+                  cursor: 'pointer', 
+                  transition: 'all 0.3s',
+                  background: activeView === item.id ? '#bd9617' : 'transparent',
+                  color: activeView === item.id ? '#0b1c2d' : 'rgba(255,255,255,0.6)'
+                }}
               >
-                <i className={`fas ${item.icon} opacity-50`}></i> {item.label}
+                <i className={`fas ${item.icon}`} style={{ width: '20px' }}></i> {item.label}
               </button>
             ))}
           </nav>
@@ -93,96 +105,94 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       </aside>
 
       {/* Main */}
-      <main className="flex-grow overflow-y-auto p-8">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <main style={{ flexGrow: 1, overflowY: 'auto', padding: '40px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {activeView === 'OVERVIEW' && (
-            <div className="space-y-8 animate-in fade-in">
-              <div className="flex justify-between items-end">
-                <h2 className="text-3xl font-black text-slate-900">Visão Geral</h2>
-                <button onClick={exportClients} className="text-xs font-bold text-slate-500 border border-slate-200 px-4 py-2 rounded-xl hover:bg-white transition-all">
-                  <i className="fas fa-download mr-2"></i> Exportar Base
+            <div style={{ display: 'grid', gap: '40px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', color: '#bd9617', margin: 0 }}>Visão Geral</h2>
+                <button onClick={exportClients} style={{ background: 'none', border: '1px solid rgba(189, 150, 23, 0.3)', color: '#bd9617', padding: '10px 20px', borderRadius: '10px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}>
+                  <i className="fas fa-download" style={{ marginRight: '10px' }}></i> EXPORTAR BASE
                 </button>
               </div>
 
-              <div className="grid sm:grid-cols-4 gap-6">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
                 {[
-                  { label: 'Alertas Ativos', val: stats.alerts, icon: 'fa-bell', color: 'text-red-500' },
-                  { label: 'Serviços Ativos', val: stats.pending, icon: 'fa-clock', color: 'text-indigo-500' },
-                  { label: 'Clientes Totais', val: stats.clients, icon: 'fa-users', color: 'text-slate-900' },
-                  { label: 'Receita Total', val: `R$ ${stats.revenue.toFixed(2)}`, icon: 'fa-wallet', color: 'text-green-600' },
+                  { label: 'Alertas Ativos', val: stats.alerts, icon: 'fa-bell', color: '#ff4d4d' },
+                  { label: 'Serviços Ativos', val: stats.pending, icon: 'fa-clock', color: '#bd9617' },
+                  { label: 'Clientes Totais', val: stats.clients, icon: 'fa-users', color: '#ffffff' },
+                  { label: 'Receita Total', val: `R$ ${stats.revenue.toFixed(2)}`, icon: 'fa-wallet', color: '#25D366' },
                 ].map((s, i) => (
-                  <div key={i} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
-                    <i className={`fas ${s.icon} ${s.color} text-lg mb-4`}></i>
+                  <div key={i} style={{ background: '#0e2a47', padding: '30px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <i className={`fas ${s.icon}`} style={{ color: s.color, fontSize: '1.2rem', marginBottom: '20px' }}></i>
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{s.label}</p>
-                      <p className="text-2xl font-black text-slate-900">{s.val}</p>
+                      <p style={{ fontSize: '0.65rem', fontWeight: 'bold', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 5px' }}>{s.label}</p>
+                      <p style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>{s.val}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Internal Alerts List */}
-              <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
-                <h3 className="text-lg font-black text-slate-900 mb-6">Lembretes de Ações (Manuais)</h3>
-                <div className="space-y-4">
+              <div style={{ background: '#0e2a47', padding: '40px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#bd9617', marginBottom: '30px' }}>Lembretes de Ações (Manuais)</h3>
+                <div style={{ display: 'grid', gap: '15px' }}>
                   {services.filter(s => s.status !== ServiceStatus.CONCLUIDO).map(svc => (
-                    <div key={svc.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                      <div className="flex gap-4">
-                         <div className="w-10 h-10 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-400">
+                    <div key={svc.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', background: 'rgba(255,255,255,0.03)', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                      <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                         <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(189, 150, 23, 0.1)', color: '#bd9617', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                            <i className="fas fa-exclamation-triangle"></i>
                          </div>
                          <div>
-                            <p className="text-sm font-bold text-slate-900">{svc.clientName} - {SERVICE_LABELS[svc.type]}</p>
-                            <p className="text-xs text-slate-500">Status: {svc.status.replace('_', ' ')}</p>
+                            <p style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff', margin: '0 0 3px' }}>{svc.clientName} - {SERVICE_LABELS[svc.type]}</p>
+                            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', margin: 0 }}>Status: {svc.status.replace('_', ' ')}</p>
                          </div>
                       </div>
-                      <div className="flex gap-2">
+                      <div style={{ display: 'flex', gap: '10px' }}>
                         {COMMUNICATION_TEMPLATES.map(t => (
                           <button 
                             key={t.id}
                             onClick={() => handleCopyMessage(t, svc)}
-                            className="px-3 py-1.5 bg-white border border-slate-200 text-[10px] font-black text-slate-500 rounded-lg hover:border-indigo-500 hover:text-indigo-600 transition-all"
-                            title={t.title}
+                            style={{ background: 'none', border: '1px solid rgba(189, 150, 23, 0.3)', color: '#bd9617', padding: '8px 15px', borderRadius: '8px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer' }}
                           >
-                            <i className="fas fa-copy mr-1"></i> {t.id === 'temp-doc' ? 'Pedir Docs' : 'Aviso Fim'}
+                            <i className="fas fa-copy" style={{ marginRight: '5px' }}></i> {t.id === 'temp-doc' ? 'PEDIR DOCS' : 'AVISO FIM'}
                           </button>
                         ))}
                       </div>
                     </div>
                   ))}
-                  {services.length === 0 && <p className="text-slate-400 italic text-sm">Nenhuma pendência ativa.</p>}
+                  {services.length === 0 && <p style={{ color: 'rgba(255,255,255,0.4)', fontStyle: 'italic', fontSize: '0.9rem' }}>Nenhuma pendência ativa.</p>}
                 </div>
               </div>
             </div>
           )}
 
           {activeView === 'CLIENTS' && (
-            <div className="space-y-6 animate-in fade-in">
-              <h2 className="text-2xl font-black">Base de Clientes & Planos</h2>
-              <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
-                <table className="w-full text-left">
-                  <thead className="bg-slate-50 border-b border-slate-200">
+            <div style={{ display: 'grid', gap: '30px' }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', color: '#bd9617', margin: 0 }}>Base de Clientes & Planos</h2>
+              <div style={{ background: '#0e2a47', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <thead style={{ background: 'rgba(0,0,0,0.2)' }}>
                     <tr>
-                      <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">Cliente</th>
-                      <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">E-mail</th>
-                      <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">Acesso ao Portal</th>
-                      <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">Ação</th>
+                      <th style={{ padding: '20px', fontSize: '0.75rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase' }}>Cliente</th>
+                      <th style={{ padding: '20px', fontSize: '0.75rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase' }}>E-mail</th>
+                      <th style={{ padding: '20px', fontSize: '0.75rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase' }}>Acesso ao Portal</th>
+                      <th style={{ padding: '20px', fontSize: '0.75rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase' }}>Ação</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody style={{ color: 'rgba(255,255,255,0.8)' }}>
                     {clients.map(client => (
-                      <tr key={client.id} className="hover:bg-slate-50">
-                        <td className="px-6 py-4 font-bold text-slate-900">{client.name}</td>
-                        <td className="px-6 py-4 text-sm text-slate-500">{client.email}</td>
-                        <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-[10px] font-black ${client.isPlanActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                      <tr key={client.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                        <td style={{ padding: '20px', fontWeight: 'bold' }}>{client.name}</td>
+                        <td style={{ padding: '20px', fontSize: '0.9rem' }}>{client.email}</td>
+                        <td style={{ padding: '20px' }}>
+                          <span style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 'bold', background: client.isPlanActive ? 'rgba(37, 211, 102, 0.1)' : 'rgba(255, 77, 77, 0.1)', color: client.isPlanActive ? '#25D366' : '#ff4d4d' }}>
                             {client.isPlanActive ? 'PLANO ATIVO' : 'BLOQUEADO'}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
+                        <td style={{ padding: '20px' }}>
                           <button 
                             onClick={() => handleTogglePlan(client.id)}
-                            className="text-xs font-bold text-slate-600 border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-white"
+                            style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff', padding: '8px 15px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}
                           >
                             {client.isPlanActive ? 'Bloquear' : 'Ativar Manual'}
                           </button>

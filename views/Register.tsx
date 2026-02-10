@@ -36,130 +36,126 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onBack, onLogin, identi
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
-        <div className="p-8">
-          <button onClick={onBack} className="text-slate-400 hover:text-slate-900 mb-8 flex items-center gap-2 transition-colors">
-            <i className="fas fa-chevron-left"></i> Voltar
+    <div className="register-page-container" style={{ background: '#0b1c2d', color: '#ffffff', minHeight: '100vh', padding: '40px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="register-card" style={{ maxWidth: '650px', width: '100%', background: '#0e2a47', borderRadius: '25px', border: '1px solid rgba(189, 150, 23, 0.3)', boxShadow: '0 30px 60px rgba(0,0,0,0.4)', overflow: 'hidden' }}>
+        <div className="p-8" style={{ padding: '40px' }}>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#bd9617', cursor: 'pointer', marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', fontSize: '0.9rem' }}>
+            <i className="fas fa-chevron-left"></i> VOLTAR
           </button>
           
-          <div className="flex justify-between items-center mb-10">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">{identity.name}</h2>
-              <p className="text-slate-500">Crie sua conta no portal</p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', color: '#bd9617', margin: '0 0 5px' }}>{identity.name}</h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', margin: 0 }}>Crie sua conta no portal</p>
             </div>
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: step === 1 ? identity.primaryColor : '#e2e8f0' }}></div>
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: step === 2 ? identity.primaryColor : '#e2e8f0' }}></div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: step === 1 ? '#bd9617' : 'rgba(255,255,255,0.1)' }}></div>
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: step === 2 ? '#bd9617' : 'rgba(255,255,255,0.1)' }}></div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '25px' }}>
             {step === 1 ? (
-              <div className="space-y-6">
+              <div style={{ display: 'grid', gap: '25px' }}>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Nome Completo</label>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase', marginBottom: '10px' }}>Nome Completo</label>
                   <input 
                     type="text" 
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(189, 150, 23, 0.2)', borderRadius: '10px', padding: '15px', color: '#ffffff', outline: 'none' }}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">E-mail</label>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase', marginBottom: '10px' }}>E-mail</label>
                   <input 
                     type="email" 
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                    style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(189, 150, 23, 0.2)', borderRadius: '10px', padding: '15px', color: '#ffffff', outline: 'none' }}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">Senha</label>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase', marginBottom: '10px' }}>Senha</label>
                     <input 
                       type="password" 
                       required
                       value={formData.password}
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                      style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(189, 150, 23, 0.2)', borderRadius: '10px', padding: '15px', color: '#ffffff', outline: 'none' }}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">Confirmar</label>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase', marginBottom: '10px' }}>Confirmar</label>
                     <input 
                       type="password" 
                       required
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                      style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(189, 150, 23, 0.2)', borderRadius: '10px', padding: '15px', color: '#ffffff', outline: 'none' }}
                     />
                   </div>
                 </div>
                 <button 
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-full text-white py-4 rounded-xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2"
-                  style={{ backgroundColor: identity.primaryColor }}
+                  style={{ width: '100%', background: '#bd9617', color: '#0b1c2d', padding: '18px', borderRadius: '12px', fontWeight: '800', border: 'none', cursor: 'pointer', marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                 >
-                  Continuar para LGPD <i className="fas fa-arrow-right"></i>
+                  CONTINUAR PARA LGPD <i className="fas fa-arrow-right"></i>
                 </button>
               </div>
             ) : (
-              <div className="space-y-6">
-                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 h-64 overflow-y-auto">
-                  <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <i className="fas fa-shield-alt" style={{ color: identity.primaryColor }}></i>
-                    Privacidade e LGPD
+              <div style={{ display: 'grid', gap: '25px' }}>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '25px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.05)', maxHeight: '250px', overflowY: 'auto' }}>
+                  <h3 style={{ color: '#bd9617', fontSize: '1rem', fontWeight: 'bold', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <i className="fas fa-shield-alt"></i> Privacidade e LGPD
                   </h3>
-                  <div className="text-sm text-slate-600 space-y-4 whitespace-pre-line">
+                  <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', whiteSpace: 'pre-line' }}>
                     {LGPD_TEXT}
                   </div>
                 </div>
 
-                <label className="flex items-start gap-3 p-4 rounded-xl border cursor-pointer" style={{ backgroundColor: `${identity.primaryColor}10`, borderColor: `${identity.primaryColor}30` }}>
+                <label style={{ display: 'flex', gap: '15px', padding: '20px', background: 'rgba(189, 150, 23, 0.05)', border: '1px solid rgba(189, 150, 23, 0.2)', borderRadius: '15px', cursor: 'pointer' }}>
                   <input 
                     type="checkbox" 
                     required
                     checked={formData.consent}
                     onChange={(e) => setFormData({...formData, consent: e.target.checked})}
-                    className="mt-1 w-5 h-5 rounded"
-                    style={{ color: identity.primaryColor }} 
+                    style={{ marginTop: '4px', width: '20px', height: '20px', accentColor: '#bd9617' }} 
                   />
-                  <div className="text-sm">
-                    <span className="font-bold text-slate-900">Aceito os termos e declaro veracidade.</span>
-                    <p className="text-slate-600 mt-1">
+                  <div style={{ fontSize: '0.9rem' }}>
+                    <span style={{ fontWeight: 'bold', color: '#bd9617' }}>Aceito os termos e declaro veracidade.</span>
+                    <p style={{ color: 'rgba(255,255,255,0.6)', margin: '5px 0 0' }}>
                       Compreendo que meus dados serão utilizados para fins de gestão contábil no escritório {identity.name}.
                     </p>
                   </div>
                 </label>
 
-                <div className="flex gap-4">
+                <div style={{ display: 'flex', gap: '15px' }}>
                   <button 
                     type="button"
                     onClick={() => setStep(1)}
-                    className="w-1/3 bg-slate-100 text-slate-700 py-4 rounded-xl font-bold hover:bg-slate-200 transition-all"
+                    style={{ flex: 1, background: 'rgba(255,255,255,0.05)', color: '#ffffff', padding: '18px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
                   >
-                    Voltar
+                    VOLTAR
                   </button>
                   <button 
                     type="submit"
                     disabled={!formData.consent}
-                    className="w-2/3 text-white py-4 rounded-xl font-bold hover:opacity-90 transition-all shadow-lg disabled:opacity-50"
-                    style={{ backgroundColor: identity.primaryColor }}
+                    style={{ flex: 2, background: '#bd9617', color: '#0b1c2d', padding: '18px', borderRadius: '12px', fontWeight: '800', border: 'none', cursor: 'pointer', opacity: formData.consent ? 1 : 0.5 }}
                   >
-                    Finalizar Cadastro
+                    FINALIZAR CADASTRO
                   </button>
                 </div>
               </div>
             )}
           </form>
 
-          <div className="mt-8 text-center">
-            <p className="text-slate-500">Já possui uma conta? <button onClick={onLogin} className="font-bold hover:underline" style={{ color: identity.primaryColor }}>Entre agora</button></p>
+          <div style={{ marginTop: '40px', textAlign: 'center' }}>
+            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem' }}>Já possui uma conta? <button onClick={onLogin} style={{ background: 'none', border: 'none', color: '#bd9617', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'underline' }}>Entre agora</button></p>
           </div>
         </div>
       </div>
