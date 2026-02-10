@@ -46,7 +46,7 @@ const Navbar: React.FC<NavbarProps> = ({ auth, onLogout, onNavigate, identity })
                 <li><button onClick={() => onNavigate('/')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>Início</button></li>
                 <li><a href="/servicos/">Serviços</a></li>
                 <li><a href="/blog/">Blog</a></li>
-                <li><a href="/sobre/">Sobre</a></li>
+                <li><button onClick={() => onNavigate('/sobre')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>Sobre</button></li>
                 <li><a href="/lgpd/">LGPD</a></li>
             </ul>
         </nav>

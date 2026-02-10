@@ -26,6 +26,7 @@ import Register from './views/Register.tsx';
 import PricingPage from './views/PricingPage.tsx';
 import FaqPage from './views/FaqPage.tsx';
 import PasswordReset from './views/PasswordReset.tsx';
+import AboutPage from './views/AboutPage.tsx';
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -110,6 +111,13 @@ const App: React.FC = () => {
               onRegister={() => navigate('/register')} 
               onResetPassword={() => navigate('/reset-password')} 
               identity={companyIdentity} 
+            />
+          } />
+
+          <Route path="/sobre" element={
+            <AboutPage 
+              identity={companyIdentity} 
+              onBack={() => navigate('/')} 
             />
           } />
           
@@ -206,14 +214,14 @@ const App: React.FC = () => {
               <li><button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>Início</button></li>
               <li><a href="/servicos/">Catálogo de Serviços</a></li>
               <li><a href="/blog/">Blog</a></li>
-              <li><a href="/sobre/">Quem Somos</a></li>
+              <li><button onClick={() => navigate('/sobre')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>Quem Somos</button></li>
               <li><a href="/lgpd/">Política de Privacidade</a></li>
             </ul>
           </div>
 
           <div className="footer-col">
             <h4>Contato</h4>
-            <a href="https://wa.me/5561920041427" target="_blank" className="btn-whatsapp-footer">
+            <a href="https://wa.me/5561920041427" target="_blank" rel="noreferrer" className="btn-whatsapp-footer">
               <i className="fab fa-whatsapp" style={{ marginRight: '10px' }}></i> WhatsApp
             </a>
             <div className="footer-email">

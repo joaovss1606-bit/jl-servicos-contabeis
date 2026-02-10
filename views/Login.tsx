@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { UserRole, CompanyIdentity } from '../types.ts';
 import { MOCK_ADMIN_USER } from '../constants.ts';
@@ -38,53 +37,53 @@ const Login: React.FC<LoginProps> = ({ onLogin, onBack, onRegister, onResetPassw
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
-        <div className="p-8">
-          <button onClick={onBack} className="text-slate-400 hover:text-slate-900 mb-8 flex items-center gap-2 transition-colors">
-            <i className="fas fa-chevron-left"></i> Voltar
+    <div className="login-page-container" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
+      <div className="login-card" style={{ maxWidth: '450px', width: '100%', background: '#0e2a47', borderRadius: '20px', border: '1px solid rgba(189, 150, 23, 0.3)', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', overflow: 'hidden' }}>
+        <div className="p-8" style={{ padding: '40px' }}>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#bd9617', cursor: 'pointer', marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', fontSize: '0.9rem' }}>
+            <i className="fas fa-chevron-left"></i> VOLTAR
           </button>
           
-          <div className="text-center mb-10">
+          <div className="text-center mb-10" style={{ marginBottom: '40px' }}>
             <div 
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 text-white"
-              style={{ backgroundColor: identity.primaryColor }}
+              className="login-icon"
+              style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid #bd9617', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', margin: '0 auto 20px', color: '#bd9617', background: 'rgba(189, 150, 23, 0.1)' }}
             >
-              <i className="fas fa-key"></i>
+              <i className="fas fa-lock"></i>
             </div>
-            <h2 className="text-2xl font-bold text-slate-900">{identity.name}</h2>
-            <p className="text-slate-500">Acesse sua área restrita</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontWeight: 700, color: '#bd9617', margin: '0 0 10px', textTransform: 'uppercase' }}>{identity.name}</h2>
+            <p style={{ color: '#ffffff', opacity: 0.7, fontSize: '1rem' }}>Acesse sua área restrita</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">E-mail</label>
-              <div className="relative">
-                <i className="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+            <div className="form-group">
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 'bold', color: '#bd9617', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>E-mail</label>
+              <div style={{ position: 'relative' }}>
+                <i className="fas fa-envelope" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(189, 150, 23, 0.5)' }}></i>
                 <input 
                   type="email" 
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-slate-500 outline-none transition-all"
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(189, 150, 23, 0.2)', borderRadius: '10px', padding: '15px 15px 15px 45px', color: '#ffffff', outline: 'none', transition: 'all 0.3s' }}
                   placeholder="seu@email.com"
                 />
               </div>
             </div>
 
-            <div>
-              <div className="flex justify-between mb-2">
-                <label className="block text-sm font-semibold text-slate-700">Senha</label>
-                <button type="button" onClick={onResetPassword} className="text-xs font-bold text-slate-400 hover:text-slate-600">Esqueceu a senha?</button>
+            <div className="form-group">
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <label style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#bd9617', textTransform: 'uppercase', letterSpacing: '1px' }}>Senha</label>
+                <button type="button" onClick={onResetPassword} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 'bold' }}>Esqueceu a senha?</button>
               </div>
-              <div className="relative">
-                <i className="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <div style={{ position: 'relative' }}>
+                <i className="fas fa-key" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(189, 150, 23, 0.5)' }}></i>
                 <input 
                   type="password" 
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-slate-500 outline-none transition-all"
+                  style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(189, 150, 23, 0.2)', borderRadius: '10px', padding: '15px 15px 15px 45px', color: '#ffffff', outline: 'none', transition: 'all 0.3s' }}
                   placeholder="••••••••"
                 />
               </div>
@@ -93,19 +92,18 @@ const Login: React.FC<LoginProps> = ({ onLogin, onBack, onRegister, onResetPassw
             <button 
               type="submit"
               disabled={isLoading}
-              className="w-full text-white py-4 rounded-xl font-bold hover:opacity-90 transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
-              style={{ backgroundColor: identity.primaryColor }}
+              style={{ width: '100%', background: '#bd9617', color: '#0b1c2d', padding: '18px', borderRadius: '10px', fontWeight: '800', fontSize: '1rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s', marginTop: '10px', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
             >
               {isLoading ? (
                 <i className="fas fa-spinner fa-spin"></i>
               ) : (
-                <>Entrar no Sistema <i className="fas fa-sign-in-alt"></i></>
+                <>ENTRAR NO SISTEMA <i className="fas fa-sign-in-alt"></i></>
               )}
             </button>
           </form>
 
-          <div className="mt-8 pt-8 border-t border-slate-100 text-center">
-            <p className="text-slate-500">Ainda não tem conta? <button onClick={onRegister} className="font-bold hover:underline" style={{ color: identity.primaryColor }}>Cadastre-se aqui</button></p>
+          <div style={{ marginTop: '40px', paddingTop: '30px', borderTop: '1px solid rgba(255,255,255,0.1)', textAlign: 'center' }}>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem' }}>Ainda não tem conta? <button onClick={onRegister} style={{ background: 'none', border: 'none', color: '#bd9617', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'underline' }}>Cadastre-se aqui</button></p>
           </div>
         </div>
       </div>
