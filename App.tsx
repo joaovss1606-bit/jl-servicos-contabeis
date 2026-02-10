@@ -12,7 +12,6 @@ import {
   InternalAlert
 } from './types.ts';
 import { 
-  MOCK_ADMIN_USER, 
   DEFAULT_COMPANY_IDENTITY, 
   INITIAL_PLANS, 
   INITIAL_FAQ 
@@ -47,7 +46,6 @@ const App: React.FC = () => {
         const parsed = JSON.parse(savedAuth) as AuthState;
         if (parsed && parsed.user) {
           setAuth(parsed);
-          // Redirecionamento inteligente baseado no estado do plano
           if (parsed.user.role === UserRole.CLIENTE && !parsed.user.isPlanActive) {
             setView('PRICING');
           } else if (parsed.isAuthenticated) {
@@ -82,7 +80,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className={view === 'LANDING' ? 'home-page' : ''}>
       <Navbar 
         auth={auth} 
         onLogout={handleLogout} 
@@ -90,7 +88,7 @@ const App: React.FC = () => {
         identity={companyIdentity} 
       />
       
-      <main className="flex-grow">
+      <main>
         {view === 'LANDING' && (
           <LandingPage 
             onStart={() => setView('PRICING')} 
@@ -178,14 +176,36 @@ const App: React.FC = () => {
         )}
       </main>
 
-      <footer className="bg-slate-900 text-slate-400 py-12 px-4 border-t border-slate-800 text-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p>© 2024 {companyIdentity.name} - Segurança LGPD Ativa.</p>
-          <div className="flex gap-6">
-            <button onClick={() => setView('FAQ')} className="hover:text-white transition-colors">Perguntas Frequentes</button>
-            <a href="#" className="hover:text-white transition-colors">Termos</a>
-            <a href="#" className="hover:text-white transition-colors">Privacidade</a>
+      <footer className="site-footer">
+        <div className="footer-container container">
+          <div className="footer-col">
+            <h3>J L Serviços Contábeis</h3>
+            <p>Soluções contábeis com transparência, segurança e foco em resultados para MEI, Pessoa Física e Empresas.</p>
           </div>
+
+          <div className="footer-col">
+            <h4>Links Rápidos</h4>
+            <ul>
+              <li><button onClick={() => setView('LANDING')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>Início</button></li>
+              <li><a href="/servicos/index.html">Catálogo de Serviços</a></li>
+              <li><a href="/sobre/index.html">Quem Somos</a></li>
+              <li><a href="/lgpd/index.html">Política de Privacidade</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>Contato</h4>
+            <a href="https://wa.me/5561920041427" target="_blank" className="btn-whatsapp-footer">
+              <i className="fab fa-whatsapp" style={{ marginRight: '10px' }}></i> WhatsApp
+            </a>
+            <div className="footer-email">
+              <i className="far fa-envelope" style={{ marginRight: '8px' }}></i> jlservicoscontabeis0@gmail.com
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <p>© 2026 J L Serviços Contábeis — Todos os direitos reservados</p>
         </div>
       </footer>
     </div>
