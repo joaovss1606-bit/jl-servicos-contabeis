@@ -1,7 +1,16 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
-      "source": "/((?!.*\\.).*)",
+      "source": "/((?!api|blog|servicos|sobre|lgpd|assets|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
