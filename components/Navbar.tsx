@@ -38,10 +38,10 @@ const Navbar: React.FC<NavbarProps> = ({ auth, onLogout, onNavigate, identity })
         <nav className="navbar">
             <ul className="nav-links" id="nav-list">
                 <li><button onClick={() => onNavigate('/')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>Início</button></li>
-                <li><a href="/servicos/index.html">Serviços</a></li>
-                <li><a href="/blog/index.html">Blog</a></li>
-                <li><a href="/sobre/index.html">Sobre</a></li>
-                <li><a href="/lgpd/index.html">LGPD</a></li>
+                <li><a href="/servicos/">Serviços</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/sobre/">Sobre</a></li>
+                <li><a href="/lgpd/">LGPD</a></li>
             </ul>
         </nav>
       </div>

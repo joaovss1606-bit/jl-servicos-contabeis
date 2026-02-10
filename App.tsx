@@ -198,10 +198,10 @@ const App: React.FC = () => {
             <h4>Links Rápidos</h4>
             <ul>
               <li><button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0 }}>Início</button></li>
-              <li><a href="/servicos/index.html">Catálogo de Serviços</a></li>
-              <li><a href="/blog/index.html">Blog</a></li>
-              <li><a href="/sobre/index.html">Quem Somos</a></li>
-              <li><a href="/lgpd/index.html">Política de Privacidade</a></li>
+              <li><a href="/servicos/">Catálogo de Serviços</a></li>
+              <li><a href="/blog/">Blog</a></li>
+              <li><a href="/sobre/">Quem Somos</a></li>
+              <li><a href="/lgpd/">Política de Privacidade</a></li>
             </ul>
           </div>
 
