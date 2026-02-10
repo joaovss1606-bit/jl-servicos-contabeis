@@ -42,33 +42,39 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart, onLogin, identity })
   ];
 
   return (
-    <div className="home-page">
-      <main className="container">
-        <div style={{ textAlign: 'center', margin: '60px 0 40px' }}>
-          <h2 className="site-title-header" style={{ fontSize: '2.8rem', marginBottom: '10px' }}>
-            Conteúdo Especializado
-          </h2>
-          <p style={{ color: '#ffffff', opacity: 0.8, fontSize: '1.1rem', fontFamily: "'Montserrat', sans-serif" }}>
-            Informações essenciais para sua segurança contábil e fiscal
-          </p>
-          <div style={{ width: '80px', height: '3px', background: '#bd9617', margin: '25px auto' }}></div>
+    <div className="home-page-content">
+      <div className="brand-identity" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '30px', margin: '40px 0' }}>
+        <img src="/logo.png" alt="JL Serviços" className="site-logo-circle" style={{ width: '150px', height: '150px', borderRadius: '50%', border: '4px solid #bd9617' }} />
+        <div className="brand-text" style={{ textAlign: 'left' }}>
+          <h1 className="site-title-header" style={{ fontSize: '3.8rem', fontWeight: 900, lineHeight: 1.1, color: '#bd9617' }}>J L Serviços Contábeis</h1>
+          <p className="site-subtitle-header" style={{ fontSize: '1.2rem', marginTop: '5px', color: '#ffffff' }}>Atendimento Online para todo o Brasil</p>
         </div>
+      </div>
 
-        <section className="blog-home">
-          {blogPosts.map((post, idx) => (
-            <article key={idx} className="blog-highlight">
-              <img src={post.img} alt={post.title} />
-              <div className="blog-content">
-                <h2>{post.title}</h2>
-                <p>{post.desc}</p>
-                <a href={post.link} style={{ color: '#bd9617', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', marginTop: '10px' }}>
-                  Ler Artigo Completo →
-                </a>
-              </div>
-            </article>
-          ))}
-        </section>
-      </main>
+      <div style={{ textAlign: 'center', margin: '60px 0 40px' }}>
+        <h2 className="site-title-header" style={{ fontSize: '2.8rem', marginBottom: '10px', color: '#bd9617' }}>
+          Conteúdo Especializado
+        </h2>
+        <p style={{ color: '#ffffff', opacity: 0.8, fontSize: '1.1rem', fontFamily: "'Montserrat', sans-serif" }}>
+          Informações essenciais para sua segurança contábil e fiscal
+        </p>
+        <div style={{ width: '80px', height: '3px', background: '#bd9617', margin: '25px auto' }}></div>
+      </div>
+
+      <section className="blog-home">
+        {blogPosts.map((post, idx) => (
+          <article key={idx} className="blog-highlight">
+            <img src={post.img} alt={post.title} />
+            <div className="blog-content">
+              <h2>{post.title}</h2>
+              <p>{post.desc}</p>
+              <a href={post.link} style={{ color: '#bd9617', fontWeight: 'bold', textDecoration: 'none', display: 'inline-block', marginTop: '10px' }}>
+                Ler Artigo Completo →
+              </a>
+            </div>
+          </article>
+        ))}
+      </section>
     </div>
   );
 };
