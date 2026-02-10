@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/((?!api|blog|servicos|sobre|lgpd|assets|.*\\..*).*)",
+      "destination": "/index.html"
+    }
   ]
 }
