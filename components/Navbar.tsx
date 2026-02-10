@@ -4,7 +4,7 @@ import { AuthState, CompanyIdentity } from '../types.ts';
 interface NavbarProps {
   auth: AuthState;
   onLogout: () => void;
-  onNavigate: (view: any) => void;
+  onNavigate: (path: string) => void;
   identity: CompanyIdentity;
 }
 
@@ -12,7 +12,7 @@ const Navbar: React.FC<NavbarProps> = ({ auth, onLogout, onNavigate, identity })
   return (
     <header className="site-header">
       <div className="container header-stack"> 
-        <div className="brand-identity" onClick={() => onNavigate('LANDING')} style={{ cursor: 'pointer' }}>
+        <div className="brand-identity" onClick={() => onNavigate('/')} style={{ cursor: 'pointer' }}>
           <img src="/logo.png" alt="JL Serviços" className="site-logo-circle" />
           <div className="brand-text">
             <h1 className="site-title-header">J L Serviços Contábeis</h1>
@@ -22,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ auth, onLogout, onNavigate, identity })
 
         <div className="client-access-row">
            {!auth.isAuthenticated ? (
-             <button onClick={() => onNavigate('LOGIN')} className="btn-area-cliente" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+             <button onClick={() => onNavigate('/login')} className="btn-area-cliente" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                <i className="fas fa-user-circle"></i> Login
              </button>
            ) : (
@@ -37,7 +37,7 @@ const Navbar: React.FC<NavbarProps> = ({ auth, onLogout, onNavigate, identity })
 
         <nav className="navbar">
             <ul className="nav-links" id="nav-list">
-                <li><button onClick={() => onNavigate('LANDING')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>Início</button></li>
+                <li><button onClick={() => onNavigate('/')} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>Início</button></li>
                 <li><a href="/servicos/index.html">Serviços</a></li>
                 <li><a href="/blog/index.html">Blog</a></li>
                 <li><a href="/sobre/index.html">Sobre</a></li>
