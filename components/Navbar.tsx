@@ -15,17 +15,18 @@ const Navbar: React.FC<NavbarProps> = ({ auth, onLogout, onNavigate, identity })
 
   return (
     <header className="site-header">
-      <div className="container header-stack"> 
-        {/* Identidade Visual - Aparece de forma diferente na Home via CSS */}
-        <div className="brand-identity" onClick={() => onNavigate('/')} style={{ cursor: 'pointer' }}>
-          <img src="/logo.png" alt="JL Serviços" className="site-logo-circle" />
-          <div className="brand-text">
-            <h1 className="site-title-header">J L Serviços Contábeis</h1>
-            <p className="site-subtitle-header">Atendimento Online para todo o Brasil</p>
+      <div className="container"> 
+        {/* Identidade Visual - SÓ APARECE EM PÁGINAS INTERNAS PARA EVITAR DUPLICAÇÃO NA HOME */}
+        {!isHomePage && (
+          <div className="brand-identity-internal" onClick={() => onNavigate('/')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '20px' }}>
+            <img src="/logo.png" alt="JL Serviços" style={{ width: '60px', height: '60px', borderRadius: '50%', border: '2px solid #bd9617' }} />
+            <div className="brand-text-internal">
+              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.5rem', color: '#bd9617', margin: 0, textTransform: 'uppercase' }}>J L Serviços Contábeis</h1>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Acesso do Cliente */}
+        {/* Acesso do Cliente - Posicionado de forma absoluta ou fixa via CSS se necessário */}
         <div className="client-access-row">
            {!auth.isAuthenticated ? (
              <button onClick={() => onNavigate('/login')} className="btn-area-cliente" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>

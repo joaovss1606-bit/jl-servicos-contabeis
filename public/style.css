@@ -9,96 +9,25 @@ body {
     line-height: 1.6 !important; 
 }
 
-/* Forçar fontes específicas para títulos e textos */
-h1, h2, h3, .site-title-header { 
-    font-family: 'Playfair Display', serif !important; 
-}
-
-p, a, button, span, li, input, select, textarea, .menu-item { 
-    font-family: 'Montserrat', sans-serif !important; 
-}
+h1, h2, h3 { font-family: 'Playfair Display', serif !important; }
+p, a, button, span, li { font-family: 'Montserrat', sans-serif !important; }
 
 .container { width: 90%; max-width: 1200px; margin: auto; }
 
 /* ==========================================================================
-   HEADER GLOBAL
+   HEADER E NAVBAR
    ========================================================================== */
 .site-header { 
-    padding: 20px 0; 
+    padding: 30px 0; 
     background: #0b1c2d; 
-    border-bottom: 1px solid rgba(189, 150, 23, 0.1);
     width: 100%;
+    position: relative;
 }
 
-.header-stack {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-/* Título elegante para páginas internas */
-.site-title-header {
-    font-size: 1.8rem !important; 
-    font-weight: 700 !important;
-    color: #bd9617 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-    margin: 0 !important;
-    text-align: center;
-}
-
-/* Estilo da Identidade Visual na Home */
-body.home-page .brand-identity {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 30px;
-    margin-bottom: 10px;
-}
-
-body.home-page .site-logo-circle {
-    display: block !important;
-    width: 150px !important;
-    height: 150px !important;
-    border-radius: 50% !important;
-    border: 4px solid #bd9617 !important;
-    object-fit: cover;
-}
-
-body.home-page .brand-text {
-    display: flex !important;
-    flex-direction: column !important;
-    text-align: left !important;
-}
-
-body.home-page .site-title-header {
-    font-size: 3.8rem !important;
-    font-weight: 900 !important;
-    line-height: 1.1 !important;
-}
-
-body.home-page .site-subtitle-header {
-    display: block !important;
-    font-size: 1.2rem !important;
-    color: #ffffff !important;
-    margin-top: 5px !important;
-}
-
-/* Esconde elementos da home em páginas internas */
-body:not(.home-page) .site-logo-circle,
-body:not(.home-page) .site-subtitle-header {
-    display: none !important;
-}
-
-/* ==========================================================================
-   MENU E NAVEGAÇÃO (PADRONIZADO)
-   ========================================================================== */
 .navbar {
-    width: 100%;
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 .nav-links { 
@@ -107,29 +36,26 @@ body:not(.home-page) .site-subtitle-header {
     list-style: none !important; 
     padding: 0 !important; 
     margin: 0 !important;
-    gap: 5px;
+    gap: 10px;
 }
 
-.nav-links li { 
-    display: flex !important; 
-}
+.nav-links li { display: flex !important; }
 
 .nav-links a, 
 .nav-links button {
     background: transparent !important;
     border: 1px solid transparent !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 15px !important; 
-    font-weight: 600 !important;
+    font-size: 14px !important; 
+    font-weight: 700 !important;
     color: #ffffff !important;
     text-transform: uppercase !important;
     text-decoration: none !important;
     letter-spacing: 1px !important;
+    height: 45px !important;
+    padding: 0 20px !important; 
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    height: 45px !important;
-    padding: 0 20px !important; 
     transition: all 0.3s ease !important;
     border-radius: 4px !important;
     cursor: pointer !important;
@@ -142,96 +68,110 @@ body:not(.home-page) .site-subtitle-header {
     border: 1px solid rgba(189, 150, 23, 0.5) !important;
 }
 
-/* Estilo do botão de Login/Sair */
 .client-access-row {
     position: absolute;
-    top: 20px;
+    top: 35px;
     right: 5%;
 }
 
 .btn-area-cliente {
     color: #ffffff !important;
     font-weight: 700 !important;
-    font-size: 0.85rem !important;
+    font-size: 0.8rem !important;
     text-transform: uppercase !important;
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
-    transition: color 0.3s !important;
+    text-decoration: none !important;
 }
 
-.btn-area-cliente:hover {
+.btn-area-cliente:hover { color: #bd9617 !important; }
+
+/* ==========================================================================
+   LANDING PAGE (HOME)
+   ========================================================================== */
+.brand-identity-home {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 40px;
+    padding: 60px 0;
+}
+
+.site-logo-home {
+    width: 180px !important;
+    height: 180px !important;
+    border-radius: 50% !important;
+    border: 5px solid #bd9617 !important;
+    object-fit: cover;
+}
+
+.brand-text-home {
+    text-align: left !important;
+}
+
+.site-title-home {
+    font-size: 4rem !important;
+    font-weight: 900 !important;
     color: #bd9617 !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+.site-subtitle-home {
+    font-size: 1.3rem !important;
+    color: #ffffff !important;
+    margin-top: 10px !important;
 }
 
 /* ==========================================================================
-   CONTEÚDO E SEÇÕES
+   SEÇÕES E CARDS
    ========================================================================== */
-.pf-section h2 {
-    font-family: 'Playfair Display', serif !important;
+.section-title {
+    font-size: 2.5rem !important;
     color: #bd9617 !important;
-    border-left: 5px solid #bd9617;
-    padding-left: 15px;
-    margin-bottom: 25px;
-    text-align: left;
+    text-align: center !important;
+    margin-bottom: 15px !important;
+    text-transform: uppercase !important;
+}
+
+.section-subtitle {
+    text-align: center !important;
+    color: rgba(255,255,255,0.7) !important;
+    margin-bottom: 50px !important;
 }
 
 .service-card {
-    background: linear-gradient(145deg, #0e2a47, #0b1c2d) !important;
+    background: #0e2a47 !important;
     border: 1px solid rgba(189, 150, 23, 0.2) !important;
-    border-radius: 12px !important;
+    border-radius: 15px !important;
     padding: 30px !important;
-    text-decoration: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    transition: all 0.4s ease !important;
+    transition: all 0.3s ease !important;
 }
 
 .service-card:hover {
-    transform: translateY(-8px) !important;
     border-color: #bd9617 !important;
-    box-shadow: 0 12px 25px rgba(0,0,0,0.4) !important;
-}
-
-.service-title {
-    font-family: 'Montserrat', sans-serif !important;
-    font-weight: 700 !important;
-    font-size: 1.1rem !important;
-    color: #ffffff !important;
-    margin-bottom: 8px !important;
-}
-
-.service-price {
-    font-family: 'Montserrat', sans-serif !important;
-    color: #bd9617 !important;
-    font-weight: 800 !important;
-    font-size: 1.4rem !important;
+    transform: translateY(-5px) !important;
 }
 
 /* ==========================================================================
    FOOTER
    ========================================================================== */
-.site-footer { 
-    background: #050c16 !important; 
-    border-top: 2px solid #bd9617 !important; 
-    padding: 60px 0 30px !important; 
-    margin-top: 80px !important; 
-}
-
-.footer-col h3, .footer-col h4 { 
-    font-family: 'Playfair Display', serif !important;
-    color: #bd9617 !important; 
-    margin-bottom: 20px !important; 
+.site-footer {
+    background: #050c16 !important;
+    border-top: 2px solid #bd9617 !important;
+    padding: 60px 0 30px !important;
+    margin-top: 80px !important;
 }
 
 /* ==========================================================================
    RESPONSIVIDADE
    ========================================================================== */
 @media (max-width: 768px) {
-    body.home-page .brand-identity { flex-direction: column !important; text-align: center !important; }
-    body.home-page .brand-text { text-align: center !important; }
-    body.home-page .site-logo-circle { width: 120px !important; height: 120px !important; }
-    body.home-page .site-title-header { font-size: 2.2rem !important; }
+    .brand-identity-home { flex-direction: column !important; text-align: center !important; gap: 20px; }
+    .brand-text-home { text-align: center !important; }
+    .site-title-home { font-size: 2.5rem !important; }
     .nav-links { flex-direction: column !important; align-items: center !important; }
-    .client-access-row { position: static !important; margin-bottom: 20px !important; text-align: center !important; }
+    .client-access-row { position: static !important; margin-top: 20px !important; text-align: center !important; }
 }
