@@ -1,0 +1,184 @@
+/* ===== BASE & PADRONIZAÇÃO ===== */
+.mei-page {
+  padding: 40px 0 80px;
+  color: #ffffff;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+  margin: 30px auto 0;
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+}
+
+.breadcrumb a {
+  color: #bd9617;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* ===== HEADER ===== */
+.mei-header {
+  text-align: center;
+  margin: 40px 0 60px;
+}
+
+.mei-header h1 {
+  font-size: 3rem;
+  color: #bd9617; /* Dourado JL */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.mei-header p {
+  color: #ffffff;
+  opacity: 0.9;
+  max-width: 700px;
+  margin: auto;
+  line-height: 1.6;
+}
+
+/* ===== SEÇÕES ===== */
+.mei-section {
+  background: rgba(255,255,255,0.03); /* Leve transparência padrão do site */
+  border: 1px solid rgba(189,150,23,0.1);
+  border-radius: 15px;
+  padding: 40px;
+  margin-bottom: 50px;
+}
+
+.mei-section h2 {
+  color: #bd9617;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  text-align: center;
+}
+
+/* ===== SERVIÇOS AVULSOS ===== */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.service-card {
+  background: rgba(10, 25, 47, 0.8);
+  border: 1px solid rgba(189,150,23,0.3);
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.service-title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.service-price {
+  color: #bd9617;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.service-card:hover {
+  border-color: #bd9617;
+  background: rgba(189,150,23,0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* ===== PLANOS ===== */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.plan-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s;
+}
+
+.plan-card.premium {
+  border: 2px solid #bd9617;
+  background: rgba(189,150,23,0.05);
+  position: relative;
+}
+
+.plan-card h3 {
+  color: #bd9617;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 25px;
+}
+
+.plan-card ul li {
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 12px;
+  list-style: none;
+}
+
+/* ===== BOTÕES ===== */
+.btn-plan {
+  margin-top: auto;
+  padding: 15px;
+  border-radius: 30px;
+  border: 2px solid #bd9617;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  background: transparent;
+  color: #bd9617;
+  transition: 0.3s;
+}
+
+.btn-plan:hover {
+  background: #bd9617;
+  color: #0a192f;
+}
+
+.btn-plan.destaque {
+  background: #bd9617;
+  color: #0a192f;
+}
+
+.btn-plan.destaque:hover {
+  background: transparent;
+  color: #bd9617;
+}
+
+.badge {
+  background: #bd9617;
+  color: #0a192f;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  position: absolute;
+  top: -15px;
+  right: 30px;
+}

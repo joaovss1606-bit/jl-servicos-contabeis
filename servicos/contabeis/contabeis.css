@@ -1,0 +1,94 @@
+/* ===== ESTILO SERVIÇOS CONTÁBEIS JL ===== */
+.contabeis-page {
+  padding: 40px 0 80px;
+  color: #ffffff;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb {
+  margin: 30px auto 0;
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+}
+
+.breadcrumb a {
+  color: #bd9617;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+/* ===== HEADER ===== */
+.contabeis-header {
+  text-align: center;
+  margin: 40px 0 60px;
+}
+
+.contabeis-header h1 {
+  font-size: 2.8rem;
+  color: #bd9617;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.contabeis-header p {
+  color: #ffffff;
+  opacity: 0.9;
+  max-width: 700px;
+  margin: auto;
+}
+
+/* ===== GRID DE SERVIÇOS ===== */
+.contabeis-section {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(189,150,23,0.1);
+  border-radius: 15px;
+  padding: 40px;
+}
+
+.contabeis-section h2 {
+  color: #bd9617;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.service-card {
+  background: rgba(10, 25, 47, 0.8);
+  border: 1px solid rgba(189,150,23,0.3);
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.service-title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.service-price {
+  color: #bd9617;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.service-card:hover {
+  border-color: #bd9617;
+  background: rgba(189,150,23,0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}

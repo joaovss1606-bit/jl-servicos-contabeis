@@ -1,17 +1,5 @@
 {
+  "version": 2,
   "cleanUrls": true,
-  "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/index.html",
-      "destination": "/",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/((?!api|blog|servicos|sobre|lgpd|assets|.*\\..*).*)",
-      "destination": "/index.html"
-    }
-  ]
+  "trailingSlash": true
 }
