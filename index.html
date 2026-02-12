@@ -5,37 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>J L Serviços Contábeis | Atendimento Online</title>
 
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body class="home-page">
 <header class="site-header">
-  <div class="container header-content"> 
+  <div class="container header-stack"> 
     
-    <!-- Identidade Visual da Home -->
     <div class="brand-identity">
-      <img src="/logo.png" alt="JL Serviços" class="site-logo-circle">
+      <img src="logo.png" alt="JL Serviços" class="site-logo-circle">
       <div class="brand-text">
         <h1 class="site-title-header">J L Serviços Contábeis</h1>
         <p class="site-subtitle-header">Atendimento Online para todo o Brasil</p>
       </div>
     </div>
 
-    <!-- Menu de Navegação -->
-    <nav style="margin-top: 40px; width: 100%;">
-        <ul class="menu" id="nav-list" style="display: flex; justify-content: center; gap: 15px; list-style: none; padding: 0;">
-            <li class="menu-item"><a href="/">Início</a></li>
-            <li class="menu-item"><a href="/servicos/">Serviços</a></li>
-            <li class="menu-item"><a href="/blog/">Blog</a></li>
-            <li class="menu-item"><a href="/sobre/">Sobre</a></li>
-            <li class="menu-item"><a href="/lgpd/">LGPD</a></li>
-            <li class="menu-item">
-                <a href="/servicos/area_do_cliente/" style="border: 1px solid #bd9617 !important; color: #bd9617 !important; margin-left: 20px;">
-                    <i class="fas fa-user-circle" style="margin-right: 8px;"></i> LOGIN
-                </a>
-            </li>
+    <div class="client-access-row">
+       <a href="servicos/area_do_cliente/index.html" class="btn-area-cliente">
+         <i class="fas fa-user-circle"></i> Login
+       </a>
+       <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menu">
+          <i class="fas fa-bars"></i>
+       </button>
+    </div>
+
+    <nav class="navbar">
+        <ul class="nav-links" id="nav-list">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="servicos/index.html">Serviços</a></li>
+            <li><a href="blog/index.html">Blog</a></li>
+            <li><a href="sobre/index.html">Sobre</a></li>
+            <li><a href="lgpd/index.html">LGPD</a></li>
         </ul>
     </nav>
   </div>
@@ -44,8 +46,8 @@
 
 <main class="container">
 
-  <div style="text-align: center; margin: 80px 0 40px;">
-    <h2 class="site-title-header" style="font-size: 3rem !important; margin-bottom: 10px;">
+  <div style="text-align: center; margin: 60px 0 40px;">
+    <h2 class="site-title-header" style="font-size: 2.8rem !important; margin-bottom: 10px;">
       Conteúdo Especializado
     </h2>
     <p style="color: #ffffff; opacity: 0.8; font-size: 1.1rem; font-family: 'Montserrat', sans-serif;">
@@ -57,29 +59,47 @@
   <section class="blog-home">
 
     <article class="blog-highlight">
-      <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800" alt="Contabilidade Geral">
+      <img src="https://via.placeholder.com/800x400/0a192f/bd9617?text=PF+vs+PJ" alt="Contabilidade Geral">
       <div class="blog-content">
-        <h2 style="font-family: 'Playfair Display', serif; color: #bd9617; margin-bottom: 15px;">Conta PF vs PJ: Entenda</h2>
+        <h2>Conta PF vs PJ: Entenda</h2>
         <p>Descubra por que separar as suas contas pessoais das da empresa é vital para o seu sucesso.</p>
-        <a href="/blog/contabilidade/separar-conta-pf-pj.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:15px; font-family: 'Montserrat', sans-serif;">Ler Artigo Completo →</a>
+        <a href="blog/contabilidade/separar-conta-pf-pj.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
       </div>
     </article>
 
     <article class="blog-highlight">
-      <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800" alt="Legislação Contábil">
+      <img src="https://via.placeholder.com/800x400/0a192f/bd9617?text=Legislação+2026" alt="Legislação Contábil">
       <div class="blog-content">
-        <h2 style="font-family: 'Playfair Display', serif; color: #bd9617; margin-bottom: 15px;">Mudanças para 2026</h2>
+        <h2>Mudanças para 2026</h2>
         <p>Fique por dentro das novas regras tributárias e limites de faturamento para este ano.</p>
-        <a href="/blog/legislacao/mudancas-contabeis-2026.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:15px; font-family: 'Montserrat', sans-serif;">Ler Artigo Completo →</a>
+        <a href="blog/legislacao/mudancas-contabeis-2026.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
       </div>
     </article>
 
     <article class="blog-highlight">
-      <img src="https://images.unsplash.com/photo-1521791136064-7986c2923216?auto=format&fit=crop&q=80&w=800" alt="Departamento Pessoal">
+      <img src="https://via.placeholder.com/800x400/0a192f/bd9617?text=Contratação+MEI" alt="Departamento Pessoal">
       <div class="blog-content">
-        <h2 style="font-family: 'Playfair Display', serif; color: #bd9617; margin-bottom: 15px;">Contratar no MEI: Regras</h2>
+        <h2>Contratar no MEI: Regras</h2>
         <p>Saiba quanto custa e como registrar seu primeiro funcionário de forma legal e segura.</p>
-        <a href="/blog/departamento-pessoal/contratar-funcionario-mei.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:15px; font-family: 'Montserrat', sans-serif;">Ler Artigo Completo →</a>
+        <a href="blog/departamento-pessoal/contratar-funcionario-mei.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
+      </div>
+    </article>
+
+    <article class="blog-highlight">
+      <img src="https://via.placeholder.com/800x400/0a192f/bd9617?text=Guia+DAS-MEI" alt="Fiscal">
+      <div class="blog-content">
+        <h2>Guia DAS-MEI: Evite Multas</h2>
+        <p>Saiba como manter seu imposto mensal em dia e como regularizar atrasos.</p>
+        <a href="blog/fiscal/guia-das-mei.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
+      </div>
+    </article>
+
+    <article class="blog-highlight">
+      <img src="https://via.placeholder.com/800x400/0a192f/bd9617?text=Checklist+Mensal" alt="Contábil">
+      <div class="blog-content">
+        <h2>Documentos Mensais</h2>
+        <p>Confira o checklist completo do que você precisa enviar para manter sua empresa regular.</p>
+        <a href="blog/contabil/documentos-mensais-contador.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
       </div>
     </article>
 
@@ -90,22 +110,22 @@
 <footer class="site-footer">
   <div class="footer-container container">
     <div class="footer-col">
-      <h3 style="font-family: 'Playfair Display', serif;">J L Serviços Contábeis</h3>
+      <h3>J L Serviços Contábeis</h3>
       <p>Soluções contábeis com transparência, segurança e foco em resultados para MEI, Pessoa Física e Empresas.</p>
     </div>
 
     <div class="footer-col">
-      <h4 style="font-family: 'Montserrat', sans-serif;">Links Rápidos</h4>
-      <ul style="list-style: none; padding: 0;">
-        <li style="margin-bottom: 10px;"><a href="/" style="color: #fff; text-decoration: none;">Início</a></li>
-        <li style="margin-bottom: 10px;"><a href="/servicos/" style="color: #fff; text-decoration: none;">Catálogo de Serviços</a></li>
-        <li style="margin-bottom: 10px;"><a href="/sobre/" style="color: #fff; text-decoration: none;">Quem Somos</a></li>
-        <li style="margin-bottom: 10px;"><a href="/lgpd/" style="color: #fff; text-decoration: none;">Política de Privacidade</a></li>
+      <h4>Links Rápidos</h4>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="servicos/index.html">Catálogo de Serviços</a></li>
+        <li><a href="sobre/index.html">Quem Somos</a></li>
+        <li><a href="lgpd/index.html">Política de Privacidade</a></li>
       </ul>
     </div>
 
     <div class="footer-col">
-      <h4 style="font-family: 'Montserrat', sans-serif;">Contato</h4>
+      <h4>Contato</h4>
       <a href="https://wa.me/5561920041427" target="_blank" class="btn-whatsapp-footer">
         <i class="fab fa-whatsapp" style="margin-right: 10px;"></i> WhatsApp
       </a>
@@ -120,5 +140,7 @@
   </div>
 </footer>
 
-</body>
+<script type="module" src="./menu.js"></script>
+<body class="home-page">
 </html>
+
