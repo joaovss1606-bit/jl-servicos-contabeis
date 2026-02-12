@@ -31,12 +31,12 @@ if (loginForm) {
             // REDIRECIONAMENTO ESTRATÉGICO
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
                 // Se você estiver na raiz, esse caminho está correto:
-                window.location.href = window.location.href = "admin.html";
+                window.location.href = "admin.html";
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servicoEscolhido = urlParams.get('servico');
                 
-                const basePath = 'servicos/area_do_cliente/dashboard.html';
+                const basePath = 'dashboard.html';
                 window.location.href = servicoEscolhido 
                     ? `${basePath}?contratar=${servicoEscolhido}` 
                     : basePath;

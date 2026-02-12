@@ -31,7 +31,8 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onBack, onLogin, identi
       name: formData.name,
       email: formData.email,
       role: UserRole.CLIENTE,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      isPlanActive: false
     });
   };
 
