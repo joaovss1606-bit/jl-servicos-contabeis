@@ -14,51 +14,18 @@ export default defineConfig(({ mode }) => {
         react(),
         viteStaticCopy({
           targets: [
-            {
-              src: 'servicos',
-              dest: '.'
-            },
-            {
-              src: 'blog',
-              dest: '.'
-            },
-            {
-              src: 'sobre',
-              dest: '.'
-            },
-            {
-              src: 'lgpd',
-              dest: '.'
-            },
-            {
-              src: 'views',
-              dest: '.'
-            },
-            {
-              src: 'components',
-              dest: '.'
-            },
-            {
-              src: 'login.html',
-              dest: '.'
-            },
-            {
-              src: 'style.css',
-              dest: '.'
-            },
-            {
-              src: 'menu.js',
-              dest: '.'
-            },
-            {
-              src: 'logo.png',
-              dest: '.'
-            },
-            {
-              src: 'minha-foto.jpeg',
-              dest: '.'
-            }
-          ]
+            'servicos',
+            'blog',
+            'sobre',
+            'lgpd',
+            'views',
+            'components',
+            'login.html',
+            'style.css',
+            'menu.js',
+            'logo.png',
+            'minha-foto.jpeg'
+          ].map(src => ({ src, dest: '.' }))
         })
       ],
       define: {
