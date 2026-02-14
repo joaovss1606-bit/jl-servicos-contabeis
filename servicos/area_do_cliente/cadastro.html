@@ -29,6 +29,13 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
+        .login-container img {
+            width: 80px;
+            margin-bottom: 20px;
+            border: 2px solid #bd9617;
+            border-radius: 50%;
+            padding: 5px;
+        }
         .login-container h2 { font-family: 'Playfair Display', serif; color: #bd9617; font-size: 1.8rem; margin-bottom: 10px; }
         .input-group { position: relative; margin-bottom: 15px; text-align: left; }
         .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #bd9617; }
@@ -40,6 +47,11 @@
             border-radius: 10px;
             color: white;
             outline: none;
+            transition: 0.3s;
+        }
+        .input-group input:focus {
+            border-color: #bd9617;
+            background: rgba(0, 0, 0, 0.4);
         }
         .btn-register {
             width: 100%;
@@ -49,14 +61,33 @@
             border-radius: 10px;
             color: white;
             font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
+            transition: 0.4s;
             margin-top: 10px;
+        }
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(189, 150, 23, 0.3);
+        }
+        .back-link {
+            margin-top: 25px;
+            display: block;
+            color: #bd9617;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+        .back-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
 <div class="login-container">
+    <img src="../../logo.png" alt="Logo JL">
     <h2>Criar Conta</h2>
     <p style="margin-bottom: 25px; color: #ccc;">Cadastre-se para contratar o serviço</p>
 
@@ -78,16 +109,29 @@
     </form>
 
     <p style="margin-top: 20px; font-size: 0.85rem; color: #ccc;">
-        Já tem conta? <a href="index.html" style="color: #bd9617; text-decoration: none;">Faça login</a>
+        Já tem conta? <a href="index.html" id="link-login" style="color: #bd9617; text-decoration: none; font-weight: bold;">Faça login</a>
     </p>
+
+    <a href="../../index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Voltar para o site
+    </a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    // Configurações do Supabase (reutilizando as mesmas do seu cliente.js)
+    // Configurações do Supabase
     const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
-    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; // Use sua chave completa
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+    // Preserva os parâmetros no link de login
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const linkLogin = document.getElementById('link-login');
+        if (urlParams.toString() && linkLogin) {
+            linkLogin.href = `index.html?${urlParams.toString()}`;
+        }
+    });
 
     document.getElementById('register-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -114,14 +158,22 @@
             // 3. Verifica se tem serviço na URL para redirecionar
             const urlParams = new URLSearchParams(window.location.search);
             const servico = urlParams.get('servico');
+            const categoria = urlParams.get('categoria');
 
             alert("Cadastro realizado com sucesso!");
             
+            let redirectUrl = 'dashboard.html';
+            const params = new URLSearchParams();
+            
             if (servico) {
-                window.location.href = `dashboard.html?contratar=${servico}`;
-            } else {
-                window.location.href = 'dashboard.html';
+                params.append('contratar', servico);
+                if (categoria) {
+                    params.append('categoria', categoria);
+                }
+                redirectUrl += `?${params.toString()}`;
             }
+            
+            window.location.href = redirectUrl;
         }
     });
 </script>

@@ -133,6 +133,7 @@
     <h2>Bem-vindo</h2>
     <p>Acesse sua área exclusiva</p>
 
+
     <div id="error-msg">Usuário ou senha inválidos.</div>
 
     <form id="login-form">
@@ -163,11 +164,10 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
-        const servico = urlParams.get('servico');
         const linkCadastro = document.getElementById('link-cadastro');
 
-        if (servico && linkCadastro) {
-            linkCadastro.href = `cadastro.html?servico=${servico}`;
+        if (urlParams.toString() && linkCadastro) {
+            linkCadastro.href = `cadastro.html?${urlParams.toString()}`;
         }
     });
 </script>
