@@ -30,7 +30,8 @@
         <nav style="margin-top: 40px;">
             <p style="font-size: 0.8rem; color: #888;">Navegação</p>
             <div style="display: flex; flex-direction: column; gap: 15px;">
-                <a href="#" style="color: var(--gold); text-decoration: none;"><i class="fas fa-home"></i> Início</a>
+                <a href="../../index.html" style="color: #fff; text-decoration: none;"><i class="fas fa-home"></i> Voltar ao Site</a>
+                <a href="#" style="color: var(--gold); text-decoration: none;"><i class="fas fa-columns"></i> Dashboard</a>
             </div>
         </nav>
         <a onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair do Painel</a>
@@ -74,19 +75,27 @@
 
     <script>
         const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
-        const SB_KEY = 'SUA_KEY_ANON_AQUI'; 
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
         const dashClient = supabase.createClient(SB_URL, SB_KEY);
 
         const nomesServicos = {
             'abertura-mei': 'Abertura de MEI', 
             'mei-plano-basico': 'Plano MEI Básico', 
             'mei-plano-premium': 'Plano MEI Premium', 
-            'irpf': 'Declaração IRPF'
+            'irpf': 'Declaração IRPF',
+            'regularizacao-mei': 'Regularização de MEI',
+            'baixa-mei': 'Baixa de MEI',
+            'emissao-das': 'Emissão de DAS',
+            'dasn-anual': 'DASN (Anual)',
+            'parcelamento-mei': 'Parcelamento de Débitos',
+            'alteracao-mei': 'Alteração de Dados',
+            'cpf-regularizacao': 'Regularização de CPF',
+            'planejamento-tributario': 'Planejamento Tributário'
         };
 
         async function logout() {
             await dashClient.auth.signOut();
-            window.location.href = '../../index.html'; // Ajustado para voltar da pasta servicos/area_do_cliente
+            window.location.href = '../../index.html';
         }
 
         function abrirWhatsapp(msg = "Olá! Sou cliente JL e preciso de suporte.") {
@@ -97,11 +106,10 @@
             const { data: { user } } = await dashClient.auth.getUser();
 
             if (!user) {
-                window.location.href = '../../index.html';
+                window.location.href = 'index.html';
                 return;
             }
 
-            // BOTÃO DO ADMIN - Troque pelo seu e-mail real
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com"; 
             if (user.email === EMAIL_ADMIN) {
                 const btnAdmin = document.createElement('button');
@@ -111,16 +119,13 @@
                 document.body.appendChild(btnAdmin);
             }
 
-            // Carregar Perfil e Documentos (Correção de nomes de tabela)
             const { data: profile } = await dashClient.from('profiles').select('*').eq('id', user.id).single();
             const { data: assinatura } = await dashClient.from('assinaturas').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false }).limit(1).maybeSingle();
             const { data: docs } = await dashClient.from('documentos').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false });
 
-            // Atualiza UI
             document.getElementById('user-name').innerText = "Olá, " + (profile?.nome?.split(' ')[0] || user.email.split('@')[0]);
             document.getElementById('user-email').innerText = user.email;
 
-            // Status Badge
             const statusBadge = document.getElementById('sub-status');
             const status = assinatura?.status || "Inativo";
             statusBadge.innerText = status;
@@ -128,7 +133,6 @@
             statusBadge.style.color = status === 'Pendente' ? 'black' : 'white';
             document.getElementById('sub-details').innerText = nomesServicos[assinatura?.plano_id] || "Nenhum serviço ativo";
 
-            // Lista Documentos
             const listaDocs = document.getElementById('lista-documentos');
             if (docs?.length > 0) {
                 listaDocs.innerHTML = docs.map(doc => `
@@ -141,58 +145,16 @@
                 listaDocs.innerHTML = "<p style='font-size:0.7rem; color:#666;'>Nada disponível ainda.</p>";
             }
 
-            // Lógica de Checkout Automático (Seu código original chamando a nova função)
             const urlParams = new URLSearchParams(window.location.search);
             const servico = urlParams.get('contratar');
-            if (servico) iniciarFluxoContratacao(user, servico, profile);
-        }
-
-        async function iniciarFluxoContratacao(user, servicoID, profile) {
-            console.log("Iniciando contratação para:", servicoID);
-            try {
-                // 1. Verificar duplicidade
-                const { data: existente } = await dashClient
-                    .from('assinaturas')
-                    .select('*')
-                    .eq('cliente_id', user.id)
-                    .eq('plano_id', servicoID)
-                    .in('status', ['Pendente', 'Ativo'])
-                    .maybeSingle();
-
-                if (existente) {
-                    alert(`Você já possui uma solicitação para ${nomesServicos[servicoID] || servicoID}.`);
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    return;
-                }
-
-                // 2. Registrar no banco
-                const { error: insError } = await dashClient.from('assinaturas').insert({
-                    cliente_id: user.id,
-                    plano_id: servicoID,
-                    status: 'Pendente'
-                });
-
-                if (insError) throw insError;
-
-                // 3. Notificar via WhatsApp
-                const nomeCliente = profile?.nome || user.email;
-                const nomeServico = nomesServicos[servicoID] || servicoID;
-                const mensagem = `Olá! Meu nome é ${nomeCliente}. Acabei de solicitar o serviço *${nomeServico}* pelo site e gostaria de prosseguir com o atendimento.`;
-                
-                alert("Solicitação registrada! Vamos te redirecionar para o WhatsApp.");
-                window.history.replaceState({}, document.title, window.location.pathname);
-                
-                setTimeout(() => {
-                    abrirWhatsapp(mensagem);
-                    location.reload();
-                }, 1000);
-
-            } catch (err) {
-                alert("Erro ao processar pedido: " + err.message);
+            const categoria = urlParams.get('categoria');
+            if (servico) {
+                // Se houver serviço na URL, redireciona para a página de compra
+                const compraUrl = `../compra/index.html?categoria=${categoria || 'mei'}&servico=${servico}`;
+                window.location.href = compraUrl;
             }
         }
 
-        // Executa a verificação ao carregar a página
         verificarAcesso();
     </script>
 </body>

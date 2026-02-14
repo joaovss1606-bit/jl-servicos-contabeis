@@ -116,7 +116,6 @@
             text-decoration: underline;
         }
 
-        /* Mensagem de Erro Estilizada */
         #error-msg {
             color: #ff4444;
             font-size: 0.8rem;
@@ -164,10 +163,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         const servico = urlParams.get('servico');
+        const categoria = urlParams.get('categoria');
         const linkCadastro = document.getElementById('link-cadastro');
 
         if (servico && linkCadastro) {
-            linkCadastro.href = `cadastro.html?servico=${servico}`;
+            let cadastroHref = `cadastro.html?servico=${servico}`;
+            if (categoria) cadastroHref += `&categoria=${categoria}`;
+            linkCadastro.href = cadastroHref;
         }
     });
 </script>

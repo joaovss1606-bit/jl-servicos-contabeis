@@ -1,4 +1,8 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/servicos/area_do_cliente/(.*)", "dest": "/servicos/area_do_cliente/index.html" }
+  ]
 }
