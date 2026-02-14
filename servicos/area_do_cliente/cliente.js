@@ -30,24 +30,16 @@ if (loginForm) {
 
             // REDIRECIONAMENTO ESTRATÉGICO
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
+                // Se você estiver na raiz, esse caminho está correto:
                 window.location.href = "admin.html";
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servicoEscolhido = urlParams.get('servico');
-                const categoriaEscolhida = urlParams.get('categoria');
                 
-                let redirectUrl = 'dashboard.html';
-                const params = new URLSearchParams();
-                
-                if (servicoEscolhido) {
-                    params.append('contratar', servicoEscolhido);
-                    if (categoriaEscolhida) {
-                        params.append('categoria', categoriaEscolhida);
-                    }
-                    redirectUrl += `?${params.toString()}`;
-                }
-                
-                window.location.href = redirectUrl;
+                const basePath = 'dashboard.html';
+                window.location.href = servicoEscolhido 
+                    ? `${basePath}?contratar=${servicoEscolhido}` 
+                    : basePath;
             }
         }
     });
@@ -58,6 +50,7 @@ if (loginForm) {
 async function checkUser() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) {
+        // Se estiver dentro de /area_do_cliente/, precisa de ../../ para voltar
         window.location.href = '../../index.html'; 
         return null;
     }
