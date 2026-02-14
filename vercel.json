@@ -2,12 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "routes": [
-    { "src": "/(style\\.css|logo\\.png|minha-foto\\.jpeg|menu\\.js)", "dest": "/$1" },
-    { "src": "/servicos/(.*)\\.(css|js|png|jpg|jpeg|svg)", "dest": "/servicos/$1.$2" },
-    { "src": "/blog/(.*)\\.(css|js|png|jpg|jpeg|svg)", "dest": "/blog/$1.$2" },
-    { "src": "/sobre/(.*)\\.(css|js|png|jpg|jpeg|svg)", "dest": "/sobre/$1.$2" },
-    { "src": "/lgpd/(.*)\\.(css|js|png|jpg|jpeg|svg)", "dest": "/lgpd/$1.$2" },
-    { "src": "/servicos/area_do_cliente/(.*)", "dest": "/servicos/area_do_cliente/index.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+    { "handle": "filesystem" },
+    { "src": "/servicos/area_do_cliente/(.*)", "dest": "/servicos/area_do_cliente/index.html" }
   ]
 }
