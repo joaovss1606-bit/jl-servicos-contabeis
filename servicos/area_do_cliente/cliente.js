@@ -29,15 +29,15 @@ if (loginForm) {
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
 
             // REDIRECIONAMENTO ESTRATÉGICO
-            // Usamos caminhos absolutos para evitar erros de navegação na Vercel
+            // Usamos caminhos relativos diretos para os arquivos .html para garantir compatibilidade
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
-                window.location.href = "/servicos/area_do_cliente/admin";
+                window.location.href = "admin.html";
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servicoEscolhido = urlParams.get('servico');
                 const categoriaEscolhida = urlParams.get('categoria');
                 
-                let redirectUrl = '/servicos/area_do_cliente/dashboard';
+                let redirectUrl = 'dashboard.html';
                 const params = new URLSearchParams();
                 
                 if (servicoEscolhido) {
@@ -48,6 +48,7 @@ if (loginForm) {
                     redirectUrl += `?${params.toString()}`;
                 }
                 
+                // Forçamos o redirecionamento usando o caminho relativo ao arquivo físico
                 window.location.href = redirectUrl;
             }
         }
@@ -59,7 +60,7 @@ if (loginForm) {
 async function checkUser() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) {
-        window.location.href = '/'; 
+        window.location.href = '../../index.html'; 
         return null;
     }
     return user;
@@ -89,5 +90,5 @@ async function getUltimaAssinatura(userId) {
 
 async function logout() {
     await supabaseClient.auth.signOut();
-    window.location.href = '/';
+    window.location.href = '../../index.html';
 }
