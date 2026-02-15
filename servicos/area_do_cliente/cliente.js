@@ -29,15 +29,15 @@ if (loginForm) {
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
 
             // REDIRECIONAMENTO ESTRATÉGICO
-            // Como o script está em /servicos/area_do_cliente/, os arquivos estão na mesma pasta
+            // Usamos caminhos absolutos para evitar erros de navegação na Vercel
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
-                window.location.href = "admin.html";
+                window.location.href = "/servicos/area_do_cliente/admin";
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servicoEscolhido = urlParams.get('servico');
                 const categoriaEscolhida = urlParams.get('categoria');
                 
-                let redirectUrl = 'dashboard.html';
+                let redirectUrl = '/servicos/area_do_cliente/dashboard';
                 const params = new URLSearchParams();
                 
                 if (servicoEscolhido) {
@@ -48,8 +48,7 @@ if (loginForm) {
                     redirectUrl += `?${params.toString()}`;
                 }
                 
-                // Forçamos o redirecionamento direto para o arquivo físico
-                window.location.assign(redirectUrl);
+                window.location.href = redirectUrl;
             }
         }
     });
@@ -60,7 +59,7 @@ if (loginForm) {
 async function checkUser() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) {
-        window.location.href = '../../index.html'; 
+        window.location.href = '/'; 
         return null;
     }
     return user;
@@ -90,5 +89,5 @@ async function getUltimaAssinatura(userId) {
 
 async function logout() {
     await supabaseClient.auth.signOut();
-    window.location.href = '../../index.html';
+    window.location.href = '/';
 }

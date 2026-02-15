@@ -150,10 +150,10 @@
         <button type="submit" class="btn-login">Entrar no Painel</button>
     </form>
     <p style="margin-top: 20px; font-size: 0.85rem; color: #ccc;">
-        Novo por aqui? <a href="cadastro.html" id="link-cadastro" style="color: #bd9617; text-decoration: none; font-weight: bold;">Crie sua conta</a>
+        Novo por aqui? <a href="/servicos/area_do_cliente/cadastro" id="link-cadastro" style="color: #bd9617; text-decoration: none; font-weight: bold;">Crie sua conta</a>
     </p>
 
-    <a href="../../index.html" class="back-link">
+    <a href="/" class="back-link">
         <i class="fas fa-arrow-left"></i> Voltar para o site
     </a>
 </div>
@@ -167,7 +167,7 @@
         const linkCadastro = document.getElementById('link-cadastro');
 
         if (urlParams.toString() && linkCadastro) {
-            linkCadastro.href = `cadastro.html?${urlParams.toString()}`;
+            linkCadastro.href = `/servicos/area_do_cliente/cadastro?${urlParams.toString()}`;
         }
     });
 </script>
