@@ -29,6 +29,7 @@ if (loginForm) {
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
 
             // REDIRECIONAMENTO ESTRATÉGICO
+            // Como o script está em /servicos/area_do_cliente/, os arquivos estão na mesma pasta
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
                 window.location.href = "admin.html";
             } else {
@@ -47,7 +48,8 @@ if (loginForm) {
                     redirectUrl += `?${params.toString()}`;
                 }
                 
-                window.location.href = redirectUrl;
+                // Forçamos o redirecionamento direto para o arquivo físico
+                window.location.assign(redirectUrl);
             }
         }
     });
