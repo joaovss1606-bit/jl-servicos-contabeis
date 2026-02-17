@@ -210,7 +210,11 @@
                 const { data, error } = await client.auth.signInWithPassword({ email, password });
                 if (error) {
                     if (errorMsg) {
-                        errorMsg.innerText = "Usuário ou senha inválidos.";
+                        if (error.message.includes("Email not confirmed")) {
+                            errorMsg.innerText = "Por favor, confirme seu e-mail antes de logar.";
+                        } else {
+                            errorMsg.innerText = "Usuário ou senha inválidos.";
+                        }
                         errorMsg.style.display = 'block';
                     }
                     btn.disabled = false;
