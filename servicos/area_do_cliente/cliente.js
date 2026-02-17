@@ -31,13 +31,13 @@ if (loginForm) {
             // REDIRECIONAMENTO ESTRATÉGICO
             // Usamos caminhos relativos diretos para os arquivos .html para garantir compatibilidade
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
-                window.location.href = "admin.html";
+                window.location.href = "/servicos/area_do_cliente/admin.html";
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servicoEscolhido = urlParams.get('servico');
                 const categoriaEscolhida = urlParams.get('categoria');
                 
-                let redirectUrl = 'dashboard.html';
+                let redirectUrl = '/servicos/area_do_cliente/dashboard.html';
                 const params = new URLSearchParams();
                 
                 if (servicoEscolhido) {
