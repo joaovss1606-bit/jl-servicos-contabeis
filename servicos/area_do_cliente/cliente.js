@@ -29,9 +29,8 @@ if (loginForm) {
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
 
             // REDIRECIONAMENTO ESTRATÉGICO
-            // Usamos caminhos relativos diretos para os arquivos .html para garantir compatibilidade
             if (profile?.role === 'admin' || data.user.email === EMAIL_ADMIN) {
-                window.location.assign("/servicos/area_do_cliente/admin.html");
+                window.location.href = "/servicos/area_do_cliente/admin.html";
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servicoEscolhido = urlParams.get('servico');
@@ -48,8 +47,7 @@ if (loginForm) {
                     redirectUrl += `?${params.toString()}`;
                 }
                 
-                // Forçamos o redirecionamento usando o caminho relativo ao arquivo físico
-                window.location.assign(window.location.origin + redirectUrl);
+                window.location.href = redirectUrl;
             }
         }
     });
@@ -60,7 +58,7 @@ if (loginForm) {
 async function checkUser() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) {
-       window.location.assign(window.location.origin + '/servicos/area_do_cliente/index.html'); 
+       window.location.href = '/servicos/area_do_cliente/index.html'; 
         return null;
     }
     return user;
@@ -90,6 +88,5 @@ async function getUltimaAssinatura(userId) {
 
 async function logout() {
     await supabaseClient.auth.signOut();
-   window.location.assign(window.location.origin + '/servicos/area_do_cliente/index.html');
-}
+    window.location.href = '/servicos/area_do_cliente/index.html';
 }

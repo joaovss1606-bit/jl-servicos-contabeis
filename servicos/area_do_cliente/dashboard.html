@@ -95,7 +95,7 @@
 
     async function logout() {
         await dashClient.auth.signOut();
-        window.location.replace('/servicos/area_do_cliente/index.html');
+        window.location.href = '/servicos/area_do_cliente/index.html';
     }
 
     function abrirWhatsapp(msg = "Olá! Sou cliente JL e preciso de suporte.") {
@@ -108,7 +108,7 @@
 
         if (sessionError || !session) {
             console.error("Sessão não encontrada ou erro:", sessionError);
-            window.location.replace('/servicos/area_do_cliente/index.html');
+            window.location.href = '/servicos/area_do_cliente/index.html';
             return;
         }
 

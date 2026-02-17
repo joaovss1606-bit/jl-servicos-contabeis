@@ -81,10 +81,33 @@
 
     <script>
         const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
-        const SB_KEY = 'SUA_KEY_ANON_AQUI'; 
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
         const adminClient = supabase.createClient(SB_URL, SB_KEY);
 
         let clienteSelecionado = null;
+
+        async function verificarAcessoAdmin() {
+            const { data: { session } } = await adminClient.auth.getSession();
+            const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
+
+            if (!session) {
+                window.location.href = '/servicos/area_do_cliente/index.html';
+                return;
+            }
+
+            const { data: profile } = await adminClient
+                .from('profiles')
+                .select('role')
+                .eq('id', session.user.id)
+                .single();
+
+            if (profile?.role !== 'admin' && session.user.email !== EMAIL_ADMIN) {
+                window.location.href = '/servicos/area_do_cliente/dashboard.html';
+                return;
+            }
+            
+            carregarDados();
+        }
 
         async function carregarDados() {
             // 1. Pega todos os perfis que não são admin
@@ -203,7 +226,7 @@
             window.location.href = '../../index.html';
         }
 
-        carregarDados();
+        verificarAcessoAdmin();
     </script>
 </body>
 </html>
