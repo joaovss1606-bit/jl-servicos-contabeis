@@ -82,7 +82,14 @@
     <script>
         const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
-        const adminClient = supabase.createClient(SB_URL, SB_KEY);
+        
+        const adminClient = supabase.createClient(SB_URL, SB_KEY, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        });
 
         let clienteSelecionado = null;
 
@@ -119,40 +126,40 @@
             const body = document.getElementById('lista-clientes-body');
             body.innerHTML = '';
 
-            profiles.forEach(p => {
-                const sub = assinaturas.find(s => s.cliente_id === p.id) || { status: 'Sem pedido', plano_id: '-' };
-                const dataFormatada = sub.created_at 
-                ? new Date(sub.created_at).toLocaleDateString('pt-BR') 
-                : '---';                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <strong>${p.nome || 'Sem nome'}</strong><br>
-                        <small style="color:#888;">${p.id.substring(0,8)}...</small>
-                    </td>
-                    <td>${sub.plano_id}</td>
-                    <td>
-                        <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
-                            <option value="Pendente" ${sub.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                            <option value="Ativo" ${sub.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
-                            <option value="Cancelado" ${sub.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
-                        </select>
-                    </td>
-                    </td>
-        <td style="color: #aaa;">${dataFormatada}</td> 
-        <td>
-                    <td>
-                        <button class="btn-upload" onclick="abrirModal('${p.id}', '${p.nome}')">
-                            <i class="fas fa-upload"></i> Doc
-                        </button>
-                    </td>
-                `;
-                body.appendChild(row);
-            });
+            if (profiles) {
+                profiles.forEach(p => {
+                    const sub = assinaturas?.find(s => s.cliente_id === p.id) || { status: 'Sem pedido', plano_id: '-' };
+                    const dataFormatada = sub.created_at 
+                    ? new Date(sub.created_at).toLocaleDateString('pt-BR') 
+                    : '---';                
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <strong>${p.nome || 'Sem nome'}</strong><br>
+                            <small style="color:#888;">${p.id.substring(0,8)}...</small>
+                        </td>
+                        <td>${sub.plano_id}</td>
+                        <td>
+                            <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
+                                <option value="Pendente" ${sub.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                                <option value="Ativo" ${sub.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
+                                <option value="Cancelado" ${sub.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                            </select>
+                        </td>
+                        <td style="color: #aaa;">${dataFormatada}</td> 
+                        <td>
+                            <button class="btn-upload" onclick="abrirModal('${p.id}', '${p.nome}')">
+                                <i class="fas fa-upload"></i> Doc
+                            </button>
+                        </td>
+                    `;
+                    body.appendChild(row);
+                });
+            }
         }
 
         async function atualizarStatus(subId, novoStatus) {
-            if (subId === 'undefined') return alert("Cliente sem assinatura registrada.");
+            if (subId === 'undefined' || subId === 'null') return alert("Cliente sem assinatura registrada.");
             const { error } = await adminClient.from('assinaturas').update({ status: novoStatus }).eq('id', subId);
             if (!error) alert("Status atualizado!");
         }
@@ -170,60 +177,55 @@
         }
 
         async function executarUpload() {
-    const fileInput = document.getElementById('file-input');
-    const file = fileInput.files[0];
-    const btn = document.querySelector('#upload-area .btn-upload');
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            const btn = document.querySelector('#upload-area .btn-upload');
 
-    if (!file || !clienteSelecionado) {
-        return alert("Por favor, selecione um arquivo PDF.");
-    }
+            if (!file || !clienteSelecionado) {
+                return alert("Por favor, selecione um arquivo PDF.");
+            }
 
-    try {
-        // Feedback visual
-        btn.disabled = true;
-        btn.innerText = "Enviando...";
+            try {
+                btn.disabled = true;
+                btn.innerText = "Enviando...";
 
-        // 1. Nome do arquivo (organizado por ID do cliente dentro do storage)
-        const fileName = `${Date.now()}_${file.name}`;
-        const filePath = `${clienteSelecionado}/${fileName}`;
+                const fileName = `${Date.now()}_${file.name}`;
+                const filePath = `${clienteSelecionado}/${fileName}`;
 
-        // 2. Upload para o Storage (Certifique-se que o nome do Bucket no Supabase é 'documentos')
-        const { data, error: storageError } = await adminClient.storage
-            .from('documentos') // Ajuste aqui se o seu bucket tiver outro nome
-            .upload(filePath, file);
+                const { data, error: storageError } = await adminClient.storage
+                    .from('documentos')
+                    .upload(filePath, file);
 
-        if (storageError) throw storageError;
+                if (storageError) throw storageError;
 
-        // 3. Pegar a URL pública do arquivo
-        const { data: { publicUrl } } = adminClient.storage
-            .from('documentos')
-            .getPublicUrl(filePath);
+                const { data: { publicUrl } } = adminClient.storage
+                    .from('documentos')
+                    .getPublicUrl(filePath);
 
-        // 4. Salvar na tabela 'documentos' para aparecer no painel do cliente
-        const { error: dbError } = await adminClient.from('documentos').insert({
-            cliente_id: clienteSelecionado,
-            nome_arquivo: file.name,
-            url_arquivo: publicUrl // Essa coluna deve ser a mesma que o Dashboard do Cliente lê
-        });
+                const { error: dbError } = await adminClient.from('documentos').insert({
+                    cliente_id: clienteSelecionado,
+                    nome_arquivo: file.name,
+                    url_arquivo: publicUrl
+                });
 
-        if (dbError) throw dbError;
+                if (dbError) throw dbError;
 
-        alert("✅ Documento disponibilizado com sucesso!");
-        fileInput.value = ""; // Limpa o campo de arquivo
-        fecharModal();
+                alert("✅ Documento disponibilizado com sucesso!");
+                fileInput.value = "";
+                fecharModal();
 
-    } catch (err) {
-        console.error(err);
-        alert("Erro no processo: " + err.message);
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "Confirmar Envio";
-    }
-}
+            } catch (err) {
+                console.error(err);
+                alert("Erro no processo: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Confirmar Envio";
+            }
+        }
 
         async function logout() {
             await adminClient.auth.signOut();
-            window.location.href = '../../index.html';
+            window.location.href = '/servicos/area_do_cliente/index.html';
         }
 
         verificarAcessoAdmin();
