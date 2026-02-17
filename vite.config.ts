@@ -20,7 +20,6 @@ export default defineConfig(({ mode }) => {
             'lgpd',
             'views',
             'components',
-            'login.html',
             'style.css',
             'menu.js',
             'logo.png',
