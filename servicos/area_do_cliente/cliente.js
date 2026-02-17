@@ -2,23 +2,30 @@
 const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
 
-// Inicialização do Cliente Supabase com persistência forçada
-const supabaseClient = supabase.createClient(SB_URL, SB_KEY, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    storage: window.localStorage
-  }
-});
+let supabaseClient;
+
+// Função para inicializar o cliente Supabase
+function initSupabase() {
+    if (typeof supabase === 'undefined') {
+        console.error("Supabase SDK não carregado!");
+        return null;
+    }
+    return supabase.createClient(SB_URL, SB_KEY, {
+        auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true,
+            storage: window.localStorage
+        }
+    });
+}
 
 // Função centralizada de redirecionamento
 async function redirecionarUsuario(user) {
     console.log("Iniciando redirecionamento para:", user.email);
     
     try {
-        // Busca o perfil para verificar a role
-        const { data: profile, error: profileError } = await supabaseClient
+        const { data: profile } = await supabaseClient
             .from('profiles')
             .select('role')
             .eq('id', user.id)
@@ -27,11 +34,9 @@ async function redirecionarUsuario(user) {
         const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
         let targetUrl = "";
 
-        // Lógica de decisão de destino
         if (profile?.role === 'admin' || user.email === EMAIL_ADMIN) {
             targetUrl = "/servicos/area_do_cliente/admin.html";
         } else {
-            // Verifica se há intenção de contratação na URL
             const urlParams = new URLSearchParams(window.location.search);
             const servico = urlParams.get('servico');
             const categoria = urlParams.get('categoria');
@@ -44,7 +49,6 @@ async function redirecionarUsuario(user) {
         }
         
         console.log("Destino definido:", targetUrl);
-        // Uso de replace para evitar que o usuário volte para a página de login ao clicar em "voltar"
         window.location.replace(targetUrl);
     } catch (err) {
         console.error("Erro no redirecionamento:", err);
@@ -54,18 +58,21 @@ async function redirecionarUsuario(user) {
 
 // Inicialização da página
 document.addEventListener('DOMContentLoaded', async () => {
+    supabaseClient = initSupabase();
+    if (!supabaseClient) return;
+
     const loginForm = document.getElementById('login-form');
     const errorMsg = document.getElementById('error-msg');
 
-    // 1. Verifica se já existe uma sessão ativa ao carregar a página
+    // 1. Verifica se já existe uma sessão ativa
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (session) {
-        console.log("Sessão ativa detectada no carregamento.");
+        console.log("Sessão ativa detectada.");
         redirecionarUsuario(session.user);
         return;
     }
 
-    // 2. Configura o listener do formulário de login
+    // 2. Listener do formulário
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -82,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 if (error) {
-                    console.error("Erro Supabase Auth:", error.message);
+                    console.error("Erro Auth:", error.message);
                     if (errorMsg) {
                         errorMsg.innerText = "Usuário ou senha inválidos.";
                         errorMsg.style.display = 'block';
@@ -90,19 +97,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                         alert("Erro ao entrar: " + error.message);
                     }
                 } else if (data.user) {
-                    console.log("Login realizado com sucesso.");
                     await redirecionarUsuario(data.user);
                 }
             } catch (err) {
                 console.error("Erro inesperado:", err);
-                alert("Ocorreu um erro inesperado. Tente novamente.");
             }
         });
     }
 });
 
-// Funções globais para uso em outras páginas (Dashboard/Admin)
+// Expor funções globais
 window.checkUser = async function() {
+    if (!supabaseClient) supabaseClient = initSupabase();
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) {
         window.location.replace('/servicos/area_do_cliente/index.html');
@@ -112,6 +118,10 @@ window.checkUser = async function() {
 };
 
 window.logout = async function() {
+    if (!supabaseClient) supabaseClient = initSupabase();
     await supabaseClient.auth.signOut();
     window.location.replace('/servicos/area_do_cliente/index.html');
 };
+
+// Expor o cliente para uso em outras partes se necessário
+window.supabaseClient = supabaseClient;
