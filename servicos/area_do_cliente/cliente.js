@@ -49,7 +49,7 @@ if (loginForm) {
                 }
                 
                 // Forçamos o redirecionamento usando o caminho relativo ao arquivo físico
-                window.location.assign(redirectUrl);
+                window.location.assign(window.location.origin + redirectUrl);
             }
         }
     });
@@ -60,7 +60,7 @@ if (loginForm) {
 async function checkUser() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) {
-        window.location.href = '../../index.html'; 
+       window.location.assign(window.location.origin + '/servicos/area_do_cliente/index.html'); 
         return null;
     }
     return user;
@@ -90,5 +90,6 @@ async function getUltimaAssinatura(userId) {
 
 async function logout() {
     await supabaseClient.auth.signOut();
-    window.location.href = '../../index.html';
+   window.location.assign(window.location.origin + '/servicos/area_do_cliente/index.html');
+}
 }
