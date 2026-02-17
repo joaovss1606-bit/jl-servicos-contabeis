@@ -123,8 +123,7 @@
 
     <div id="error-msg">Usuário ou senha inválidos.</div>
 
-    <!-- action="javascript:void(0)" impede o envio tradicional do formulário -->
-    <form id="login-form" action="javascript:void(0)">
+    <form id="login-form">
         <div class="input-group">
             <i class="fas fa-envelope"></i>
             <input type="email" id="email" placeholder="Seu e-mail" required autocomplete="email">
@@ -135,7 +134,7 @@
             <input type="password" id="password" placeholder="Sua senha" required autocomplete="current-password">
         </div>
 
-        <button type="submit" class="btn-login">Entrar no Painel</button>
+        <button type="submit" class="btn-login" id="btn-entrar">Entrar no Painel</button>
     </form>
     <p style="margin-top: 20px; font-size: 0.85rem; color: #ccc;">
         Novo por aqui? <a href="/servicos/area_do_cliente/cadastro" id="link-cadastro" style="color: #bd9617; text-decoration: none; font-weight: bold;">Crie sua conta</a>
@@ -147,14 +146,87 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="cliente.js"></script>
-
 <script>
-    // Script para manter os parâmetros da URL ao clicar em "Criar conta"
-    document.addEventListener('DOMContentLoaded', () => {
+    // Configurações do Supabase
+    const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
+
+    let supabaseClient;
+
+    function initSupabase() {
+        if (typeof supabase === 'undefined') return null;
+        if (!supabaseClient) {
+            supabaseClient = supabase.createClient(SB_URL, SB_KEY, {
+                auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
+            });
+        }
+        return supabaseClient;
+    }
+
+    async function redirecionar(user) {
+        const client = initSupabase();
+        const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
+        let target = "/servicos/area_do_cliente/dashboard.html";
+
+        try {
+            const { data: profile } = await client.from('profiles').select('role').eq('id', user.id).single();
+            if (profile?.role === 'admin' || user.email === EMAIL_ADMIN) {
+                target = "/servicos/area_do_cliente/admin.html";
+            } else {
+                const urlParams = new URLSearchParams(window.location.search);
+                const servico = urlParams.get('servico');
+                if (servico) target = `/servicos/compra/index.html?${urlParams.toString()}`;
+            }
+        } catch (e) { console.error(e); }
+        
+        window.location.href = target;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const client = initSupabase();
+        if (!client) return;
+
+        // Verifica sessão ativa
+        const { data: { session } } = await client.auth.getSession();
+        if (session) {
+            redirecionar(session.user);
+            return;
+        }
+
+        const form = document.getElementById('login-form');
+        const btn = document.getElementById('btn-entrar');
+        const errorMsg = document.getElementById('error-msg');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (errorMsg) errorMsg.style.display = 'none';
+            btn.disabled = true;
+            btn.innerText = "ENTRANDO...";
+
+            try {
+                const { data, error } = await client.auth.signInWithPassword({ email, password });
+                if (error) {
+                    if (errorMsg) {
+                        errorMsg.innerText = "Usuário ou senha inválidos.";
+                        errorMsg.style.display = 'block';
+                    }
+                    btn.disabled = false;
+                    btn.innerText = "ENTRAR NO PAINEL";
+                } else if (data.user) {
+                    redirecionar(data.user);
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btn.innerText = "ENTRAR NO PAINEL";
+            }
+        };
+
+        // Script para manter os parâmetros da URL ao clicar em "Criar conta"
         const urlParams = new URLSearchParams(window.location.search);
         const linkCadastro = document.getElementById('link-cadastro');
-
         if (urlParams.toString() && linkCadastro) {
             const baseHref = linkCadastro.getAttribute('href').split('?')[0];
             linkCadastro.href = `${baseHref}?${urlParams.toString()}`;
