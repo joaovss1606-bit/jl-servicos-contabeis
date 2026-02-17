@@ -93,39 +93,35 @@
         'planejamento-tributario': 'Planejamento Tributário'
     };
 
-    async function logout() {
-        await dashClient.auth.signOut();
-        window.location.href = 'index.html';
-    }
+   async function logout() {
+    await dashClient.auth.signOut();
+    // Caminho absoluto para evitar erro de diretório no Vercel
+    window.location.href = '/servicos/area_do_cliente/index.html';
+}
 
-    function abrirWhatsapp(msg = "Olá! Sou cliente JL e preciso de suporte.") {
-        window.open('https://wa.me/5561920041427?text=${encodeURIComponent(msg)}', '_blank');
-    }
+async function verificarAcesso() {
+    // 1. Pega a sessão de forma assíncrona antes de qualquer decisão
+    const { data: { session }, error } = await dashClient.auth.getSession();
 
-    async function verificarAcesso() {
-    // 1. Tenta pegar a sessão que já está salva no navegador (é instantâneo)
-    const { data: { session } } = await dashClient.auth.getSession();
-
-    // 2. Só redireciona se REALMENTE não houver sessão ativa
-    if (!session) {
-        window.location.href = 'index.html';
+    // 2. Se não houver sessão ou houver erro, volta para o login IMEDIATAMENTE
+    if (!session || error) {
+        window.location.href = '/servicos/area_do_cliente/index.html';
         return;
     }
 
-    // 3. Se chegou aqui, o usuário está logado. Usamos os dados da sessão.
     const user = session.user;
 
-    // Lógica do botão Admin
+    // Lógica do botão Admin (Caminho absoluto fixado)
     const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com"; 
     if (user.email === EMAIL_ADMIN) {
         const btnAdmin = document.createElement('button');
         btnAdmin.innerHTML = '<i class="fas fa-user-shield"></i> Voltar ao Admin';
         btnAdmin.style = "position:fixed; bottom:20px; right:20px; background:#bd9617; color:white; border:none; padding:12px 20px; border-radius:30px; z-index:9999; cursor:pointer; font-weight:bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);";
-        btnAdmin.onclick = () => window.location.href = 'admin.html';
+        btnAdmin.onclick = () => window.location.href = '/servicos/area_do_cliente/admin.html';
         document.body.appendChild(btnAdmin);
     }
 
-    // Carregamento dos dados do banco (Profiles, Assinaturas, Documentos)
+    // Carregamento dos dados (Sem alterações na sua lógica de banco)
     try {
         const { data: profile } = await dashClient.from('profiles').select('*').eq('id', user.id).single();
         const { data: assinatura } = await dashClient.from('assinaturas').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false }).limit(1).maybeSingle();
@@ -143,12 +139,13 @@
 
         const listaDocs = document.getElementById('lista-documentos');
         if (docs?.length > 0) {
-            listaDocs.innerHTML = docs.map(doc => '
+            // CORREÇÃO: Usando template literals corretamente com crase ( ` )
+            listaDocs.innerHTML = docs.map(doc => `
                 <div class="doc-item">
                     <span style="font-size:0.8rem;"><i class="far fa-file-pdf" style="color:#ff4444;"></i> ${doc.nome_arquivo}</span>
                     <a href="${doc.url_arquivo}" target="_blank" style="color:var(--gold); text-decoration:none; font-size:0.7rem; font-weight:bold;">BAIXAR</a>
                 </div>
-            ').join('');
+            `).join('');
         } else {
             listaDocs.innerHTML = "<p style='font-size:0.7rem; color:#666;'>Nada disponível ainda.</p>";
         }
@@ -156,12 +153,13 @@
         console.error("Erro ao carregar dados:", e);
     }
 
-    // Verifica se há serviço para contratar na URL
+    // 3. CORREÇÃO DO REDIRECIONAMENTO DE COMPRA (Estava apontando para index.html errado)
     const urlParams = new URLSearchParams(window.location.search);
     const servico = urlParams.get('contratar');
     const categoria = urlParams.get('categoria');
     if (servico) {
-        window.location.href = 'index.html?categoria=${categoria}';
+        // Redireciona para a pasta de compra correta
+        window.location.href = `/servicos/compra/index.html?categoria=${categoria}&servico=${servico}`;
     }
 }
 
