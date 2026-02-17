@@ -90,6 +90,10 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(189, 150, 23, 0.3);
         }
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
         .back-link {
             margin-top: 25px;
             display: block;
@@ -119,15 +123,16 @@
 
     <div id="error-msg">Usuário ou senha inválidos.</div>
 
-    <form id="login-form">
+    <!-- action="javascript:void(0)" impede o envio tradicional do formulário -->
+    <form id="login-form" action="javascript:void(0)">
         <div class="input-group">
             <i class="fas fa-envelope"></i>
-            <input type="email" id="email" placeholder="Seu e-mail" required>
+            <input type="email" id="email" placeholder="Seu e-mail" required autocomplete="email">
         </div>
         
         <div class="input-group">
             <i class="fas fa-lock"></i>
-            <input type="password" id="password" placeholder="Sua senha" required>
+            <input type="password" id="password" placeholder="Sua senha" required autocomplete="current-password">
         </div>
 
         <button type="submit" class="btn-login">Entrar no Painel</button>
