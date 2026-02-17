@@ -110,16 +110,17 @@
     }
 
     async function verificarAcesso() {
-        // 1. Verificação prioritária da sessão
+        console.log("Verificando acesso no dashboard...");
         const { data: { session }, error: sessionError } = await dashClient.auth.getSession();
 
         if (sessionError || !session) {
-            console.error("Sessão não encontrada ou erro:", sessionError);
+            console.warn("Sessão não encontrada no dashboard, redirecionando para login.");
             window.location.href = '/servicos/area_do_cliente/index.html';
             return;
         }
 
         const user = session.user;
+        console.log("Usuário logado:", user.email);
 
         // 2. Carregamento de Interface do Admin
         const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com"; 
@@ -131,7 +132,7 @@
             document.body.appendChild(btnAdmin);
         }
 
-        // 3. Carregamento de dados (Encapsulado em Try/Catch para não quebrar a página)
+        // 3. Carregamento de dados
         try {
             const [resProfile, resAssinatura, resDocs] = await Promise.all([
                 dashClient.from('profiles').select('*').eq('id', user.id).maybeSingle(),
@@ -168,7 +169,7 @@
             console.error("Erro ao processar dados das tabelas:", err);
         }
 
-        // 4. Lógica de Redirecionamento de Compra (Final)
+        // 4. Lógica de Redirecionamento de Compra
         const urlParams = new URLSearchParams(window.location.search);
         const servico = urlParams.get('contratar');
         const categoria = urlParams.get('categoria');
@@ -177,7 +178,6 @@
         }
     }
 
-    // Inicia a verificação ao carregar a página
     verificarAcesso();
 </script>
 </body>

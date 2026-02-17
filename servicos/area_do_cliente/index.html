@@ -169,7 +169,6 @@
         const linkCadastro = document.getElementById('link-cadastro');
 
         if (urlParams.toString() && linkCadastro) {
-            // Verifica se já não existe um "?" no link
             const baseHref = linkCadastro.getAttribute('href').split('?')[0];
             linkCadastro.href = `${baseHref}?${urlParams.toString()}`;
         }
