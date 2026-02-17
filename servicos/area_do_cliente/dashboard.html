@@ -95,11 +95,11 @@
 
     async function logout() {
         await dashClient.auth.signOut();
-        window.location.href = '/servicos/area_do_cliente/index.html';
+        window.location.href = 'index.html';
     }
 
     function abrirWhatsapp(msg = "Olá! Sou cliente JL e preciso de suporte.") {
-        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(msg)}`, '_blank');
+        window.open('https://wa.me/5561920041427?text=${encodeURIComponent(msg)}', '_blank');
     }
 
     async function verificarAcesso() {
@@ -143,12 +143,12 @@
 
         const listaDocs = document.getElementById('lista-documentos');
         if (docs?.length > 0) {
-            listaDocs.innerHTML = docs.map(doc => `
+            listaDocs.innerHTML = docs.map(doc => '
                 <div class="doc-item">
                     <span style="font-size:0.8rem;"><i class="far fa-file-pdf" style="color:#ff4444;"></i> ${doc.nome_arquivo}</span>
                     <a href="${doc.url_arquivo}" target="_blank" style="color:var(--gold); text-decoration:none; font-size:0.7rem; font-weight:bold;">BAIXAR</a>
                 </div>
-            `).join('');
+            ').join('');
         } else {
             listaDocs.innerHTML = "<p style='font-size:0.7rem; color:#666;'>Nada disponível ainda.</p>";
         }
@@ -161,7 +161,7 @@
     const servico = urlParams.get('contratar');
     const categoria = urlParams.get('categoria');
     if (servico) {
-        window.location.href = `/servicos/compra/index.html?categoria=${categoria || 'mei'}&servico=${servico}`;
+        window.location.href = 'index.html?categoria=${categoria}';
     }
 }
 
