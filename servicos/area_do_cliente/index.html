@@ -159,15 +159,19 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="cliente.js"></script>
 
 <script>
+    // Script para manter os parâmetros da URL ao clicar em "Criar conta"
     document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         const linkCadastro = document.getElementById('link-cadastro');
 
         if (urlParams.toString() && linkCadastro) {
-            linkCadastro.href = `/servicos/area_do_cliente/cadastro?${urlParams.toString()}`;
+            // Verifica se já não existe um "?" no link
+            const baseHref = linkCadastro.getAttribute('href').split('?')[0];
+            linkCadastro.href = `${baseHref}?${urlParams.toString()}`;
         }
     });
 </script>
