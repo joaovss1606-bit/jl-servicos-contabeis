@@ -884,3 +884,72 @@ body.home-page .site-subtitle-header {
     /* Opcional: uma sombra suave para realçar o salto */
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3) !important;
 }
+
+/* ==========================================================================
+   AJUSTE FINAL: BLOG HOME (ENQUADRAMENTO DE IMAGENS)
+   ========================================================================== */
+
+/* Força os cards a terem a mesma altura e layout */
+.blog-home {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.blog-highlight {
+    background: linear-gradient(145deg, #0e2a47, #0b1c2d) !important; /* Padronizado com service-card */
+    border: 1px solid rgba(189, 150, 23, 0.2) !important;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Faz todos os cards da mesma linha terem a mesma altura */
+    transition: all 0.4s ease !important;
+}
+
+/* O SEGREDO DO ENQUADRAMENTO: */
+.blog-highlight img {
+    width: 100% !important;
+    height: 220px !important;   /* Define uma altura fixa para todas as fotos */
+    object-fit: cover !important; /* Corta a imagem sem distorcer para preencher o espaço */
+    object-position: center;
+    border-bottom: 2px solid rgba(189, 150, 23, 0.3);
+}
+
+.blog-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Empurra o botão para o rodapé do card se o texto for curto */
+}
+
+.blog-content h2 {
+    font-family: 'Playfair Display', serif;
+    color: #bd9617;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.blog-content p {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    margin-bottom: 15px;
+}
+
+/* Estilo do Link "Ler Artigo" */
+.blog-link-action {
+    color: #bd9617 !important;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    margin-top: auto; /* Alinha o link sempre no final do card */
+    display: inline-block;
+}
+
+.blog-highlight:hover {
+    transform: translateY(-8px) !important;
+    border-color: #bd9617 !important;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.5) !important;
+}
