@@ -953,3 +953,72 @@ body.home-page .site-subtitle-header {
     border-color: #bd9617 !important;
     box-shadow: 0 12px 25px rgba(0,0,0,0.5) !important;
 }
+/* ==========================================================================
+   REPARO DEFINITIVO: DESIGN DOS CAMPOS DE COMPRA (JL STYLE)
+   ========================================================================== */
+
+/* Garante que o container do formulário se destaque */
+.form-card {
+    background: linear-gradient(145deg, #0e2a47, #0b1c2d) !important;
+    border: 1px solid #bd9617 !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4) !important;
+    padding: 40px !important;
+}
+
+/* Estilização agressiva dos inputs para garantir que o design apareça */
+#pedidoForm .input-group {
+    position: relative !important;
+    margin-bottom: 25px !important;
+}
+
+#pedidoForm input, 
+#pedidoForm textarea {
+    width: 100% !important;
+    background: rgba(11, 28, 45, 0.8) !important; /* Azul bem escuro */
+    border: 1.5px solid rgba(189, 150, 23, 0.3) !important; /* Borda dourada sutil */
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    padding: 15px 15px 15px 50px !important; /* Espaço para o ícone */
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+}
+
+#pedidoForm textarea {
+    padding-left: 15px !important;
+}
+
+/* Efeito de foco (quando o usuário clica para digitar) */
+#pedidoForm input:focus, 
+#pedidoForm textarea:focus {
+    border-color: #bd9617 !important;
+    box-shadow: 0 0 12px rgba(189, 150, 23, 0.4) !important;
+    background: #0e2a47 !important;
+    outline: none !important;
+}
+
+/* Estilo do Botão quando Desabilitado (Campos incompletos) */
+#btnEnviar:disabled {
+    background: #333 !important;
+    color: #777 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+    border: none !important;
+}
+
+/* Estilo do Botão quando Habilitado */
+#btnEnviar:not(:disabled) {
+    background: #25D366 !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3) !important;
+}
+
+/* Animação do Ícone Girando (Efeito Enviando) */
+.fa-spin {
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
