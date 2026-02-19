@@ -44,8 +44,12 @@ async function updateAuthHeader() {
         const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
         if (profile?.role === 'admin' || session.user.email === 'jlservicoscontabeis0@gmail.com') {
             loginBtn.href = '/servicos/area_do_cliente/admin.html';
+        } else {
+            loginBtn.href = '/servicos/area_do_cliente/dashboard.html';
         }
-    } catch (e) {}
+    } catch (e) {
+        loginBtn.href = '/servicos/area_do_cliente/dashboard.html';
+    }
   }
 }
 
