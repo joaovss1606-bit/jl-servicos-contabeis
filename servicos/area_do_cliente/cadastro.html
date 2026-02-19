@@ -128,7 +128,6 @@
 
     document.getElementById('register-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        alert("PASSO 1: Cadastro iniciado.");
         
         const btn = document.getElementById('btn-submit');
         const email = document.getElementById('reg-email').value.trim();
@@ -139,7 +138,7 @@
         btn.innerText = "CRIANDO CONTA...";
 
         try {
-            alert("PASSO 2: Criando usuário no Auth...");
+            // 1. Criar usuário no Auth
             const { data, error } = await supabaseClient.auth.signUp({
                 email: email,
                 password: password,
@@ -154,7 +153,7 @@
             if (error) throw error;
 
             if (data.user) {
-                alert("PASSO 3: Usuário criado (ID: " + data.user.id + "). Gravando perfil...");
+                // 2. Tentar inserir o perfil na tabela 'profiles'
                 const { error: profileError } = await supabaseClient
                     .from('profiles')
                     .upsert({ 
@@ -165,16 +164,15 @@
                     });
 
                 if (profileError) {
-                    alert("ERRO RLS PERFIL: " + profileError.message);
-                } else {
-                    alert("PASSO 4: Perfil gravado com sucesso!");
+                    console.error("Erro no perfil:", profileError.message);
                 }
 
-                alert("Cadastro finalizado. Redirecionando para login.");
+                alert("Cadastro realizado com sucesso! Você será redirecionado para o login.");
                 window.location.href = 'index.html';
             }
         } catch (err) {
-            alert("ERRO NO CADASTRO: " + err.message);
+            console.error("Erro no cadastro:", err.message);
+            alert("Erro no cadastro: " + err.message);
             btn.disabled = false;
             btn.innerText = "FINALIZAR CADASTRO";
         }
