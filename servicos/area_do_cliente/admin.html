@@ -94,6 +94,13 @@
         'planejamento-tributario': 'Planejamento Tributário',
         'basico': 'Plano MEI Básico',
         'premium': 'Plano MEI Premium',
+        'mei-abertura': 'Abertura de MEI',
+        'mei-regularizacao': 'Regularização de MEI',
+        'mei-baixa': 'Baixa de MEI',
+        'mei-emissao-das': 'Emissão de DAS',
+        'mei-dasn': 'DASN (Anual)',
+        'mei-parcelamento': 'Parcelamento de Débitos',
+        'mei-alteracao': 'Alteração de Dados',
         'encerramento-mei': 'Encerramento de MEI',
         'dasn': 'DASN (Anual)',
         'parcelamento': 'Parcelamento de Débitos',
@@ -118,7 +125,7 @@
 
             if (errorAssinaturas) console.error("Erro ao carregar assinaturas:", errorAssinaturas.message);
 
-            let profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com') || [];
+            let profiles = resProfiles.data?.filter(p => p.email !== 'jlservicoscontabeis0@gmail.com') || [];
 
             const body = document.getElementById('lista-clientes-body');
             body.innerHTML = '';
