@@ -114,7 +114,7 @@
             const [resProfile, resAssinaturas, resDocs] = await Promise.all([
                 supabaseClient.from('profiles').select('*').eq('id', user.id).maybeSingle(),
                 supabaseClient.from('assinaturas').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false }),
-                supabaseClient.from('documentos').select('*').eq('id', user.id).order('created_at', { ascending: false })
+                supabaseClient.from('documentos').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false })
             ]);
 
             const profile = resProfile.data;

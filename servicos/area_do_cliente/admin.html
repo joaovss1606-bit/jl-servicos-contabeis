@@ -127,7 +127,7 @@
                 profiles.forEach(p => {
                     let nomeExibicao = p.nome || p.email?.split('@')[0] || 'Usuário';
                     let whatsapp = p.whatsapp || 'Não informado';
-                    let cpf = p.cpf || 'Não informado';
+                    let cpf = p.cpf_cnpj || 'Não informado';
                     
                     // Buscar todas as assinaturas deste cliente vinculadas pelo cliente_id
                     const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);

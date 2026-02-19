@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   await client.from('profiles').update({ 
                       nome: nome,
                       whatsapp: whatsapp,
-                      cpf: cpf_cnpj
+                      cpf_cnpj: cpf
                   }).eq('id', session.user.id);
 
                   // REGISTRANDO PEDIDO (assinaturas)
