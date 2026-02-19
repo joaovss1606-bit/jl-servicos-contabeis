@@ -19,22 +19,20 @@ document.addEventListener("DOMContentLoaded", () => {
     "pessoa-fisica": {
       irpf: { titulo: "Imposto de Renda (IRPF)", categoriaLabel: "Pessoa Física", valor: "R$ 139,99", descricao: "Declaração anual completa e segura.", inclusos: ["Análise de Documentos", "Envio à Receita"] },
       "cpf-regularizacao": { titulo: "Regularização de CPF", categoriaLabel: "Pessoa Física", valor: "R$ 59,99", descricao: "Regularize seu CPF suspenso ou pendente.", inclusos: ["Consulta Receita", "Protocolo de Regularização"] },
-      "carne-leao": { titulo: "Carnê-Leão", categoriaLabel: "Pessoa Física", valor: "R$ 129,99", descricao: "Gestão mensal de impostos.", inclusos: ["Emissão de DARF", "Análise de Deduções"] },
+      "carne-leao": { titulo: "Carnê-Leão", categoriaLabel: "Pessoa Física", valor: "R$ 129,99", descricao: "Gestão mensal de impostos.", inclusos: ["Emissão de DARF", "Análise de Deduções"] }
       },
     contabeis: {
       "consultoria-contabil": { titulo: "Consultoria Contábil", categoriaLabel: "Serviços Contábeis", valor: "R$ 199,99", descricao: "Suporte especializado para sua empresa.", inclusos: ["Análise de Balanço", "Orientação Fiscal"] },
       "regularizacao-empresa": { titulo: "Regularização de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 249,99", descricao: "Regularização de empresas (ME/EPP) em atraso.", inclusos: ["Certidões", "Regularização Junta/Receita"] },
       "alteracao-contratual": { titulo: "Alteração Contratual", categoriaLabel: "Serviços Contábeis", valor: "R$ 249,99", descricao: "Mudança de Dados", inclusos: ["Viabilidade de Alteração", "Atualização no CNPJ"] },
       "abertura-empresa": { titulo: "Abertura de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 299,99", descricao: "Abertura de novo CNPJ", inclusos: ["Elaboração do Contrato Social", "Emissão do CNPJ"] },
-      "encerramento-empresa": { titulo: "Encerramento de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 499,99", descricao: "Baixa completa de empresas (ME/EPP).", inclusos: ["Distrato Social", "Baixa de Órgãos"] },
+      "encerramento-empresa": { titulo: "Encerramento de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 499,99", descricao: "Baixa completa de empresas (ME/EPP).", inclusos: ["Distrato Social", "Baixa de Órgãos"] }
     },
     "certidoes-regularizacoes": {
       "certidao-negativa": { titulo: "Certidão Negativa de Débitos", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Emissão de CND Federal, Estadual ou Municipal.", inclusos: ["Consulta de Débitos", "Emissão do PDF"] },
-      "certidao-estadual": { titulo: "Certidão Estadual", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Certidão de regularidade tributária estadual.", inclusos: ["Consulta SEFAZ", "Emissão"] },
       "certidao-fgts": { titulo: "Certidão de FGTS", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Emissão de regularidade FGTS.", inclusos: ["Consulta de Situação Fiscal", "Suporte à Regularização"] },
       "certidao-trabalhista": { titulo: "Certidão Trabalhista (CNDT)", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Comprovação de regularidade trabalhista.", inclusos: ["Consulta de Débitos", "Suporte à Regularização"] },
-      "certidao-debitos": { titulo: "Certidão de Débitos Previdenciários", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Regularidade de contribuições previdenciárias.", inclusos: ["Consulta de Situação Fiscal", "Suporte à Regularização"] },
-      "regularizacao-cadastral": { titulo: "Regularização Cadastral", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Ajustes de dados em cadastros oficiais.", inclusos: ["Protocolos", "Alteração Cadastral"] }
+      "certidao-debitos": { titulo: "Certidão de Débitos Previdenciários", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Regularidade de contribuições previdenciárias.", inclusos: ["Consulta de Situação Fiscal", "Suporte à Regularização"] }
     },
     "certificado-digital": {
       "certificado-cpf": { titulo: "Certificado Digital e-CPF", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 189,99", descricao: "Emissão de certificado digital para pessoa física.", inclusos: ["Validação Online", "Suporte"] },
@@ -42,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
       "renovacao-certificado": { titulo: "Renovação de Certificado Digital", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 129,99", descricao: "Atualização de identidade digital.", inclusos: ["Validação Online", "Suporte"] }
     },
     outros: {
-      "consultoria-contabil": { titulo: "Consultoria Contábil", categoriaLabel: "Outros", valor: "R$ 59,99", descricao: "Suporte estratégico para decisões.", inclusos: ["Orientação Preventiva", "Análise de Saúde Financeira"] },
       "regularizacao-pendencias": { titulo: "Regularização de Pendências", categoriaLabel: "Outros", valor: "R$ 139,99", descricao: "Saneamento de débitos fiscais.", inclusos: ["Levantamento de Débitos", "Emissão de Relatório Final"] },
       "emissao-notas": { titulo: "Emissão de Notas Fiscais", categoriaLabel: "Outros", valor: "R$ 39,99", descricao: "Faturamento de serviços e vendas.", inclusos: ["Emissão de Notas (NF-e/NFS-e)", "Cancelamento e Correção"] }
     }
