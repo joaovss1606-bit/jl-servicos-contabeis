@@ -218,3 +218,144 @@ input:focus, textarea:focus {
     margin-top: 40px;
     padding-bottom: 60px;
 }
+/* ==========================================================================
+   LAYOUT DE CHECKOUT (RESUMO À ESQUERDA | FORMULÁRIO À DIREITA)
+   ========================================================================== */
+
+/* Grid principal */
+.compra-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr; /* Esquerda menor, Direita maior */
+    gap: 30px;
+    align-items: start;
+    margin-top: 30px;
+}
+
+/* Estilo comum dos cards */
+.service-summary-card, .form-card {
+    background: linear-gradient(145deg, #0e2a47, #0b1c2d) !important;
+    border: 1px solid rgba(189, 150, 23, 0.3) !important;
+    border-radius: 12px !important;
+    padding: 25px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+}
+
+/* Card de Resumo (Esquerda) */
+.service-summary-card {
+    position: sticky;
+    top: 20px;
+}
+
+.section-subtitle {
+    color: #bd9617;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(189, 150, 23, 0.2);
+    padding-bottom: 10px;
+}
+
+.inclusos-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.inclusos-list li {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e0e0e0;
+}
+
+.inclusos-list li::before {
+    content: "✓";
+    color: #bd9617;
+    font-weight: bold;
+}
+
+.price-box {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(189, 150, 23, 0.2);
+    text-align: right;
+}
+
+.price-box strong {
+    font-size: 1.6rem;
+    color: #bd9617;
+    display: block;
+}
+
+/* Formulário (Direita) */
+.form-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #bd9617;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px 12px 12px 45px;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(189, 150, 23, 0.2) !important;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+input:focus {
+    border-color: #bd9617 !important;
+    outline: none;
+}
+
+/* Botão Enviar Pedido */
+.btn-checkout {
+    width: 100%;
+    padding: 18px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+.btn-checkout:disabled {
+    background: #2a2a2a !important;
+    color: #666 !important;
+    cursor: not-allowed;
+}
+
+.btn-checkout:not(:disabled) {
+    background: #25D366 !important;
+    color: #fff !important;
+    cursor: pointer;
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+    .compra-grid {
+        grid-template-columns: 1fr;
+    }
+    .service-summary-card {
+        position: static;
+    }
+}
