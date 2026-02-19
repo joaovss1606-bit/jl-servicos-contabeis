@@ -144,14 +144,16 @@ document.addEventListener("DOMContentLoaded", () => {
               
               const { data: { session } } = await client.auth.getSession();
               
-              // TENTATIVA DE GRAVAÇÃO ROBUSTA
+              // TENTATIVA DE GRAVAÇÃO ROBUSTA NA TABELA ASSINATURAS
               const payload = {
                   plano_id: serv,
                   status: 'Pendente',
                   nome_cliente: nome,
                   email_cliente: email,
                   whatsapp: whatsapp,
-                  cpf: cpf
+                  cpf: cpf,
+                  servico: dados.titulo,
+                  valor: dados.valor
               };
 
               if (session) {
@@ -160,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   const { error: profileError } = await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
                   if (profileError) {
                       console.error("Erro RLS Perfil:", profileError);
-                      alert("⚠️ ERRO TÉCNICO PERFIL:\n" + profileError.message + "\nCódigo: " + profileError.code);
+                      // Não bloqueia o fluxo de compra por erro no perfil
                   }
               }
 
@@ -168,7 +170,13 @@ document.addEventListener("DOMContentLoaded", () => {
               const { error: insertError } = await client.from('assinaturas').insert(payload);
               if (insertError) {
                   console.error("Erro RLS Assinatura:", insertError);
-                  alert("⚠️ ERRO TÉCNICO ASSINATURA:\n" + insertError.message + "\nCódigo: " + insertError.code + "\nDetalhes: " + (insertError.details || "Nenhum"));
+                  // Exibe erro técnico detalhado para diagnóstico
+                  alert("⚠️ ERRO TÉCNICO AO REGISTRAR PEDIDO:\n" + 
+                        "Mensagem: " + insertError.message + "\n" +
+                        "Código: " + insertError.code + "\n" +
+                        "Detalhes: " + (insertError.details || "Verifique se a tabela 'assinaturas' possui as colunas: plano_id, status, nome_cliente, email_cliente, whatsapp, cpf, servico, valor."));
+              } else {
+                  console.log("Pedido gravado com sucesso na tabela assinaturas!");
               }
           }
       } catch (err) {
