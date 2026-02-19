@@ -100,10 +100,21 @@
 
     async function carregarDadosDashboard(user) {
         try {
+            // --- FORÇAR ATUALIZAÇÃO DO NOME NO PERFIL ---
+            // Como o usuário está logado aqui, as políticas de RLS 'authenticated' permitem o UPDATE.
+            // Isso corrige o problema de usuários novos ou antigos que ficaram com "Novo Cliente".
+            const realName = user.user_metadata?.full_name || user.user_metadata?.display_name;
+            if (realName && realName.toLowerCase() !== "novo cliente") {
+                await supabaseClient
+                    .from('profiles')
+                    .update({ nome: realName })
+                    .eq('id', user.id);
+            }
+
             const [resProfile, resAssinaturas, resDocs] = await Promise.all([
                 supabaseClient.from('profiles').select('*').eq('id', user.id).maybeSingle(),
                 supabaseClient.from('assinaturas').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false }),
-                supabaseClient.from('documentos').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false })
+                supabaseClient.from('documentos').select('*').eq('id', user.id).order('created_at', { ascending: false })
             ]);
 
             const profile = resProfile.data;

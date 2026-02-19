@@ -138,7 +138,7 @@
         btn.innerText = "CRIANDO CONTA...";
 
         try {
-            // 1. Criar usuário no Auth
+            // 1. Criar usuário no Auth com metadados de nome
             const { data, error } = await supabaseClient.auth.signUp({
                 email: email,
                 password: password,
@@ -153,8 +153,8 @@
             if (error) throw error;
 
             if (data.user) {
-                // 2. Tentar atualizar o perfil na tabela 'profiles'
-                // Se o Supabase tiver uma trigger, o perfil já existe. Usamos UPSERT para forçar o nome real.
+                // Tenta gravar o perfil imediatamente após o cadastro.
+                // Como as políticas de RLS exigem 'authenticated', tentamos aqui primeiro.
                 const { error: profileError } = await supabaseClient
                     .from('profiles')
                     .upsert({ 
@@ -165,12 +165,12 @@
                     });
 
                 if (profileError) {
-                    console.error("Erro no perfil:", profileError);
-                    // Se houver erro de RLS (permissão), avisamos o usuário para depuração
-                    alert("Aviso: Conta criada, mas houve um erro ao salvar seu nome no banco de dados (Erro RLS). O suporte técnico já foi notificado.");
+                    console.error("Erro no perfil pós-cadastro:", profileError.message);
+                    // Se houver erro, pode ser porque o usuário ainda não está totalmente logado.
+                    // O dashboard.html cuidará de tentar atualizar o nome novamente após o login.
                 }
 
-                alert("Cadastro realizado com sucesso! Você será redirecionado para o login.");
+                alert("Cadastro realizado com sucesso! Faça login para continuar.");
                 window.location.href = 'index.html';
             }
         } catch (err) {
