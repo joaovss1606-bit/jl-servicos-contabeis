@@ -5,42 +5,46 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- BASE DE DADOS (MOCK) ---
   const servicosMock = {
     mei: {
-      basico: { titulo: "Plano MEI — Básico", categoriaLabel: "MEI", valor: "R$ 99,99", descricao: "Manutenção mensal essencial para seu MEI.", inclusos: ["DAS Mensal", "DASN Anual", "Suporte"] },
-      premium: { titulo: "Plano MEI — Premium", categoriaLabel: "MEI", valor: "R$ 159,99", descricao: "Gestão completa para o seu negócio.", inclusos: ["DAS Mensal", "Certidões", "Parcelamentos", "Suporte Prioritário"] },
-      "abertura-mei": { titulo: "Abertura de MEI", categoriaLabel: "MEI", valor: "R$ 148,99", descricao: "Formalização completa do seu CNPJ MEI.", inclusos: ["CNPJ", "Inscrição Municipal", "CCMEI"] },
-      "regularizacao-mei": { titulo: "Regularização de MEI", categoriaLabel: "MEI", valor: "R$ 198,99", descricao: "Coloque seu MEI em dia com o governo.", inclusos: ["Análise de Débitos", "Regularização Fiscal"] },
+      basico: { titulo: "Plano MEI — Básico", categoriaLabel: "MEI", valor: "R$ 59,99", descricao: "Manutenção mensal essencial para seu MEI.", inclusos: ["DAS Mensal", "DASN Anual", "Suporte"] },
+      premium: { titulo: "Plano MEI — Premium", categoriaLabel: "MEI", valor: "R$ 89,99", descricao: "Gestão completa para o seu negócio.", inclusos: ["DAS Mensal", "Certidões", "Parcelamentos", "Suporte Prioritário"] },
+      "abertura-mei": { titulo: "Abertura de MEI", categoriaLabel: "MEI", valor: "R$ 99,99", descricao: "Formalização completa do seu CNPJ MEI.", inclusos: ["CNPJ", "Inscrição Municipal", "CCMEI"] },
+      "regularizacao-mei": { titulo: "Regularização de MEI", categoriaLabel: "MEI", valor: "R$ 139,99", descricao: "Coloque seu MEI em dia com o governo.", inclusos: ["Análise de Débitos", "Regularização Fiscal"] },
       "baixa-mei": { titulo: "Baixa de MEI", categoriaLabel: "MEI", valor: "R$ 128,99", descricao: "Encerramento formal das atividades do MEI.", inclusos: ["Baixa CNPJ", "DASN de Extinção"] },
-      "encerramento-mei": { titulo: "Encerramento de MEI", categoriaLabel: "MEI", valor: "R$ 128,99", descricao: "Baixa completa do MEI junto aos órgãos oficiais.", inclusos: ["Encerramento no portal", "Baixa do CNPJ", "Orientação final"] },
-      "emissao-das": { titulo: "Emissão de DAS", categoriaLabel: "MEI", valor: "R$ 48,99", descricao: "Emissão da guia DAS do MEI.", inclusos: ["Cálculo do imposto", "Emissão da guia"] },
-      dasn: { titulo: "Declaração Anual do MEI (DASN-SIMEI)", categoriaLabel: "MEI", valor: "R$ 98,99", descricao: "Envio da declaração anual obrigatória do MEI.", inclusos: ["Apuração do faturamento", "Envio da declaração"] },
-      parcelamento: { titulo: "Parcelamento de Débitos do MEI", categoriaLabel: "MEI", valor: "R$ 178,99", descricao: "Parcelamento de débitos em atraso do MEI.", inclusos: ["Análise da dívida", "Simulação e parcelamento"] },
-      "alteracao-mei": { titulo: "Alteração de Dados do MEI", categoriaLabel: "MEI", valor: "R$ 78,99", descricao: "Alteração de dados cadastrais do MEI.", inclusos: ["Alteração no cadastro", "Confirmação das mudanças"] }
+      "encerramento-mei": { titulo: "Encerramento de MEI", categoriaLabel: "MEI", valor: "R$ 89,99", descricao: "Baixa completa do MEI junto aos órgãos oficiais.", inclusos: ["Encerramento no portal", "Baixa do CNPJ", "Orientação final"] },
+      "emissao-das": { titulo: "Emissão de DAS", categoriaLabel: "MEI", valor: "R$ 25,99", descricao: "Emissão da guia DAS do MEI.", inclusos: ["Cálculo do imposto", "Emissão da guia"] },
+      dasn: { titulo: "Declaração Anual do MEI (DASN-SIMEI)", categoriaLabel: "MEI", valor: "R$ 79,99", descricao: "Envio da declaração anual obrigatória do MEI.", inclusos: ["Apuração do faturamento", "Envio da declaração"] },
+      parcelamento: { titulo: "Parcelamento de Débitos do MEI", categoriaLabel: "MEI", valor: "R$ 85,99", descricao: "Parcelamento de débitos em atraso do MEI.", inclusos: ["Análise da dívida", "Simulação e parcelamento"] },
+      "alteracao-mei": { titulo: "Alteração de Dados do MEI", categoriaLabel: "MEI", valor: "R$ 75,99", descricao: "Alteração de dados cadastrais do MEI.", inclusos: ["Alteração no cadastro", "Confirmação das mudanças"] }
     },
     "pessoa-fisica": {
       irpf: { titulo: "Imposto de Renda (IRPF)", categoriaLabel: "Pessoa Física", valor: "R$ 139,99", descricao: "Declaração anual completa e segura.", inclusos: ["Análise de Documentos", "Envio à Receita"] },
-      "cpf-regularizacao": { titulo: "Regularização de CPF", categoriaLabel: "Pessoa Física", valor: "R$ 79,99", descricao: "Regularize seu CPF suspenso ou pendente.", inclusos: ["Consulta Receita", "Protocolo de Regularização"] },
-      "planejamento-tributario": { titulo: "Planejamento Tributário", categoriaLabel: "Pessoa Física", valor: "R$ 199,99", descricao: "Estudo para redução legal de impostos.", inclusos: ["Análise de Renda", "Simulação Tributária"] },
-      "orientacao-fiscal-pf": { titulo: "Orientação Fiscal Pessoa Física", categoriaLabel: "Pessoa Física", valor: "R$ 119,99", descricao: "Consultoria para planejamento tributário de pessoas físicas.", inclusos: ["Análise de rendimentos", "Dicas de economia fiscal", "Suporte técnico"] }
-    },
+      "cpf-regularizacao": { titulo: "Regularização de CPF", categoriaLabel: "Pessoa Física", valor: "R$ 59,99", descricao: "Regularize seu CPF suspenso ou pendente.", inclusos: ["Consulta Receita", "Protocolo de Regularização"] },
+      "carne-leao": { titulo: "Carnê-Leão", categoriaLabel: "Pessoa Física", valor: "R$ 129,99", descricao: "Gestão mensal de impostos.", inclusos: ["Emissão de DARF", "Análise de Deduções"] },
+      },
     contabeis: {
       "consultoria-contabil": { titulo: "Consultoria Contábil", categoriaLabel: "Serviços Contábeis", valor: "R$ 199,99", descricao: "Suporte especializado para sua empresa.", inclusos: ["Análise de Balanço", "Orientação Fiscal"] },
-      "elaboracao-balanco": { titulo: "Elaboração de Balanço", categoriaLabel: "Serviços Contábeis", valor: "R$ 349,99", descricao: "Fechamento contábil e balanço patrimonial.", inclusos: ["DRE", "Balanço Patrimonial"] },
       "regularizacao-empresa": { titulo: "Regularização de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 249,99", descricao: "Regularização de empresas (ME/EPP) em atraso.", inclusos: ["Certidões", "Regularização Junta/Receita"] },
-      "encerramento-empresa": { titulo: "Encerramento de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 499,99", descricao: "Baixa completa de empresas (ME/EPP).", inclusos: ["Distrato Social", "Baixa de Órgãos"] }
+      "alteracao-contratual": { titulo: "Alteração Contratual", categoriaLabel: "Serviços Contábeis", valor: "R$ 249,99", descricao: "Mudança de Dados", inclusos: ["Viabilidade de Alteração", "Atualização no CNPJ"] },
+      "abertura-empresa": { titulo: "Abertura de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 299,99", descricao: "Abertura de novo CNPJ", inclusos: ["Elaboração do Contrato Social", "Emissão do CNPJ"] },
+      "encerramento-empresa": { titulo: "Encerramento de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 499,99", descricao: "Baixa completa de empresas (ME/EPP).", inclusos: ["Distrato Social", "Baixa de Órgãos"] },
     },
     "certidoes-regularizacoes": {
-      "certidao-negativa": { titulo: "Certidão Negativa de Débitos", categoriaLabel: "Certidões", valor: "R$ 79,99", descricao: "Emissão de CND Federal, Estadual ou Municipal.", inclusos: ["Consulta de Débitos", "Emissão do PDF"] },
-      "certidao-estadual": { titulo: "Certidão Estadual", categoriaLabel: "Certidões", valor: "R$ 89,99", descricao: "Certidão de regularidade tributária estadual.", inclusos: ["Consulta SEFAZ", "Emissão"] },
-      "regularizacao-cadastral": { titulo: "Regularização Cadastral", categoriaLabel: "Certidões", valor: "R$ 99,99", descricao: "Ajustes de dados em cadastros oficiais.", inclusos: ["Protocolos", "Alteração Cadastral"] }
+      "certidao-negativa": { titulo: "Certidão Negativa de Débitos", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Emissão de CND Federal, Estadual ou Municipal.", inclusos: ["Consulta de Débitos", "Emissão do PDF"] },
+      "certidao-estadual": { titulo: "Certidão Estadual", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Certidão de regularidade tributária estadual.", inclusos: ["Consulta SEFAZ", "Emissão"] },
+      "certidao-fgts": { titulo: "Certidão de FGTS", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Emissão de regularidade FGTS.", inclusos: ["Consulta de Situação Fiscal", "Suporte à Regularização"] },
+      "certidao-trabalhista": { titulo: "Certidão Trabalhista (CNDT)", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Comprovação de regularidade trabalhista.", inclusos: ["Consulta de Débitos", "Suporte à Regularização"] },
+      "certidao-debitos": { titulo: "Certidão de Débitos Previdenciários", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Regularidade de contribuições previdenciárias.", inclusos: ["Consulta de Situação Fiscal", "Suporte à Regularização"] },
+      "regularizacao-cadastral": { titulo: "Regularização Cadastral", categoriaLabel: "Certidões", valor: "R$ 35,99", descricao: "Ajustes de dados em cadastros oficiais.", inclusos: ["Protocolos", "Alteração Cadastral"] }
     },
     "certificado-digital": {
-      "emissao-a1": { titulo: "Certificado Digital A1", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 189,99", descricao: "Emissão de certificado digital para pessoa jurídica ou física.", inclusos: ["Validação Online", "Instalação"] },
-      "emissao-a3": { titulo: "Certificado Digital A3", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 249,99", descricao: "Certificado em token ou cartão com validade de até 3 anos.", inclusos: ["Token incluso", "Suporte"] }
+      "certificado-cpf": { titulo: "Certificado Digital e-CPF", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 189,99", descricao: "Emissão de certificado digital para pessoa física.", inclusos: ["Validação Online", "Suporte"] },
+      "certificado-cnpj": { titulo: "Certificado Digital e-CNPJ", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 249,99", descricao: "Certificado em arquivo com validade de 1 ano.", inclusos: ["Validação Online", "Suporte"] },
+      "renovacao-certificado": { titulo: "Renovação de Certificado Digital", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 129,99", descricao: "Atualização de identidade digital.", inclusos: ["Validação Online", "Suporte"] }
     },
     outros: {
-      "planilha-financeira": { titulo: "Planilha Financeira Pessoal", categoriaLabel: "Outros", valor: "R$ 59,99", descricao: "Organização completa das suas contas.", inclusos: ["Planilha Excel/Google", "Aula de uso"] },
-      "organizacao-documentos": { titulo: "Organização de Documentos", categoriaLabel: "Outros", valor: "R$ 149,99", descricao: "Digitalização e separação contábil de arquivos.", inclusos: ["Digitalização", "Classificação"] },
-      "orientacao-financeira": { titulo: "Orientação Financeira Básica", categoriaLabel: "Outros", valor: "R$ 119,99", descricao: "Consultoria simples para finanças pessoais.", inclusos: ["Sessão de 40min", "Plano de Ação"] }
+      "consultoria-contabil": { titulo: "Consultoria Contábil", categoriaLabel: "Outros", valor: "R$ 59,99", descricao: "Suporte estratégico para decisões.", inclusos: ["Orientação Preventiva", "Análise de Saúde Financeira"] },
+      "regularizacao-pendencias": { titulo: "Regularização de Pendências", categoriaLabel: "Outros", valor: "R$ 139,99", descricao: "Saneamento de débitos fiscais.", inclusos: ["Levantamento de Débitos", "Emissão de Relatório Final"] },
+      "emissao-notas": { titulo: "Emissão de Notas Fiscais", categoriaLabel: "Outros", valor: "R$ 39,99", descricao: "Faturamento de serviços e vendas.", inclusos: ["Emissão de Notas (NF-e/NFS-e)", "Cancelamento e Correção"] }
     }
   };
 
