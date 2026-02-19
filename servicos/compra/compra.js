@@ -52,8 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   };
 
-
-
   const nomesCategorias = {
     "mei": "MEI",
     "pessoa-fisica": "Pessoa Física",
@@ -63,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "outros": "Outros"
   };
 
+  // --- CARREGAMENTO DE DADOS DO SERVIÇO ---
   const params = new URLSearchParams(window.location.search);
   const cat = params.get("categoria")?.trim();
   const serv = (params.get("servico") || params.get("plano") || params.get("slug"))?.trim();
@@ -74,18 +73,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
   }
 
-  // Preenchimento HTML
+  // --- PREENCHIMENTO HTML ---
   document.getElementById("nomeServico") && (document.getElementById("nomeServico").innerText = dados.titulo);
   document.getElementById("descricaoServico") && (document.getElementById("descricaoServico").innerText = dados.descricao);
   document.getElementById("valorServico") && (document.getElementById("valorServico").innerText = dados.valor);
   document.getElementById("inclusosServico") && (document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join(""));
 
- // --- BREADCRUMB CORRIGIDO (Estrutura: raiz/servico/compra/) ---
-const bread = document.getElementById("breadcrumb");
-if (bread && cat) {
+  // --- BREADCRUMB ---
+  const bread = document.getElementById("breadcrumb");
+  if (bread && cat) {
     const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
-
-    // Caminho para a categoria: sobe de 'compra', e entra na pasta da categoria
     const linkCategoria = `../${cat}/index.html`; 
     bread.innerHTML = `
         <a href="../../index.html">Início</a> 
@@ -96,33 +93,33 @@ if (bread && cat) {
         <span> › </span> 
         <strong style="color: #fff;">${dados.titulo}</strong>
     `;
-}
+  }
 
-// --- MÁSCARAS ---
-    const handleWhatsApp = (e) => {
-        let v = e.target.value.replace(/\D/g, "");
-        if (v.length > 11) v = v.slice(0, 11);
-        v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
-        v = v.replace(/(\d{5})(\d)/, "$1-$2");
-        e.target.value = v;
-        validarFormulario();
-    };
+  // --- MÁSCARAS DE ENTRADA ---
+  const handleWhatsApp = (e) => {
+    let v = e.target.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+    v = v.replace(/(\d{5})(\d)/, "$1-$2");
+    e.target.value = v;
+    validarFormulario();
+  };
 
-    const handleCPF = (e) => {
-        let v = e.target.value.replace(/\D/g, "");
-        if (v.length > 11) v = v.slice(0, 11);
-        v = v.replace(/(\d{3})(\d)/, "$1.$2");
-        v = v.replace(/(\d{3})(\d)/, "$1.$2");
-        v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-        e.target.value = v;
-        validarFormulario();
-    };
+  const handleCPF = (e) => {
+    let v = e.target.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    e.target.value = v;
+    validarFormulario();
+  };
 
-    document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
-    document.getElementById("cpf")?.addEventListener("input", handleCPF);
+  document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
+  document.getElementById("cpf")?.addEventListener("input", handleCPF);
 
-    // Adicione/Substitua apenas a parte do evento 'submit' e a 'validarFormulario'
-function validarFormulario() {
+  // --- VALIDAÇÃO DO FORMULÁRIO ---
+  function validarFormulario() {
     const nome = document.getElementById("nome").value.trim();
     const email = document.getElementById("email").value.trim();
     const whatsapp = document.getElementById("whatsapp").value.replace(/\D/g, "");
@@ -133,42 +130,25 @@ function validarFormulario() {
     const whatsappOk = whatsapp.length === 11;
     const cpfOk = cpf.length === 11;
     document.getElementById("btnEnviar").disabled = !(nomeOk && emailOk && whatsappOk && cpfOk);
-}
+  }
 
-// Dentro do seu DOMContentLoaded, no evento submit:
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const btn = document.getElementById("btnEnviar");
-    btn.disabled = true;
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Enviando...`;
+  // --- EVENTO DE ESCUTA EM TODOS OS CAMPOS ---
+  form.querySelectorAll('input, textarea').forEach(el => {
+    el.addEventListener("input", validarFormulario);
+  });
 
-    const mensagem = `🚀 *NOVO PEDIDO* ...`; // Sua lógica de mensagem aqui
+  // --- ENVIO DO FORMULÁRIO ---
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    setTimeout(() => {
-        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
-        btn.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
-        btn.disabled = false;
-    }, 1500);
-});
+      // Ativa visual de "Enviando"
+      botao.classList.add("loading");
+      botao.disabled = true;
+      botao.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Enviando pedido...`;
 
-    // Adiciona evento de escuta em todos os campos para validar
-    form.querySelectorAll('input, textarea').forEach(el => {
-        el.addEventListener("input", validarFormulario);
-    });
-
-
-
-    // --- ENVIO ---
-    if (form) {
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-          
-
-            // Ativa visual de "Enviando"
-            botao.classList.add("loading");
-            botao.disabled = true;
-            botao.innerHTML = `<i class="fas fa-circle-notch"></i> Enviando pedido...`;
-            const mensagem = 
+      // Monta a mensagem para WhatsApp
+      const mensagem = 
 `🚀 *NOVO PEDIDO - JL SERVIÇOS*
 🛠️ *Serviço:* ${dados.titulo}
 💰 *Valor:* ${dados.valor}
@@ -179,17 +159,17 @@ form.addEventListener("submit", (e) => {
 🆔 *CPF:* ${document.getElementById("cpf").value}
 💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
 
-            // Pequeno delay para o usuário ver o efeito de carregamento antes de abrir o zap
-            setTimeout(() => {
-                window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
-               
-               // Reseta o botão após o redirecionamento
-                setTimeout(() => {
-                    botao.classList.remove("loading");
-                    botao.disabled = false;
-                    botao.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
-                }, 2000);
-            }, 1200);
-        });
-    }
+      // Pequeno delay para o usuário ver o efeito de carregamento
+      setTimeout(() => {
+        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
+       
+        // Reseta o botão após o redirecionamento
+        setTimeout(() => {
+          botao.classList.remove("loading");
+          botao.disabled = false;
+          botao.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
+        }, 2000);
+      }, 1200);
+    });
+  }
 });

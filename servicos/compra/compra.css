@@ -1,12 +1,6 @@
 /* ==========================================================================
-   LAYOUT BASE - Ajustado para garantir margens e Grid
+   LAYOUT RESPONSIVO - Desktop e Mobile
    ========================================================================== */
-body { 
-    background: #0b1c2d; 
-    color: #fff; 
-    font-family: 'Montserrat', sans-serif; 
-    margin: 0; 
-}
 
 /* Garante que o conteúdo não cole nas laterais e centralize */
 .content-wrapper { 
@@ -17,7 +11,11 @@ body {
 }
 
 /* HEADER */
-.mei-header { text-align: center; margin-bottom: 50px; }
+.mei-header { 
+    text-align: center; 
+    margin-bottom: 50px; 
+}
+
 .mei-header h1 { 
     font-family: 'Playfair Display', serif; 
     font-size: 2.5rem; 
@@ -25,9 +23,17 @@ body {
     text-transform: uppercase; 
     margin-bottom: 10px; 
 }
-.mei-header p { opacity: 0.8; max-width: 600px; margin: auto; line-height: 1.6; }
 
-/* GRID PRINCIPAL - Resumo à esquerda (380px) e Formulário à direita (restante) */
+.mei-header p { 
+    opacity: 0.8; 
+    max-width: 600px; 
+    margin: auto; 
+    line-height: 1.6; 
+}
+
+/* ========================================================================== 
+   GRID PRINCIPAL - DESKTOP (Resumo 380px à esquerda, Formulário à direita)
+   ========================================================================== */
 .compra-grid { 
     display: grid; 
     grid-template-columns: 380px 1fr; 
@@ -35,8 +41,9 @@ body {
     align-items: start; 
 }
 
-/* CARDS */
-.service-summary-card, .form-card {
+/* CARDS - Estilo comum */
+.service-summary-card, 
+.form-card {
     background: linear-gradient(145deg, #0e2a47, #0b1c2d);
     padding: 30px;
     border-radius: 15px;
@@ -44,14 +51,15 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-/* Faz o resumo acompanhar o scroll da página */
+/* Card de Resumo - STICKY no Desktop */
 .service-summary-card { 
-    position: -webkit-sticky; /* Suporte Safari */
+    position: -webkit-sticky;
     position: sticky; 
-    top: 20px; 
+    top: 20px;
+    height: fit-content;
 }
 
-/* FORMULÁRIO */
+/* SEÇÕES DO CARD */
 .section-subtitle { 
     color: #bd9617; 
     border-left: 4px solid #bd9617; 
@@ -61,7 +69,71 @@ body {
     font-weight: 700;
 }
 
-.input-group { position: relative; margin-bottom: 20px; }
+.service-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+/* LISTA DE INCLUSOS */
+.inclusos-list { 
+    list-style: none; 
+    padding: 0; 
+    margin: 20px 0; 
+}
+
+.inclusos-list li { 
+    font-size: 0.9rem; 
+    margin-bottom: 10px; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.inclusos-list li::before { 
+    content: "✓"; 
+    color: #bd9617; 
+    font-weight: bold; 
+}
+
+/* CAIXA DE PREÇO */
+.price-box { 
+    border-top: 1px solid rgba(189, 150, 23, 0.2); 
+    padding-top: 20px; 
+    text-align: right; 
+}
+
+.price-box span {
+    display: block;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 8px;
+}
+
+.price-box strong { 
+    font-size: 1.8rem; 
+    color: #bd9617; 
+    display: block; 
+}
+
+/* ========================================================================== 
+   FORMULÁRIO
+   ========================================================================== */
+
+.form-card h2 {
+    color: #bd9617; 
+    font-family: 'Playfair Display', serif; 
+    margin-bottom: 25px; 
+    font-size: 1.5rem;
+}
+
+/* CAMPOS DE ENTRADA */
+.input-group { 
+    position: relative; 
+    margin-bottom: 20px; 
+}
+
 .input-group i { 
     position: absolute; 
     left: 15px; 
@@ -71,7 +143,8 @@ body {
     z-index: 2;
 }
 
-input, textarea {
+input, 
+textarea {
     width: 100%; 
     padding: 15px 15px 15px 45px;
     background: rgba(11, 28, 45, 0.6); 
@@ -80,12 +153,25 @@ input, textarea {
     color: #fff; 
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
-textarea { padding-left: 15px; min-height: 100px; }
-input:focus, textarea:focus { border-color: #bd9617; outline: none; background: rgba(14, 42, 71, 0.8); }
+textarea { 
+    padding-left: 15px; 
+    min-height: 100px; 
+    resize: vertical;
+}
 
-/* WhatsApp e CPF lado a lado */
+input:focus, 
+textarea:focus { 
+    border-color: #bd9617; 
+    outline: none; 
+    background: rgba(14, 42, 71, 0.8); 
+    box-shadow: 0 0 10px rgba(189, 150, 23, 0.1);
+}
+
+/* WhatsApp e CPF lado a lado (Desktop) */
 .row-inputs { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
@@ -103,27 +189,162 @@ input:focus, textarea:focus { border-color: #bd9617; outline: none; background: 
     font-weight: 800; 
     text-transform: uppercase;
     cursor: pointer; 
-    transition: 0.3s;
+    transition: all 0.3s ease;
     display: flex; 
     align-items: center; 
     justify-content: center; 
     gap: 10px;
+    font-size: 1rem;
 }
-.btn-checkout:hover:not(:disabled) { background: #1eb956; transform: translateY(-2px); }
-.btn-checkout:disabled { background: #444; opacity: 0.6; cursor: not-allowed; }
 
-/* RESUMO LISTA */
-.inclusos-list { list-style: none; padding: 0; margin: 20px 0; }
-.inclusos-list li { font-size: 0.9rem; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-.inclusos-list li::before { content: "✓"; color: #bd9617; font-weight: bold; }
+.btn-checkout:hover:not(:disabled) { 
+    background: #1eb956; 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+}
 
-.price-box { border-top: 1px solid rgba(189, 150, 23, 0.2); padding-top: 20px; text-align: right; }
-.price-box strong { font-size: 1.8rem; color: #bd9617; display: block; }
+.btn-checkout:disabled { 
+    background: #444; 
+    opacity: 0.6; 
+    cursor: not-allowed; 
+}
 
-/* RESPONSIVIDADE - Ajusta para Celular */
+.btn-checkout.loading {
+    pointer-events: none;
+}
+
+/* ========================================================================== 
+   RESPONSIVIDADE - TABLET (até 900px)
+   ========================================================================== */
 @media (max-width: 900px) {
-    .compra-grid { grid-template-columns: 1fr; }
-    .service-summary-card { position: static; margin-bottom: 20px; }
-    .row-inputs { grid-template-columns: 1fr; }
-    .mei-header h1 { font-size: 2rem; }
+    .compra-grid { 
+        grid-template-columns: 1fr; 
+    }
+    
+    .service-summary-card { 
+        position: static; 
+        margin-bottom: 20px; 
+        height: auto;
+    }
+    
+    .row-inputs { 
+        grid-template-columns: 1fr 1fr; 
+    }
+    
+    .mei-header h1 { 
+        font-size: 2rem; 
+    }
+}
+
+/* ========================================================================== 
+   RESPONSIVIDADE - MOBILE (até 600px)
+   ========================================================================== */
+@media (max-width: 600px) {
+    .content-wrapper {
+        margin: 30px auto 60px;
+        padding: 0 15px;
+    }
+
+    .mei-header h1 { 
+        font-size: 1.8rem; 
+        margin-bottom: 8px;
+    }
+
+    .mei-header p {
+        font-size: 0.95rem;
+    }
+
+    .compra-grid { 
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .service-summary-card { 
+        order: -1;
+        margin-bottom: 0;
+    }
+
+    .form-card h2 {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+    .input-group { 
+        margin-bottom: 15px; 
+    }
+
+    input, 
+    textarea {
+        padding: 12px 12px 12px 40px;
+        font-size: 16px;
+    }
+
+    textarea { 
+        min-height: 80px; 
+    }
+
+    .row-inputs { 
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .btn-checkout {
+        padding: 16px;
+        font-size: 0.95rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .price-box strong { 
+        font-size: 1.6rem; 
+    }
+
+    .inclusos-list li { 
+        font-size: 0.85rem; 
+        margin-bottom: 8px;
+    }
+}
+
+/* ========================================================================== 
+   RESPONSIVIDADE - MOBILE PEQUENO (até 400px)
+   ========================================================================== */
+@media (max-width: 400px) {
+    .content-wrapper {
+        margin: 20px auto 40px;
+        padding: 0 10px;
+    }
+
+    .mei-header h1 { 
+        font-size: 1.5rem; 
+    }
+
+    .mei-header p {
+        font-size: 0.9rem;
+    }
+
+    .service-summary-card, 
+    .form-card {
+        padding: 20px;
+    }
+
+    .form-card h2 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    input, 
+    textarea {
+        padding: 10px 10px 10px 35px;
+    }
+
+    .btn-checkout {
+        padding: 14px;
+        font-size: 0.9rem;
+    }
+
+    .price-box strong { 
+        font-size: 1.4rem; 
+    }
 }
