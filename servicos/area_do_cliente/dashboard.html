@@ -108,7 +108,15 @@
             const assinatura = resAssinatura.data;
             const docs = resDocs.data;
 
-            document.getElementById('user-name').innerText = "Olá, " + (profile?.nome?.split(' ')[0] || user.email.split('@')[0]);
+            // Tentar pegar o nome do perfil ou do metadata do usuário
+            let display_name = profile?.nome || user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+            
+            // Se for o admin, usar o nome fixo solicitado
+            if (user.email === "jlservicoscontabeis0@gmail.com") {
+                display_name = "JL Serviços Contábeis Online";
+            }
+
+            document.getElementById('user-name').innerText = "Olá, " + display_name;
             document.getElementById('user-email').innerText = user.email;
 
             const statusBadge = document.getElementById('sub-status');

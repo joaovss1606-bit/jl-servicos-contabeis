@@ -31,8 +31,12 @@ async function updateAuthHeader() {
         name = 'JL Serviços Contábeis Online';
     }
 
+    // Pegar apenas o primeiro e segundo nome se houver
+    const nameParts = name.split(' ');
+    const displayName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[1]}` : nameParts[0];
+
     // Atualizar o botão de login para mostrar o nome
-    loginBtn.innerHTML = `<i class="fas fa-user-circle"></i> Olá, ${name.split(' ')[0]}`;
+    loginBtn.innerHTML = `<i class="fas fa-user-circle"></i> Olá, ${displayName}`;
     loginBtn.href = '/servicos/area_do_cliente/dashboard.html';
     
     // Verificar se é admin para redirecionar corretamente
