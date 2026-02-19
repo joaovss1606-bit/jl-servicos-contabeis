@@ -87,7 +87,24 @@
         'parcelamento-mei': 'Parcelamento de Débitos',
         'alteracao-mei': 'Alteração de Dados',
         'cpf-regularizacao': 'Regularização de CPF',
-        'planejamento-tributario': 'Planejamento Tributário'
+        'planejamento-tributario': 'Planejamento Tributário',
+        'basico': 'Plano MEI Básico',
+        'premium': 'Plano MEI Premium',
+        'encerramento-mei': 'Encerramento de MEI',
+        'dasn': 'DASN (Anual)',
+        'parcelamento': 'Parcelamento de Débitos',
+        'consultoria-contabil': 'Consultoria Contábil',
+        'elaboracao-balanco': 'Elaboração de Balanço',
+        'regularizacao-empresa': 'Regularização de Empresa',
+        'encerramento-empresa': 'Encerramento de Empresa',
+        'certidao-negativa': 'Certidão Negativa',
+        'certidao-estadual': 'Certidão Estadual',
+        'regularizacao-cadastral': 'Regularização Cadastral',
+        'emissao-a1': 'Certificado Digital A1',
+        'emissao-a3': 'Certificado Digital A3',
+        'planilha-financeira': 'Planilha Financeira',
+        'organizacao-documentos': 'Organização de Documentos',
+        'orientacao-financeira': 'Orientação Financeira'
     };
 
     async function carregarDadosAdmin() {
@@ -106,7 +123,7 @@
                 profiles.forEach(p => {
                     let nomeExibicao = p.nome || p.email?.split('@')[0] || 'Usuário';
                     
-                    // Buscar todas as assinaturas deste cliente
+                    // Buscar todas as assinaturas deste cliente vinculadas pelo cliente_id
                     const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);
                     
                     if (clienteAssinaturas.length === 0) {

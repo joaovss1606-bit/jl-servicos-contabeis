@@ -144,27 +144,23 @@ document.addEventListener("DOMContentLoaded", () => {
               
               const { data: { session } } = await client.auth.getSession();
               
-              // REMOVIDO CAMPOS QUE CAUSAM ERRO (CPF, WHATSAPP, SERVICO, VALOR)
-              // ENVIANDO APENAS O QUE É PADRÃO NO SCHEMA DO SUPABASE
+              // SELECIONANDO APENAS AS COLUNAS QUE EXISTEM NO BANCO DO USUÁRIO
               const payload = {
                   plano_id: serv,
-                  status: 'Pendente',
-                  nome_cliente: nome,
-                  email_cliente: email
+                  status: 'Pendente'
               };
 
               if (session) {
                   payload.cliente_id = session.user.id;
-                  // Tenta atualizar o perfil
+                  // Atualiza o perfil (RLS UPDATE authenticated)
                   await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
               }
 
-              // Inserção na tabela assinaturas
+              // Inserção na tabela assinaturas (RLS INSERT public)
               const { error: insertError } = await client.from('assinaturas').insert(payload);
               if (insertError) {
                   console.error("Erro na tabela assinaturas:", insertError.message);
-                  // Alerta silencioso no console para não assustar o usuário, 
-                  // já que o WhatsApp é o canal principal.
+                  alert("⚠️ Erro ao registrar pedido no banco:\n" + insertError.message);
               } else {
                   console.log("Pedido registrado com sucesso!");
               }
