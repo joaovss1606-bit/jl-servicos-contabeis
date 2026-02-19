@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Reutilizando seu CSS de Login para manter a identidade */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: radial-gradient(circle at center, #0e2a47 0%, #0a192f 100%);
@@ -71,6 +70,10 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(189, 150, 23, 0.3);
         }
+        .btn-register:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
         .back-link {
             margin-top: 25px;
             display: block;
@@ -105,7 +108,7 @@
             <input type="password" id="reg-password" placeholder="Crie uma senha" required>
         </div>
 
-        <button type="submit" class="btn-register">Finalizar Cadastro</button>
+        <button type="submit" class="btn-register" id="btn-submit">Finalizar Cadastro</button>
     </form>
 
     <p style="margin-top: 20px; font-size: 0.85rem; color: #ccc;">
@@ -119,12 +122,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    // Configurações do Supabase
     const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
     const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    // Preserva os parâmetros no link de login
     document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         const linkLogin = document.getElementById('link-login');
@@ -136,53 +137,57 @@
     document.getElementById('register-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const email = document.getElementById('reg-email').value;
+        const btn = document.getElementById('btn-submit');
+        const email = document.getElementById('reg-email').value.trim();
         const password = document.getElementById('reg-password').value;
-        const nome = document.getElementById('reg-nome').value;
+        const nome = document.getElementById('reg-nome').value.trim();
 
-        // 1. Cria o usuário na Auth do Supabase
-        const { data, error } = await supabaseClient.auth.signUp({
-            email: email,
-            password: password,
-            options: { data: { full_name: nome } }
-        });
+        btn.disabled = true;
+        btn.innerText = "CRIANDO CONTA...";
 
-        if (error) {
-            alert("Erro no cadastro: " + error.message);
-        } else {
-            // 2. Cria o perfil na tabela 'profiles' com o nome REAL digitado
-            const { error: profileError } = await supabaseClient.from('profiles').upsert([
-                { 
-                    id: data.user.id, 
-                    nome: nome, 
+        try {
+            // 1. Criar usuário no Auth
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: { data: { full_name: nome } }
+            });
+
+            if (error) throw error;
+
+            if (data.user) {
+                // 2. Atualizar ou Inserir o perfil na tabela 'profiles'
+                // Usamos UPSERT para garantir que o nome correto seja salvo, mesmo que uma Trigger tenha criado o perfil como "Novo Cliente"
+                const { error: profileError } = await supabaseClient.from('profiles').upsert({
+                    id: data.user.id,
+                    nome: nome,
                     email: email,
                     role: 'cliente'
+                });
+
+                if (profileError) {
+                    console.error("Erro ao atualizar perfil:", profileError);
+                    // Tentativa secundária caso o erro seja de permissão (RLS) no UPSERT
+                    await supabaseClient.from('profiles').update({ nome: nome }).eq('id', data.user.id);
                 }
-            ]);
 
-            if (profileError) {
-                console.error("Erro ao criar perfil:", profileError);
-            }
-
-            // 3. Verifica se tem serviço na URL para redirecionar
-            const urlParams = new URLSearchParams(window.location.search);
-            const servico = urlParams.get('servico');
-            const categoria = urlParams.get('categoria');
-
-            alert("Cadastro realizado com sucesso!");
-            
-            let redirectUrl = 'dashboard.html';
-            const params = new URLSearchParams();
-            
-            if (servico) {
-                params.append('contratar', servico);
-                if (categoria) {
-                    params.append('categoria', categoria);
+                alert("Cadastro realizado com sucesso!");
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                const servico = urlParams.get('servico');
+                const categoria = urlParams.get('categoria');
+                
+                let redirectUrl = 'dashboard.html';
+                if (servico) {
+                    redirectUrl = `dashboard.html?contratar=${servico}${categoria ? '&categoria=' + categoria : ''}`;
                 }
-                redirectUrl += `?${params.toString()}`;
+                
+                window.location.href = redirectUrl;
             }
-            
-            window.location.href = redirectUrl;
+        } catch (err) {
+            alert("Erro no cadastro: " + err.message);
+            btn.disabled = false;
+            btn.innerText = "FINALIZAR CADASTRO";
         }
     });
 </script>

@@ -142,12 +142,15 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+
       // Ativa visual de "Enviando"
       botao.classList.add("loading");
       botao.disabled = true;
       botao.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Enviando pedido...`;
 
-      // 1. Tentar registrar no Supabase se o usuário estiver logado
+      // 1. Registrar no Supabase
       try {
           if (typeof supabase !== 'undefined') {
               const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
@@ -155,17 +158,23 @@ document.addEventListener("DOMContentLoaded", () => {
               const client = supabase.createClient(SB_URL, SB_KEY);
               
               const { data: { session } } = await client.auth.getSession();
+              
+              // Se estiver logado, vincula ao cliente_id, senão salva apenas os dados de contato
+              const payload = {
+                  plano_id: serv,
+                  status: 'Pendente',
+                  nome_cliente: nome,
+                  email_cliente: email
+              };
+
               if (session) {
-                  const nome = document.getElementById("nome").value;
-                  const email = document.getElementById("email").value;
-                  await client.from('assinaturas').insert({
-                      cliente_id: session.user.id,
-                      plano_id: serv,
-                      status: 'Pendente',
-                      nome_cliente: nome,
-                      email_cliente: email
-                  });
+                  payload.cliente_id = session.user.id;
+                  // Aproveita para garantir que o nome no perfil esteja correto
+                  await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
               }
+
+              const { error: insertError } = await client.from('assinaturas').insert(payload);
+              if (insertError) throw insertError;
           }
       } catch (err) {
           console.error("Erro ao registrar pedido no banco:", err);
@@ -177,9 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
 🛠️ *Serviço:* ${dados.titulo}
 💰 *Valor:* ${dados.valor}
 👤 *DADOS DO CLIENTE:*
-📝 *Nome:* ${document.getElementById("nome").value}
+📝 *Nome:* ${nome}
 📱 *WhatsApp:* ${document.getElementById("whatsapp").value}
-📧 *E-mail:* ${document.getElementById("email").value}
+📧 *E-mail:* ${email}
 🆔 *CPF:* ${document.getElementById("cpf").value}
 💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
 
