@@ -74,6 +74,21 @@
 <script>
     let clienteSelecionado = null;
 
+    const nomesServicos = {
+        'abertura-mei': 'Abertura de MEI', 
+        'mei-plano-basico': 'Plano MEI Básico', 
+        'mei-plano-premium': 'Plano MEI Premium', 
+        'irpf': 'Declaração IRPF',
+        'regularizacao-mei': 'Regularização de MEI',
+        'baixa-mei': 'Baixa de MEI',
+        'emissao-das': 'Emissão de DAS',
+        'dasn-anual': 'DASN (Anual)',
+        'parcelamento-mei': 'Parcelamento de Débitos',
+        'alteracao-mei': 'Alteração de Dados',
+        'cpf-regularizacao': 'Regularização de CPF',
+        'planejamento-tributario': 'Planejamento Tributário'
+    };
+
     async function carregarDadosAdmin() {
         try {
             const { data: profiles } = await supabaseClient.from('profiles').select('*').neq('role', 'admin');
@@ -84,23 +99,41 @@
 
             if (profiles && profiles.length > 0) {
                 profiles.forEach(p => {
-                    const sub = assinaturas?.find(s => s.cliente_id === p.id) || { status: 'Sem pedido', plano_id: '-' };
-                    const dataFormatada = sub.created_at ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';                
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.id.substring(0,8)}...</small></td>
-                        <td>${sub.plano_id}</td>
-                        <td>
-                            <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
-                                <option value="Pendente" ${sub.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                                <option value="Ativo" ${sub.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
-                                <option value="Cancelado" ${sub.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
-                            </select>
-                        </td>
-                        <td style="color: #aaa;">${dataFormatada}</td> 
-                        <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${p.nome}')"><i class="fas fa-upload"></i> Doc</button></td>
-                    `;
-                    body.appendChild(row);
+                    // Buscar todas as assinaturas deste cliente
+                    const clienteAssinaturas = assinaturas?.filter(s => s.cliente_id === p.id) || [];
+                    
+                    if (clienteAssinaturas.length === 0) {
+                        // Cliente sem assinatura ainda
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.id.substring(0,8)}...</small></td>
+                            <td><span style="color:#666;">Aguardando pedido</span></td>
+                            <td><span class="status-badge" style="background:#666; padding:4px 8px; border-radius:4px; font-size:0.7rem;">INATIVO</span></td>
+                            <td style="color: #666;">---</td> 
+                            <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${p.nome}')"><i class="fas fa-upload"></i> Doc</button></td>
+                        `;
+                        body.appendChild(row);
+                    } else {
+                        // Cliente com uma ou mais assinaturas
+                        clienteAssinaturas.forEach(sub => {
+                            const dataFormatada = sub.created_at ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';                
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.id.substring(0,8)}...</small></td>
+                                <td>${nomesServicos[sub.plano_id] || sub.plano_id}</td>
+                                <td>
+                                    <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
+                                        <option value="Pendente" ${sub.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                                        <option value="Ativo" ${sub.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
+                                        <option value="Cancelado" ${sub.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                                    </select>
+                                </td>
+                                <td style="color: #aaa;">${dataFormatada}</td> 
+                                <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${p.nome}')"><i class="fas fa-upload"></i> Doc</button></td>
+                            `;
+                            body.appendChild(row);
+                        });
+                    }
                 });
             } else {
                 body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum cliente encontrado.</td></tr>';
