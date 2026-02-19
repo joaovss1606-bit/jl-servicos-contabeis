@@ -185,7 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
 💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
 
       setTimeout(() => {
-        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
+        // Usando encodeURIComponent para garantir que emojis e caracteres especiais sejam codificados corretamente para a URL
+        const urlWhatsApp = `https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`;
+        window.open(urlWhatsApp, "_blank");
         setTimeout(() => {
           botao.classList.remove("loading");
           botao.disabled = false;
