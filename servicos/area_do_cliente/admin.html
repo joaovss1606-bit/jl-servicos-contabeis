@@ -101,22 +101,23 @@
 
             if (profiles.length > 0) {
                 profiles.forEach(p => {
-                    // Filtrar nome real: remover "Novo Cliente" e usar dados reais
-                    let nomeExibicao = p.nome || 'Cliente';
+                    // Lógica para obter o nome real do usuário
+                    let nomeExibicao = p.nome || 'Usuário';
                     if (nomeExibicao.toLowerCase().includes('novo cliente') || nomeExibicao === 'Novo Cliente') {
-                        nomeExibicao = 'Cliente';
+                        // Tentar extrair do e-mail se o nome for genérico
+                        nomeExibicao = p.email ? p.email.split('@')[0] : 'Usuário';
                     }
                     
                     // Buscar todas as assinaturas deste cliente
-                    const clienteAssinaturas = assinaturas?.filter(s => s.cliente_id === p.id) || [];
+                    const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);
                     
                     if (clienteAssinaturas.length === 0) {
-                        // Cliente sem assinatura ainda
+                        // Usuário sem assinatura ainda - não aparece como "Cliente"
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td><strong>${nomeExibicao}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
-                            <td><span style="color:#666;">Aguardando pedido</span></td>
-                            <td><span class="status-badge" style="background:#666; padding:4px 8px; border-radius:4px; font-size:0.7rem;">INATIVO</span></td>
+                            <td><span style="color:#666;">Interessado / Sem Pedido</span></td>
+                            <td><span class="status-badge" style="background:#f1c40f; color: black; padding:4px 8px; border-radius:4px; font-size:0.7rem;">POTENCIAL</span></td>
                             <td style="color: #666;">---</td> 
                             <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${nomeExibicao}')"><i class="fas fa-upload"></i> Doc</button></td>
                         `;

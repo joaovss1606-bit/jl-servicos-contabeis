@@ -173,25 +173,39 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {clients.map(client => (
-                      <tr key={client.id} className="hover:bg-slate-50">
-                        <td className="px-6 py-4 font-bold text-slate-900">{client.name}</td>
-                        <td className="px-6 py-4 text-sm text-slate-500">{client.email}</td>
-                        <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-[10px] font-black ${client.isPlanActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                            {client.isPlanActive ? 'PLANO ATIVO' : 'BLOQUEADO'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <button 
-                            onClick={() => handleTogglePlan(client.id)}
-                            className="text-xs font-bold text-slate-600 border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-white"
-                          >
-                            {client.isPlanActive ? 'Bloquear' : 'Ativar Manual'}
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {clients.map(client => {
+                      // Verificar se o usuário tem algum serviço contratado
+                      const hasService = services.some(s => s.clientId === client.id);
+                      const displayName = client.name && !client.name.toLowerCase().includes('novo cliente') 
+                        ? client.name 
+                        : (client.email ? client.email.split('@')[0] : 'Usuário');
+
+                      return (
+                        <tr key={client.id} className="hover:bg-slate-50">
+                          <td className="px-6 py-4 font-bold text-slate-900">{displayName}</td>
+                          <td className="px-6 py-4 text-sm text-slate-500">{client.email}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-black ${
+                              hasService 
+                                ? (client.isPlanActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700')
+                                : 'bg-amber-100 text-amber-700'
+                            }`}>
+                              {hasService 
+                                ? (client.isPlanActive ? 'PLANO ATIVO' : 'BLOQUEADO')
+                                : 'POTENCIAL / SEM SERVIÇO'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <button 
+                              onClick={() => handleTogglePlan(client.id)}
+                              className="text-xs font-bold text-slate-600 border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-white"
+                            >
+                              {client.isPlanActive ? 'Bloquear' : 'Ativar Manual'}
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
