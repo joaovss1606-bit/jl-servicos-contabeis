@@ -28,6 +28,15 @@
         .client-info strong { font-size: 1rem; color: #fff; }
         .client-info small { color: #888; font-size: 0.75rem; }
         .client-detail { color: var(--gold); font-size: 0.8rem; font-weight: 600; }
+        
+        /* Estilos dos Filtros */
+        .filters-container { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .filter-group { display: flex; flex-direction: column; gap: 5px; }
+        .filter-group label { font-size: 0.75rem; color: var(--gold); font-weight: 600; text-transform: uppercase; }
+        .filter-input { background: #1a2a44; color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 8px 12px; border-radius: 5px; font-family: inherit; font-size: 0.85rem; outline: none; min-width: 150px; }
+        .filter-input:focus { border-color: var(--gold); }
+        .btn-clear { background: rgba(255,255,255,0.1); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; align-self: flex-end; font-size: 0.85rem; transition: 0.3s; }
+        .btn-clear:hover { background: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
@@ -47,7 +56,40 @@
         <p>Olá, <span id="admin-name">JL Serviços Contábeis Online</span>. Aqui estão os seus clientes e pedidos.</p>
 
         <div class="admin-card">
-            <h3>Clientes e Assinaturas</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">Clientes e Assinaturas</h3>
+                <div id="counter-info" style="font-size: 0.85rem; color: #888;"></div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="filter-status" class="filter-input">
+                        <option value="">Todos os Status</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Ativo">Ativo</option>
+                        <option value="Cancelado">Cancelado</option>
+                        <option value="POTENCIAL">Potencial (Sem Pedido)</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Serviço</label>
+                    <select id="filter-servico" class="filter-input">
+                        <option value="">Todos os Serviços</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Data de Envio</label>
+                    <input type="date" id="filter-data" class="filter-input">
+                </div>
+                <div class="filter-group" style="flex-grow: 1;">
+                    <label>Buscar Cliente (Nome/Email/CPF)</label>
+                    <input type="text" id="filter-search" class="filter-input" placeholder="Digite para buscar...">
+                </div>
+                <button class="btn-clear" onclick="limparFiltros()">Limpar</button>
+            </div>
+
             <table id="table-clientes">
                 <thead>
                     <tr>
@@ -78,6 +120,7 @@
 
 <script>
     let clienteSelecionado = null;
+    let dadosOriginais = { profiles: [], assinaturas: [] };
 
     const nomesServicos = {
         'abertura-mei': 'Abertura de MEI', 
@@ -142,72 +185,144 @@
 
             if (errorAssinaturas) console.error("Erro ao carregar assinaturas:", errorAssinaturas.message);
 
-            let profiles = resProfiles.data?.filter(p => p.email !== 'jlservicoscontabeis0@gmail.com') || [];
+            dadosOriginais.profiles = resProfiles.data?.filter(p => p.email !== 'jlservicoscontabeis0@gmail.com') || [];
+            dadosOriginais.assinaturas = assinaturas || [];
 
-            const body = document.getElementById('lista-clientes-body');
-            body.innerHTML = '';
+            popularFiltroServicos();
+            renderizarTabelaFiltrada();
+            
+            // Adicionar listeners para os filtros
+            ['filter-status', 'filter-servico', 'filter-data', 'filter-search'].forEach(id => {
+                document.getElementById(id).addEventListener('input', renderizarTabelaFiltrada);
+            });
 
-            if (profiles.length > 0) {
-                profiles.forEach(p => {
-                    let nomeExibicao = p.nome || p.email?.split('@')[0] || 'Usuário';
-                    let whatsapp = p.whatsapp || 'Não informado';
-                    let cpf = p.cpf_cnpj || 'Não informado';
-                    
-                    // Buscar todas as assinaturas deste cliente vinculadas pelo cliente_id
-                    const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);
-                    
-                    if (clienteAssinaturas.length === 0) {
+        } catch (err) {
+            console.error("Erro ao carregar dados admin:", err);
+            document.getElementById('lista-clientes-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff4444;">Erro ao carregar dados. Verifique o console.</td></tr>';
+        }
+    }
+
+    function popularFiltroServicos() {
+        const select = document.getElementById('filter-servico');
+        const servicosUnicos = new Set();
+        dadosOriginais.assinaturas.forEach(s => {
+            const nome = nomesServicos[s.plano_id] || s.plano_id;
+            if (nome) servicosUnicos.add(nome);
+        });
+
+        select.innerHTML = '<option value="">Todos os Serviços</option>';
+        Array.from(servicosUnicos).sort().forEach(serv => {
+            const opt = document.createElement('option');
+            opt.value = serv;
+            opt.textContent = serv;
+            select.appendChild(opt);
+        });
+    }
+
+    function renderizarTabelaFiltrada() {
+        const statusFiltro = document.getElementById('filter-status').value;
+        const servicoFiltro = document.getElementById('filter-servico').value;
+        const dataFiltro = document.getElementById('filter-data').value;
+        const buscaFiltro = document.getElementById('filter-search').value.toLowerCase();
+
+        const body = document.getElementById('lista-clientes-body');
+        body.innerHTML = '';
+
+        let totalExibidos = 0;
+
+        dadosOriginais.profiles.forEach(p => {
+            const nomeExibicao = p.nome || p.email?.split('@')[0] || 'Usuário';
+            const whatsapp = p.whatsapp || 'Não informado';
+            const cpf = p.cpf_cnpj || 'Não informado';
+            const email = p.email || '';
+
+            // Filtro de busca textual
+            const atendeBusca = !buscaFiltro || 
+                nomeExibicao.toLowerCase().includes(buscaFiltro) || 
+                email.toLowerCase().includes(buscaFiltro) || 
+                cpf.toLowerCase().includes(buscaFiltro);
+
+            if (!atendeBusca) return;
+
+            const clienteAssinaturas = dadosOriginais.assinaturas.filter(s => s.cliente_id === p.id);
+
+            if (clienteAssinaturas.length === 0) {
+                // Caso: Potencial (Sem Pedido)
+                const atendeStatus = !statusFiltro || statusFiltro === 'POTENCIAL';
+                const atendeServico = !servicoFiltro;
+                const atendeData = !dataFiltro;
+
+                if (atendeStatus && atendeServico && atendeData) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="client-info">
+                                <strong>${nomeExibicao}</strong>
+                                <small>${email}</small>
+                                <span class="client-detail"><i class="fab fa-whatsapp"></i> ${whatsapp}</span>
+                                <span class="client-detail"><i class="far fa-id-card"></i> ${cpf}</span>
+                            </div>
+                        </td>
+                        <td><span style="color:#666;">Interessado / Sem Pedido</span></td>
+                        <td><span class="status-badge" style="background:#f1c40f; color: black;">POTENCIAL</span></td>
+                        <td style="color: #666;">---</td> 
+                        <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${nomeExibicao}')"><i class="fas fa-upload"></i> Doc</button></td>
+                    `;
+                    body.appendChild(row);
+                    totalExibidos++;
+                }
+            } else {
+                // Caso: Com Pedidos
+                clienteAssinaturas.forEach(sub => {
+                    const nomeServico = nomesServicos[sub.plano_id] || sub.plano_id || 'Serviço';
+                    const dataISO = sub.created_at ? sub.created_at.split('T')[0] : '';
+                    const dataFormatada = sub.created_at ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';
+
+                    const atendeStatus = !statusFiltro || statusFiltro === sub.status;
+                    const atendeServico = !servicoFiltro || servicoFiltro === nomeServico;
+                    const atendeData = !dataFiltro || dataFiltro === dataISO;
+
+                    if (atendeStatus && atendeServico && atendeData) {
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>
                                 <div class="client-info">
                                     <strong>${nomeExibicao}</strong>
-                                    <small>${p.email}</small>
+                                    <small>${email}</small>
                                     <span class="client-detail"><i class="fab fa-whatsapp"></i> ${whatsapp}</span>
                                     <span class="client-detail"><i class="far fa-id-card"></i> ${cpf}</span>
                                 </div>
                             </td>
-                            <td><span style="color:#666;">Interessado / Sem Pedido</span></td>
-                            <td><span class="status-badge" style="background:#f1c40f; color: black;">POTENCIAL</span></td>
-                            <td style="color: #666;">---</td> 
+                            <td>${nomeServico}</td>
+                            <td>
+                                <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
+                                    <option value="Pendente" ${sub.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                                    <option value="Ativo" ${sub.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
+                                    <option value="Cancelado" ${sub.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                                </select>
+                            </td>
+                            <td style="color: #aaa;">${dataFormatada}</td> 
                             <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${nomeExibicao}')"><i class="fas fa-upload"></i> Doc</button></td>
                         `;
                         body.appendChild(row);
-                    } else {
-                        clienteAssinaturas.forEach(sub => {
-                            const dataFormatada = sub.created_at ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';                
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>
-                                    <div class="client-info">
-                                        <strong>${nomeExibicao}</strong>
-                                        <small>${p.email}</small>
-                                        <span class="client-detail"><i class="fab fa-whatsapp"></i> ${whatsapp}</span>
-                                        <span class="client-detail"><i class="far fa-id-card"></i> ${cpf}</span>
-                                    </div>
-                                </td>
-                                <td>${nomesServicos[sub.plano_id] || sub.plano_id || 'Serviço'}</td>
-                                <td>
-                                    <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
-                                        <option value="Pendente" ${sub.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                                        <option value="Ativo" ${sub.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
-                                        <option value="Cancelado" ${sub.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
-                                    </select>
-                                </td>
-                                <td style="color: #aaa;">${dataFormatada}</td> 
-                                <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${nomeExibicao}')"><i class="fas fa-upload"></i> Doc</button></td>
-                            `;
-                            body.appendChild(row);
-                        });
+                        totalExibidos++;
                     }
                 });
-            } else {
-                body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum cliente encontrado.</td></tr>';
             }
-        } catch (err) {
-            console.error("Erro ao carregar dados admin:", err);
-            document.getElementById('lista-clientes-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff4444;">Erro ao carregar dados. Verifique o console.</td></tr>';
+        });
+
+        document.getElementById('counter-info').textContent = `Exibindo ${totalExibidos} registro(s)`;
+        if (totalExibidos === 0) {
+            body.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum resultado para os filtros aplicados.</td></tr>';
         }
+    }
+
+    function limparFiltros() {
+        document.getElementById('filter-status').value = '';
+        document.getElementById('filter-servico').value = '';
+        document.getElementById('filter-data').value = '';
+        document.getElementById('filter-search').value = '';
+        renderizarTabelaFiltrada();
     }
 
     async function atualizarStatus(subId, novoStatus) {
