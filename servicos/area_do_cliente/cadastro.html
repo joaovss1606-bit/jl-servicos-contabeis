@@ -152,7 +152,7 @@
         } else {
             // 2. Cria o perfil inicial na tabela 'profiles'
             await supabaseClient.from('profiles').insert([
-                { id: data.user.id, nome: nome }
+                { id: data.user.id, nome: nome, email: email }
             ]);
 
             // 3. Verifica se tem serviço na URL para redirecionar

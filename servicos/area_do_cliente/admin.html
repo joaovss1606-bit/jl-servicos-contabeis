@@ -90,9 +90,18 @@
     };
 
     async function carregarDadosAdmin() {
+        console.log("Iniciando carregamento de dados do admin...");
         try {
-            const { data: profiles } = await supabaseClient.from('profiles').select('*').neq('role', 'admin');
-            const { data: assinaturas } = await supabaseClient.from('assinaturas').select('*');
+            const resProfiles = await supabaseClient.from('profiles').select('*');
+            console.log("Profiles retornados:", resProfiles);
+            
+            // Tentar filtrar, mas se não houver role definida, mostrar todos menos o email do admin conhecido
+            const profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com');
+            const { data: assinaturas, error: errorAssinaturas } = await supabaseClient.from('assinaturas').select('*');
+            
+            console.log("Profiles filtrados:", profiles);
+            console.log("Assinaturas:", assinaturas);
+            if (errorAssinaturas) console.error("Erro ao buscar assinaturas:", errorAssinaturas);
 
             const body = document.getElementById('lista-clientes-body');
             body.innerHTML = '';
@@ -106,7 +115,7 @@
                         // Cliente sem assinatura ainda
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.id.substring(0,8)}...</small></td>
+                            <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
                             <td><span style="color:#666;">Aguardando pedido</span></td>
                             <td><span class="status-badge" style="background:#666; padding:4px 8px; border-radius:4px; font-size:0.7rem;">INATIVO</span></td>
                             <td style="color: #666;">---</td> 
@@ -119,7 +128,7 @@
                             const dataFormatada = sub.created_at ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';                
                             const row = document.createElement('tr');
                             row.innerHTML = `
-                                <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.id.substring(0,8)}...</small></td>
+                                <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
                                 <td>${nomesServicos[sub.plano_id] || sub.plano_id}</td>
                                 <td>
                                     <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
