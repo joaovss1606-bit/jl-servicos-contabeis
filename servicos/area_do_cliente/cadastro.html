@@ -128,6 +128,7 @@
 
     document.getElementById('register-form').addEventListener('submit', async (e) => {
         e.preventDefault();
+        alert("PASSO 1: Cadastro iniciado.");
         
         const btn = document.getElementById('btn-submit');
         const email = document.getElementById('reg-email').value.trim();
@@ -138,7 +139,7 @@
         btn.innerText = "CRIANDO CONTA...";
 
         try {
-            // 1. Criar usuário no Auth
+            alert("PASSO 2: Criando usuário no Auth...");
             const { data, error } = await supabaseClient.auth.signUp({
                 email: email,
                 password: password,
@@ -153,7 +154,7 @@
             if (error) throw error;
 
             if (data.user) {
-                // 2. Tentar inserir o perfil na tabela 'profiles'
+                alert("PASSO 3: Usuário criado (ID: " + data.user.id + "). Gravando perfil...");
                 const { error: profileError } = await supabaseClient
                     .from('profiles')
                     .upsert({ 
@@ -164,16 +165,16 @@
                     });
 
                 if (profileError) {
-                    console.error("Erro no perfil:", profileError);
-                    alert("⚠️ ERRO DE GRAVAÇÃO NO BANCO:\n" + profileError.message + "\n\nIsso confirma que o Supabase bloqueou o nome. Por favor, me informe essa mensagem!");
+                    alert("ERRO RLS PERFIL: " + profileError.message);
+                } else {
+                    alert("PASSO 4: Perfil gravado com sucesso!");
                 }
 
-                alert("Cadastro realizado com sucesso! Você será redirecionado para o login.");
+                alert("Cadastro finalizado. Redirecionando para login.");
                 window.location.href = 'index.html';
             }
         } catch (err) {
-            console.error("Erro no cadastro:", err);
-            alert("❌ ERRO NO CADASTRO:\n" + err.message);
+            alert("ERRO NO CADASTRO: " + err.message);
             btn.disabled = false;
             btn.innerText = "FINALIZAR CADASTRO";
         }

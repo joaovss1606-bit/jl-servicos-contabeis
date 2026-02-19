@@ -127,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      alert("PASSO 1: Botão clicado e código de envio iniciado.");
 
       const nome = document.getElementById("nome").value.trim();
       const email = document.getElementById("email").value.trim();
@@ -136,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
       botao.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Enviando pedido...`;
 
       try {
+          alert("PASSO 2: Conectando ao Supabase...");
           if (typeof supabase !== 'undefined') {
               const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
               const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
@@ -151,24 +153,29 @@ document.addEventListener("DOMContentLoaded", () => {
               };
 
               if (session) {
+                  alert("PASSO 3: Sessão de usuário encontrada (ID: " + session.user.id + ").");
                   payload.cliente_id = session.user.id;
-                  // Tenta atualizar o perfil
+                  
+                  // Atualiza o perfil
                   const { error: profileError } = await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
-                  if (profileError) {
-                      console.error("Erro RLS Perfil:", profileError);
-                      alert("⚠️ ERRO AO ATUALIZAR NOME:\n" + profileError.message);
-                  }
+                  if (profileError) alert("AVISO RLS PERFIL: " + profileError.message);
+              } else {
+                  alert("AVISO: Usuário não logado, o pedido será anônimo.");
               }
 
               // Inserção na tabela assinaturas
+              alert("PASSO 4: Gravando pedido na tabela assinaturas...");
               const { error: insertError } = await client.from('assinaturas').insert(payload);
               if (insertError) {
-                  console.error("Erro RLS Assinatura:", insertError);
-                  alert("⚠️ ERRO AO GRAVAR PEDIDO:\n" + insertError.message);
+                  alert("ERRO RLS ASSINATURA: " + insertError.message);
+              } else {
+                  alert("PASSO 5: Pedido gravado com sucesso no banco!");
               }
+          } else {
+              alert("ERRO: Biblioteca do Supabase não carregada!");
           }
       } catch (err) {
-          console.error("Erro fatal no Supabase:", err);
+          alert("ERRO FATAL: " + err.message);
       }
 
       const mensagem = 
@@ -182,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
 🆔 *CPF:* ${document.getElementById("cpf").value}
 💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
 
+      alert("PASSO FINAL: Redirecionando para o WhatsApp.");
       setTimeout(() => {
         window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
         setTimeout(() => {
