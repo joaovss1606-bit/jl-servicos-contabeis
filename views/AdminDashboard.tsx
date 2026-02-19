@@ -176,7 +176,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     {clients.map(client => {
                       // Verificar se o usuário tem algum serviço contratado
                       const hasService = services.some(s => s.clientId === client.id);
-                      const displayName = client.name || 'Usuário';
+                      
+                      // Lógica DEFINITIVA para exibição do nome:
+                      // Se o nome for "Novo Cliente" ou nulo, usamos o email como fallback seguro.
+                      let displayName = client.name;
+                      if (!displayName || displayName.toLowerCase() === 'novo cliente') {
+                        displayName = client.email ? client.email.split('@')[0] : 'Usuário';
+                      }
 
                       return (
                         <tr key={client.id} className="hover:bg-slate-50">
