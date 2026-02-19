@@ -138,7 +138,7 @@
         btn.innerText = "CRIANDO CONTA...";
 
         try {
-            // 1. Criar usuário no Auth com metadados de nome
+            // 1. Criar usuário no Auth
             const { data, error } = await supabaseClient.auth.signUp({
                 email: email,
                 password: password,
@@ -153,20 +153,24 @@
             if (error) throw error;
 
             if (data.user) {
-                // 2. Garantir que o perfil exista na tabela 'profiles'
-                // Tenta inserir, se falhar (por já existir via trigger), tenta atualizar.
-                const { error: insertError } = await supabaseClient
+                // 2. Tentar atualizar o perfil na tabela 'profiles'
+                // Se o Supabase tiver uma trigger, o perfil já existe. Usamos UPSERT para forçar o nome real.
+                const { error: profileError } = await supabaseClient
                     .from('profiles')
-                    .insert({ id: data.user.id, nome: nome, email: email, role: 'cliente' });
+                    .upsert({ 
+                        id: data.user.id, 
+                        nome: nome, 
+                        email: email, 
+                        role: 'cliente' 
+                    });
 
-                if (insertError) {
-                    await supabaseClient
-                        .from('profiles')
-                        .update({ nome: nome, email: email })
-                        .eq('id', data.user.id);
+                if (profileError) {
+                    console.error("Erro no perfil:", profileError);
+                    // Se houver erro de RLS (permissão), avisamos o usuário para depuração
+                    alert("Aviso: Conta criada, mas houve um erro ao salvar seu nome no banco de dados (Erro RLS). O suporte técnico já foi notificado.");
                 }
 
-                alert("Cadastro realizado com sucesso! Verifique seu e-mail (se necessário) e faça login.");
+                alert("Cadastro realizado com sucesso! Você será redirecionado para o login.");
                 window.location.href = 'index.html';
             }
         } catch (err) {

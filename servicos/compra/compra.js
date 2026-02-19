@@ -153,21 +153,25 @@ document.addEventListener("DOMContentLoaded", () => {
               if (session) {
                   payload.cliente_id = session.user.id;
                   
-                  // ATUALIZAÇÃO FORÇADA DE PERFIL (Garante que o nome seja salvo na profiles)
-                  await client.from('profiles').upsert({ 
+                  // Tenta atualizar o perfil. Se falhar por RLS, o sistema continua para o WhatsApp.
+                  const { error: profileError } = await client.from('profiles').upsert({ 
                     id: session.user.id, 
                     nome: nome, 
                     email: email, 
                     role: 'cliente' 
                   });
+                  if (profileError) console.error("Erro RLS no Perfil:", profileError.message);
               }
 
-              // INSERÇÃO NA TABELA ASSINATURAS
+              // Tenta inserir a assinatura. Se falhar por RLS, o sistema continua para o WhatsApp.
               const { error: insertError } = await client.from('assinaturas').insert(payload);
-              if (insertError) console.error("Erro na assinatura:", insertError);
+              if (insertError) {
+                  console.error("Erro RLS na Assinatura:", insertError.message);
+                  alert("Aviso: O pedido será enviado via WhatsApp, mas houve um erro ao registrar no banco de dados (Erro de Permissão RLS).");
+              }
           }
       } catch (err) {
-          console.error("Erro fatal:", err);
+          console.error("Erro fatal no Supabase:", err);
       }
 
       const mensagem = 
