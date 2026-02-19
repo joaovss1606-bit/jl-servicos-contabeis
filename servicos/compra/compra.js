@@ -129,6 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const nome = document.getElementById("nome").value.trim();
       const email = document.getElementById("email").value.trim();
+      const whatsapp = document.getElementById("whatsapp").value;
+      const cpf = document.getElementById("cpf").value;
 
       botao.classList.add("loading");
       botao.disabled = true;
@@ -142,28 +144,36 @@ document.addEventListener("DOMContentLoaded", () => {
               
               const { data: { session } } = await client.auth.getSession();
               
+              // TENTATIVA DE GRAVAÇÃO ROBUSTA
               const payload = {
                   plano_id: serv,
                   status: 'Pendente',
                   nome_cliente: nome,
-                  email_cliente: email
+                  email_cliente: email,
+                  whatsapp: whatsapp,
+                  cpf: cpf
               };
 
               if (session) {
                   payload.cliente_id = session.user.id;
-                  // Atualiza o perfil (RLS UPDATE authenticated)
-                  await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
+                  // Tenta atualizar o perfil
+                  const { error: profileError } = await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
+                  if (profileError) {
+                      console.error("Erro RLS Perfil:", profileError);
+                      alert("⚠️ ERRO TÉCNICO PERFIL:\n" + profileError.message + "\nCódigo: " + profileError.code);
+                  }
               }
 
-              // Inserção na tabela assinaturas (RLS INSERT public)
+              // Inserção na tabela assinaturas
               const { error: insertError } = await client.from('assinaturas').insert(payload);
               if (insertError) {
-                  console.error("Erro RLS Assinatura:", insertError.message);
-                  alert("Aviso: O pedido será enviado via WhatsApp, mas houve um erro ao registrar no banco de dados. Por favor, verifique suas políticas de RLS.");
+                  console.error("Erro RLS Assinatura:", insertError);
+                  alert("⚠️ ERRO TÉCNICO ASSINATURA:\n" + insertError.message + "\nCódigo: " + insertError.code + "\nDetalhes: " + (insertError.details || "Nenhum"));
               }
           }
       } catch (err) {
           console.error("Erro fatal no Supabase:", err);
+          alert("❌ ERRO FATAL NO SISTEMA:\n" + err.message);
       }
 
       const mensagem = 
@@ -172,9 +182,9 @@ document.addEventListener("DOMContentLoaded", () => {
 💰 *Valor:* ${dados.valor}
 👤 *DADOS DO CLIENTE:*
 📝 *Nome:* ${nome}
-📱 *WhatsApp:* ${document.getElementById("whatsapp").value}
+📱 *WhatsApp:* ${whatsapp}
 📧 *E-mail:* ${email}
-🆔 *CPF:* ${document.getElementById("cpf").value}
+🆔 *CPF:* ${cpf}
 💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
 
       setTimeout(() => {
