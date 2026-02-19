@@ -41,6 +41,11 @@
         <h1>Painel Administrativo</h1>
         <p>Olá, <span id="admin-name">JL Serviços Contábeis Online</span>. Aqui estão os seus clientes e pedidos.</p>
 
+        <div id="debug-panel" style="background: rgba(255,0,0,0.1); border: 1px solid red; padding: 10px; margin-bottom: 20px; font-family: monospace; font-size: 0.8rem; display: none;">
+            <strong>Debug Info:</strong>
+            <div id="debug-content"></div>
+        </div>
+
         <div class="admin-card">
             <h3>Clientes e Assinaturas</h3>
             <table id="table-clientes">
@@ -90,23 +95,41 @@
     };
 
     async function carregarDadosAdmin() {
-        console.log("Iniciando carregamento de dados do admin...");
+        const debugPanel = document.getElementById('debug-panel');
+        const debugContent = document.getElementById('debug-content');
+        debugPanel.style.display = 'block';
+        debugContent.innerHTML = "Buscando dados...";
+
         try {
             const resProfiles = await supabaseClient.from('profiles').select('*');
-            console.log("Profiles retornados:", resProfiles);
-            
-            // Tentar filtrar, mas se não houver role definida, mostrar todos menos o email do admin conhecido
-            const profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com');
             const { data: assinaturas, error: errorAssinaturas } = await supabaseClient.from('assinaturas').select('*');
             
-            console.log("Profiles filtrados:", profiles);
-            console.log("Assinaturas:", assinaturas);
-            if (errorAssinaturas) console.error("Erro ao buscar assinaturas:", errorAssinaturas);
+            debugContent.innerHTML = `
+                Profiles Status: ${resProfiles.error ? 'Erro: ' + resProfiles.error.message : 'Sucesso (' + (resProfiles.data?.length || 0) + ' encontrados)'}<br>
+                Assinaturas Status: ${errorAssinaturas ? 'Erro: ' + errorAssinaturas.message : 'Sucesso (' + (assinaturas?.length || 0) + ' encontradas)'}
+            `;
+
+            // Se não retornar nada, tentar buscar da auth (se possível via metadata) ou mostrar erro específico
+            if (!resProfiles.data || resProfiles.data.length === 0) {
+                debugContent.innerHTML += "<br><span style='color:orange;'>Aviso: Nenhum perfil retornado da tabela 'profiles'. Verifique as permissões RLS.</span>";
+            }
+
+            let profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com') || [];
+
+            // Se não temos perfis mas temos assinaturas, criar perfis temporários a partir das assinaturas
+            if (profiles.length === 0 && assinaturas && assinaturas.length > 0) {
+                const uniqueClientIds = [...new Set(assinaturas.map(s => s.cliente_id))];
+                profiles = uniqueClientIds.map(id => ({
+                    id: id,
+                    nome: "Cliente (Perfil Restrito)",
+                    email: "Consulte na assinatura"
+                }));
+            }
 
             const body = document.getElementById('lista-clientes-body');
             body.innerHTML = '';
 
-            if (profiles && profiles.length > 0) {
+            if (profiles.length > 0) {
                 profiles.forEach(p => {
                     // Buscar todas as assinaturas deste cliente
                     const clienteAssinaturas = assinaturas?.filter(s => s.cliente_id === p.id) || [];
