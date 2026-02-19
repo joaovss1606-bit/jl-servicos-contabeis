@@ -101,12 +101,8 @@
 
             if (profiles.length > 0) {
                 profiles.forEach(p => {
-                    // Lógica para obter o nome real do usuário
+                    // Lógica para obter o nome real do usuário conforme registrado no Supabase
                     let nomeExibicao = p.nome || 'Usuário';
-                    if (nomeExibicao.toLowerCase().includes('novo cliente') || nomeExibicao === 'Novo Cliente') {
-                        // Tentar extrair do e-mail se o nome for genérico
-                        nomeExibicao = p.email ? p.email.split('@')[0] : 'Usuário';
-                    }
                     
                     // Buscar todas as assinaturas deste cliente
                     const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);

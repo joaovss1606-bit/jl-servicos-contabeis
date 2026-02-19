@@ -161,14 +161,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           {activeView === 'CLIENTS' && (
             <div className="space-y-6 animate-in fade-in">
-              <h2 className="text-2xl font-black">Base de Clientes & Planos</h2>
+              <h2 className="text-2xl font-black">Base de Usuários & Planos</h2>
               <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
                 <table className="w-full text-left">
                   <thead className="bg-slate-50 border-b border-slate-200">
                     <tr>
-                      <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">Cliente</th>
+                      <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">Usuário</th>
                       <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">E-mail</th>
-                      <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">Acesso ao Portal</th>
+                      <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">Status de Contratação</th>
                       <th className="px-6 py-4 text-xs font-black uppercase text-slate-400">Ação</th>
                     </tr>
                   </thead>
@@ -176,9 +176,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     {clients.map(client => {
                       // Verificar se o usuário tem algum serviço contratado
                       const hasService = services.some(s => s.clientId === client.id);
-                      const displayName = client.name && !client.name.toLowerCase().includes('novo cliente') 
-                        ? client.name 
-                        : (client.email ? client.email.split('@')[0] : 'Usuário');
+                      const displayName = client.name || 'Usuário';
 
                       return (
                         <tr key={client.id} className="hover:bg-slate-50">
@@ -191,7 +189,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 : 'bg-amber-100 text-amber-700'
                             }`}>
                               {hasService 
-                                ? (client.isPlanActive ? 'PLANO ATIVO' : 'BLOQUEADO')
+                                ? (client.isPlanActive ? 'CLIENTE ATIVO' : 'CLIENTE BLOQUEADO')
                                 : 'POTENCIAL / SEM SERVIÇO'}
                             </span>
                           </td>
