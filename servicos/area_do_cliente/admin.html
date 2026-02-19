@@ -101,12 +101,20 @@
         debugContent.innerHTML = "Buscando dados...";
 
         try {
+            // Tentar buscar perfis com tratamento de erro detalhado
             const resProfiles = await supabaseClient.from('profiles').select('*');
+            if (resProfiles.error) {
+                console.error("Erro detalhado Profiles:", resProfiles.error);
+            }
+
             const { data: assinaturas, error: errorAssinaturas } = await supabaseClient.from('assinaturas').select('*');
+            if (errorAssinaturas) {
+                console.error("Erro detalhado Assinaturas:", errorAssinaturas);
+            }
             
             debugContent.innerHTML = `
-                Profiles Status: ${resProfiles.error ? 'Erro: ' + resProfiles.error.message : 'Sucesso (' + (resProfiles.data?.length || 0) + ' encontrados)'}<br>
-                Assinaturas Status: ${errorAssinaturas ? 'Erro: ' + errorAssinaturas.message : 'Sucesso (' + (assinaturas?.length || 0) + ' encontradas)'}
+                Profiles: ${resProfiles.error ? '<span style="color:red;">' + resProfiles.error.code + ' - ' + resProfiles.error.message + '</span>' : '✅ ' + (resProfiles.data?.length || 0) + ' perfis'}<br>
+                Assinaturas: ${errorAssinaturas ? '<span style="color:red;">' + errorAssinaturas.code + ' - ' + errorAssinaturas.message + '</span>' : '✅ ' + (assinaturas?.length || 0) + ' registros'}
             `;
 
             // Se não retornar nada, tentar buscar da auth (se possível via metadata) ou mostrar erro específico
@@ -116,15 +124,20 @@
 
             let profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com') || [];
 
-            // Garantir que perfis sem assinaturas sejam incluídos (já estão no filter acima)
-            // Se profiles ainda estiver vazio, mas houver assinaturas, fazemos o fallback
+            // Se profiles está vazio, mas assinaturas não, significa que RLS está bloqueando 'profiles'
+            // Vamos tentar buscar informações básicas de cada assinatura
             if (profiles.length === 0 && assinaturas && assinaturas.length > 0) {
-                const uniqueClientIds = [...new Set(assinaturas.map(s => s.cliente_id))];
-                profiles = uniqueClientIds.map(id => ({
-                    id: id,
-                    nome: "Cliente (Sem Perfil Criado)",
-                    email: "ID: " + id.substring(0,8)
-                }));
+                const clientMap = new Map();
+                assinaturas.forEach(s => {
+                    if (!clientMap.has(s.cliente_id)) {
+                        clientMap.set(s.cliente_id, {
+                            id: s.cliente_id,
+                            nome: s.nome_cliente || "Cliente JL",
+                            email: s.email_cliente || "ID: " + s.cliente_id.substring(0,8)
+                        });
+                    }
+                });
+                profiles = Array.from(clientMap.values());
             }
 
             const body = document.getElementById('lista-clientes-body');

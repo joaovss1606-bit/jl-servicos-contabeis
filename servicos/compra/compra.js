@@ -156,10 +156,14 @@ document.addEventListener("DOMContentLoaded", () => {
               
               const { data: { session } } = await client.auth.getSession();
               if (session) {
+                  const nome = document.getElementById("nome").value;
+                  const email = document.getElementById("email").value;
                   await client.from('assinaturas').insert({
                       cliente_id: session.user.id,
                       plano_id: serv,
-                      status: 'Pendente'
+                      status: 'Pendente',
+                      nome_cliente: nome,
+                      email_cliente: email
                   });
               }
           }
