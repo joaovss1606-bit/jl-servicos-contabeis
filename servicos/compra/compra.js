@@ -17,39 +17,32 @@ document.addEventListener("DOMContentLoaded", () => {
       parcelamento: { titulo: "Parcelamento de Débitos do MEI", categoriaLabel: "MEI", valor: "R$ 178,99", descricao: "Parcelamento de débitos em atraso do MEI.", inclusos: ["Análise da dívida", "Simulação e parcelamento"] },
       "alteracao-mei": { titulo: "Alteração de Dados do MEI", categoriaLabel: "MEI", valor: "R$ 78,99", descricao: "Alteração de dados cadastrais do MEI.", inclusos: ["Alteração no cadastro", "Confirmação das mudanças"] }
     },
-
     "pessoa-fisica": {
       irpf: { titulo: "Imposto de Renda (IRPF)", categoriaLabel: "Pessoa Física", valor: "R$ 139,99", descricao: "Declaração anual completa e segura.", inclusos: ["Análise de Documentos", "Envio à Receita"] },
       "cpf-regularizacao": { titulo: "Regularização de CPF", categoriaLabel: "Pessoa Física", valor: "R$ 79,99", descricao: "Regularize seu CPF suspenso ou pendente.", inclusos: ["Consulta Receita", "Protocolo de Regularização"] },
       "planejamento-tributario": { titulo: "Planejamento Tributário", categoriaLabel: "Pessoa Física", valor: "R$ 199,99", descricao: "Estudo para redução legal de impostos.", inclusos: ["Análise de Renda", "Simulação Tributária"] },
       "orientacao-fiscal-pf": { titulo: "Orientação Fiscal Pessoa Física", categoriaLabel: "Pessoa Física", valor: "R$ 119,99", descricao: "Consultoria para planejamento tributário de pessoas físicas.", inclusos: ["Análise de rendimentos", "Dicas de economia fiscal", "Suporte técnico"] }
     },
-
     contabeis: {
       "consultoria-contabil": { titulo: "Consultoria Contábil", categoriaLabel: "Serviços Contábeis", valor: "R$ 199,99", descricao: "Suporte especializado para sua empresa.", inclusos: ["Análise de Balanço", "Orientação Fiscal"] },
       "elaboracao-balanco": { titulo: "Elaboração de Balanço", categoriaLabel: "Serviços Contábeis", valor: "R$ 349,99", descricao: "Fechamento contábil e balanço patrimonial.", inclusos: ["DRE", "Balanço Patrimonial"] },
       "regularizacao-empresa": { titulo: "Regularização de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 249,99", descricao: "Regularização de empresas (ME/EPP) em atraso.", inclusos: ["Certidões", "Regularização Junta/Receita"] },
       "encerramento-empresa": { titulo: "Encerramento de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 499,99", descricao: "Baixa completa de empresas (ME/EPP).", inclusos: ["Distrato Social", "Baixa de Órgãos"] }
-
     },
-
     "certidoes-regularizacoes": {
       "certidao-negativa": { titulo: "Certidão Negativa de Débitos", categoriaLabel: "Certidões", valor: "R$ 79,99", descricao: "Emissão de CND Federal, Estadual ou Municipal.", inclusos: ["Consulta de Débitos", "Emissão do PDF"] },
       "certidao-estadual": { titulo: "Certidão Estadual", categoriaLabel: "Certidões", valor: "R$ 89,99", descricao: "Certidão de regularidade tributária estadual.", inclusos: ["Consulta SEFAZ", "Emissão"] },
       "regularizacao-cadastral": { titulo: "Regularização Cadastral", categoriaLabel: "Certidões", valor: "R$ 99,99", descricao: "Ajustes de dados em cadastros oficiais.", inclusos: ["Protocolos", "Alteração Cadastral"] }
     },
-
     "certificado-digital": {
       "emissao-a1": { titulo: "Certificado Digital A1", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 189,99", descricao: "Emissão de certificado digital para pessoa jurídica ou física.", inclusos: ["Validação Online", "Instalação"] },
       "emissao-a3": { titulo: "Certificado Digital A3", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 249,99", descricao: "Certificado em token ou cartão com validade de até 3 anos.", inclusos: ["Token incluso", "Suporte"] }
     },
-
     outros: {
       "planilha-financeira": { titulo: "Planilha Financeira Pessoal", categoriaLabel: "Outros", valor: "R$ 59,99", descricao: "Organização completa das suas contas.", inclusos: ["Planilha Excel/Google", "Aula de uso"] },
       "organizacao-documentos": { titulo: "Organização de Documentos", categoriaLabel: "Outros", valor: "R$ 149,99", descricao: "Digitalização e separação contábil de arquivos.", inclusos: ["Digitalização", "Classificação"] },
       "orientacao-financeira": { titulo: "Orientação Financeira Básica", categoriaLabel: "Outros", valor: "R$ 119,99", descricao: "Consultoria simples para finanças pessoais.", inclusos: ["Sessão de 40min", "Plano de Ação"] }
     }
-
   };
 
   const nomesCategorias = {
@@ -61,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "outros": "Outros"
   };
 
-  // --- CARREGAMENTO DE DADOS DO SERVIÇO ---
   const params = new URLSearchParams(window.location.search);
   const cat = params.get("categoria")?.trim();
   const serv = (params.get("servico") || params.get("plano") || params.get("slug"))?.trim();
@@ -73,13 +65,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
   }
 
-  // --- PREENCHIMENTO HTML ---
   document.getElementById("nomeServico") && (document.getElementById("nomeServico").innerText = dados.titulo);
   document.getElementById("descricaoServico") && (document.getElementById("descricaoServico").innerText = dados.descricao);
   document.getElementById("valorServico") && (document.getElementById("valorServico").innerText = dados.valor);
   document.getElementById("inclusosServico") && (document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join(""));
 
-  // --- BREADCRUMB ---
   const bread = document.getElementById("breadcrumb");
   if (bread && cat) {
     const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
@@ -95,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // --- MÁSCARAS DE ENTRADA ---
   const handleWhatsApp = (e) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 11) v = v.slice(0, 11);
@@ -118,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
   document.getElementById("cpf")?.addEventListener("input", handleCPF);
 
-  // --- VALIDAÇÃO DO FORMULÁRIO ---
   function validarFormulario() {
     const nome = document.getElementById("nome").value.trim();
     const email = document.getElementById("email").value.trim();
@@ -132,12 +120,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btnEnviar").disabled = !(nomeOk && emailOk && whatsappOk && cpfOk);
   }
 
-  // --- EVENTO DE ESCUTA EM TODOS OS CAMPOS ---
   form.querySelectorAll('input, textarea').forEach(el => {
     el.addEventListener("input", validarFormulario);
   });
 
-  // --- ENVIO DO FORMULÁRIO ---
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -145,12 +131,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const nome = document.getElementById("nome").value.trim();
       const email = document.getElementById("email").value.trim();
 
-      // Ativa visual de "Enviando"
       botao.classList.add("loading");
       botao.disabled = true;
       botao.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Enviando pedido...`;
 
-      // 1. Registrar no Supabase
       try {
           if (typeof supabase !== 'undefined') {
               const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
@@ -159,7 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
               
               const { data: { session } } = await client.auth.getSession();
               
-              // Se estiver logado, vincula ao cliente_id, senão salva apenas os dados de contato
               const payload = {
                   plano_id: serv,
                   status: 'Pendente',
@@ -168,36 +151,25 @@ document.addEventListener("DOMContentLoaded", () => {
               };
 
               if (session) {
-                  console.log("Usuário logado:", session.user.id);
                   payload.cliente_id = session.user.id;
                   
-                  // Atualiza o perfil para garantir o nome correto (inclusive para usuários antigos)
-                  const { error: profileError } = await client
-                      .from('profiles')
-                      .update({ nome: nome })
-                      .eq('id', session.user.id);
-                  
-                  if (profileError) {
-                      console.error("Erro ao atualizar perfil no pedido:", profileError.message);
-                      // Tenta INSERT caso o perfil não exista (raro, mas possível)
-                      await client.from('profiles').insert({ id: session.user.id, nome: nome, email: email, role: 'cliente' });
-                  } else {
-                      console.log("Perfil atualizado no pedido!");
-                  }
+                  // ATUALIZAÇÃO FORÇADA DE PERFIL (Garante que o nome seja salvo na profiles)
+                  await client.from('profiles').upsert({ 
+                    id: session.user.id, 
+                    nome: nome, 
+                    email: email, 
+                    role: 'cliente' 
+                  });
               }
 
+              // INSERÇÃO NA TABELA ASSINATURAS
               const { error: insertError } = await client.from('assinaturas').insert(payload);
-              if (insertError) {
-                  console.error("Erro ao inserir assinatura:", insertError.message);
-              } else {
-                  console.log("Assinatura inserida com sucesso!");
-              }
+              if (insertError) console.error("Erro na assinatura:", insertError);
           }
       } catch (err) {
-          console.error("Erro fatal ao registrar pedido no banco:", err);
+          console.error("Erro fatal:", err);
       }
 
-      // Monta a mensagem para WhatsApp
       const mensagem = 
 `🚀 *NOVO PEDIDO - JL SERVIÇOS*
 🛠️ *Serviço:* ${dados.titulo}
@@ -209,11 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
 🆔 *CPF:* ${document.getElementById("cpf").value}
 💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
 
-      // Pequeno delay para o usuário ver o efeito de carregamento
       setTimeout(() => {
         window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
-       
-        // Reseta o botão após o redirecionamento
         setTimeout(() => {
           botao.classList.remove("loading");
           botao.disabled = false;

@@ -21,6 +21,7 @@
         .btn-action { background: var(--gold); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: 600; }
         .logout-btn { margin-top: auto; color: #ff4444; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .doc-item { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:10px; }
+        .service-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 0; }
     </style>
 </head>
 <body>
@@ -46,9 +47,10 @@
         <div class="dashboard-grid">
             <div class="card">
                 <i class="fas fa-id-card"></i>
-                <h3>Sua Assinatura</h3>
-                <p style="font-size: 0.9rem;">Status: <span id="sub-status" class="status-badge">Verificando...</span></p>
-                <p id="sub-details" style="font-size: 0.8rem; color: #aaa;">Carregando plano...</p>
+                <h3>Seus Serviços</h3>
+                <div id="lista-servicos" style="max-height: 300px; overflow-y: auto;">
+                    <p style="font-size: 0.8rem; color: #888;">Buscando pedidos...</p>
+                </div>
             </div>
 
             <div class="card">
@@ -98,61 +100,44 @@
 
     async function carregarDadosDashboard(user) {
         try {
-            const [resProfile, resAssinatura, resDocs] = await Promise.all([
+            const [resProfile, resAssinaturas, resDocs] = await Promise.all([
                 supabaseClient.from('profiles').select('*').eq('id', user.id).maybeSingle(),
-                supabaseClient.from('assinaturas').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false }).limit(1).maybeSingle(),
+                supabaseClient.from('assinaturas').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false }),
                 supabaseClient.from('documentos').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false })
             ]);
 
             const profile = resProfile.data;
-            const assinatura = resAssinatura.data;
-            const docs = resDocs.data;
+            const assinaturas = resAssinaturas.data || [];
+            const docs = resDocs.data || [];
 
-            // --- LÓGICA DE NOME ULTRA-ROBUSTA ---
-            let finalName = "";
-            const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
-
-            if (user.email === EMAIL_ADMIN) {
-                finalName = "JL Serviços Contábeis Online";
-            } else {
-                // Tentar várias fontes de nome
-                const possibleNames = [
-                    profile?.nome,
-                    user.user_metadata?.full_name,
-                    user.user_metadata?.name,
-                    user.email?.split('@')[0]
-                ];
-
-                // Filtrar nomes que pareçam genéricos ou inválidos
-                const filteredNames = possibleNames.filter(n => 
-                    n && 
-                    typeof n === 'string' && 
-                    n.trim().length > 0 && 
-                    !n.toLowerCase().includes("novo cliente") && 
-                    !n.toLowerCase().includes("user")
-                );
-
-                if (filteredNames.length > 0) {
-                    const nameToProcess = filteredNames[0];
-                    const parts = nameToProcess.split(' ').filter(p => p.trim().length > 0);
-                    finalName = parts.length > 1 ? `${parts[0]} ${parts[1]}` : parts[0];
-                } else {
-                    finalName = user.email?.split('@')[0] || "Cliente";
-                }
-            }
+            // --- LÓGICA DE NOME ---
+            let finalName = profile?.nome || user.user_metadata?.full_name || user.email?.split('@')[0] || "Cliente";
+            if (finalName.toLowerCase() === "novo cliente") finalName = user.email?.split('@')[0] || "Cliente";
 
             document.getElementById('user-name').innerText = "Olá, " + finalName;
             document.getElementById('user-email').innerText = user.email;
 
-            const statusBadge = document.getElementById('sub-status');
-            const status = assinatura?.status || "Inativo";
-            statusBadge.innerText = status;
-            statusBadge.style.background = status === 'Ativo' ? '#25d366' : (status === 'Pendente' ? '#f1c40f' : '#ff4444');
-            statusBadge.style.color = status === 'Pendente' ? 'black' : 'white';
-            document.getElementById('sub-details').innerText = nomesServicos[assinatura?.plano_id] || "Nenhum serviço ativo";
+            // --- LISTA DE SERVIÇOS ---
+            const listaServicos = document.getElementById('lista-servicos');
+            if (assinaturas.length > 0) {
+                listaServicos.innerHTML = assinaturas.map(sub => {
+                    const status = sub.status || "Pendente";
+                    const cor = status === 'Ativo' ? '#25d366' : (status === 'Pendente' ? '#f1c40f' : '#ff4444');
+                    const corTexto = status === 'Pendente' ? 'black' : 'white';
+                    return `
+                        <div class="service-item">
+                            <p style="margin:0; font-weight:bold; font-size:0.9rem;">${nomesServicos[sub.plano_id] || sub.plano_id}</p>
+                            <span class="status-badge" style="background:${cor}; color:${corTexto}; font-size:0.6rem;">${status}</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                listaServicos.innerHTML = "<p style='font-size:0.8rem; color:#888;'>Nenhum serviço contratado ainda.</p>";
+            }
 
+            // --- LISTA DE DOCUMENTOS ---
             const listaDocs = document.getElementById('lista-documentos');
-            if (docs && docs.length > 0) {
+            if (docs.length > 0) {
                 listaDocs.innerHTML = docs.map(doc => `
                     <div class="doc-item">
                         <span style="font-size:0.8rem;"><i class="far fa-file-pdf" style="color:#ff4444;"></i> ${doc.nome_arquivo}</span>
@@ -168,13 +153,10 @@
         }
     }
 
-    // Inicialização protegida
     document.addEventListener('DOMContentLoaded', async () => {
         const user = await checkUser();
         if (user) {
             carregarDadosDashboard(user);
-            
-            // Botão flutuante para Admin
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com"; 
             if (user.email === EMAIL_ADMIN) {
                 const btnAdmin = document.createElement('button');
