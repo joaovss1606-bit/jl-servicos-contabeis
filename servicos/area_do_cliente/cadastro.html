@@ -144,23 +144,25 @@
         const { data, error } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
-            options: { data: { full_name: nome, display_name: nome } }
+            options: { data: { full_name: nome } }
         });
 
         if (error) {
             alert("Erro no cadastro: " + error.message);
         } else {
-            // 2. Cria o perfil inicial na tabela 'profiles'
-            // Inserimos em 'nome', 'display_name' e 'full_name' para garantir compatibilidade com o banco
-            await supabaseClient.from('profiles').insert([
+            // 2. Cria o perfil na tabela 'profiles' com o nome REAL digitado
+            const { error: profileError } = await supabaseClient.from('profiles').upsert([
                 { 
                     id: data.user.id, 
                     nome: nome, 
-                    display_name: nome,
-                    full_name: nome,
-                    email: email 
+                    email: email,
+                    role: 'cliente'
                 }
             ]);
+
+            if (profileError) {
+                console.error("Erro ao criar perfil:", profileError);
+            }
 
             // 3. Verifica se tem serviço na URL para redirecionar
             const urlParams = new URLSearchParams(window.location.search);

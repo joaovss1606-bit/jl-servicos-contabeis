@@ -96,21 +96,17 @@
             const { data: assinaturas, error: errorAssinaturas } = await supabaseClient.from('assinaturas').select('*');
 
             let profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com') || [];
-            
-            // LOG DE DEPURAÇÃO: Ver o que está vindo do Supabase
-            console.log("Perfis encontrados:", profiles);
 
             const body = document.getElementById('lista-clientes-body');
             body.innerHTML = '';
 
             if (profiles.length > 0) {
                 profiles.forEach(p => {
-                    // LÓGICA DE EXIBIÇÃO: Prioridade absoluta ao campo de nome do banco de dados.
-                    // Verificamos 'nome', 'display_name' e 'full_name' para cobrir todas as possibilidades do Supabase.
-                    let nomeExibicao = p.nome || p.display_name || p.full_name;
+                    // Lógica simplificada: Confia no campo 'nome' do banco de dados.
+                    let nomeExibicao = p.nome;
                     
-                    // Se o nome for nulo, vazio ou "Novo Cliente", usamos o email como fallback
-                    if (!nomeExibicao || nomeExibicao.trim() === '' || nomeExibicao.toLowerCase() === 'novo cliente') {
+                    // Fallback apenas se o nome estiver nulo ou vazio no banco.
+                    if (!nomeExibicao || nomeExibicao.trim() === '') {
                         nomeExibicao = p.email ? p.email.split('@')[0] : 'Usuário';
                     }
                     
