@@ -41,11 +41,6 @@
         <h1>Painel Administrativo</h1>
         <p>Olá, <span id="admin-name">JL Serviços Contábeis Online</span>. Aqui estão os seus clientes e pedidos.</p>
 
-        <div id="debug-panel" style="background: rgba(255,0,0,0.1); border: 1px solid red; padding: 10px; margin-bottom: 20px; font-family: monospace; font-size: 0.8rem; display: none;">
-            <strong>Debug Info:</strong>
-            <div id="debug-content"></div>
-        </div>
-
         <div class="admin-card">
             <h3>Clientes e Assinaturas</h3>
             <table id="table-clientes">
@@ -95,56 +90,23 @@
     };
 
     async function carregarDadosAdmin() {
-        const debugPanel = document.getElementById('debug-panel');
-        const debugContent = document.getElementById('debug-content');
-        debugPanel.style.display = 'block';
-        debugContent.innerHTML = "Buscando dados...";
-
         try {
-            // Tentar buscar perfis com tratamento de erro detalhado
             const resProfiles = await supabaseClient.from('profiles').select('*');
-            if (resProfiles.error) {
-                console.error("Erro detalhado Profiles:", resProfiles.error);
-            }
-
             const { data: assinaturas, error: errorAssinaturas } = await supabaseClient.from('assinaturas').select('*');
-            if (errorAssinaturas) {
-                console.error("Erro detalhado Assinaturas:", errorAssinaturas);
-            }
-            
-            debugContent.innerHTML = `
-                Profiles: ${resProfiles.error ? '<span style="color:red;">' + resProfiles.error.code + ' - ' + resProfiles.error.message + '</span>' : '✅ ' + (resProfiles.data?.length || 0) + ' perfis'}<br>
-                Assinaturas: ${errorAssinaturas ? '<span style="color:red;">' + errorAssinaturas.code + ' - ' + errorAssinaturas.message + '</span>' : '✅ ' + (assinaturas?.length || 0) + ' registros'}
-            `;
-
-            // Se não retornar nada, tentar buscar da auth (se possível via metadata) ou mostrar erro específico
-            if (!resProfiles.data || resProfiles.data.length === 0) {
-                debugContent.innerHTML += "<br><span style='color:orange;'>Aviso: Nenhum perfil retornado da tabela 'profiles'.</span>";
-            }
 
             let profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com') || [];
-
-            // Se profiles está vazio, mas assinaturas não, significa que RLS está bloqueando 'profiles'
-            // Vamos tentar buscar informações básicas de cada assinatura
-            if (profiles.length === 0 && assinaturas && assinaturas.length > 0) {
-                const clientMap = new Map();
-                assinaturas.forEach(s => {
-                    if (!clientMap.has(s.cliente_id)) {
-                        clientMap.set(s.cliente_id, {
-                            id: s.cliente_id,
-                            nome: s.nome_cliente || "Cliente JL",
-                            email: s.email_cliente || "ID: " + s.cliente_id.substring(0,8)
-                        });
-                    }
-                });
-                profiles = Array.from(clientMap.values());
-            }
 
             const body = document.getElementById('lista-clientes-body');
             body.innerHTML = '';
 
             if (profiles.length > 0) {
                 profiles.forEach(p => {
+                    // Filtrar nome real: remover "Novo Cliente" e usar dados reais
+                    let nomeExibicao = p.nome || 'Cliente';
+                    if (nomeExibicao.toLowerCase().includes('novo cliente') || nomeExibicao === 'Novo Cliente') {
+                        nomeExibicao = 'Cliente';
+                    }
+                    
                     // Buscar todas as assinaturas deste cliente
                     const clienteAssinaturas = assinaturas?.filter(s => s.cliente_id === p.id) || [];
                     
@@ -152,11 +114,11 @@
                         // Cliente sem assinatura ainda
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
+                            <td><strong>${nomeExibicao}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
                             <td><span style="color:#666;">Aguardando pedido</span></td>
                             <td><span class="status-badge" style="background:#666; padding:4px 8px; border-radius:4px; font-size:0.7rem;">INATIVO</span></td>
                             <td style="color: #666;">---</td> 
-                            <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${p.nome}')"><i class="fas fa-upload"></i> Doc</button></td>
+                            <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${nomeExibicao}')"><i class="fas fa-upload"></i> Doc</button></td>
                         `;
                         body.appendChild(row);
                     } else {
@@ -165,7 +127,7 @@
                             const dataFormatada = sub.created_at ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';                
                             const row = document.createElement('tr');
                             row.innerHTML = `
-                                <td><strong>${p.nome || 'Sem nome'}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
+                                <td><strong>${nomeExibicao}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
                                 <td>${nomesServicos[sub.plano_id] || sub.plano_id}</td>
                                 <td>
                                     <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
@@ -175,7 +137,7 @@
                                     </select>
                                 </td>
                                 <td style="color: #aaa;">${dataFormatada}</td> 
-                                <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${p.nome}')"><i class="fas fa-upload"></i> Doc</button></td>
+                                <td><button class="btn-upload" onclick="abrirModal('${p.id}', '${nomeExibicao}')"><i class="fas fa-upload"></i> Doc</button></td>
                             `;
                             body.appendChild(row);
                         });
@@ -186,6 +148,7 @@
             }
         } catch (err) {
             console.error("Erro ao carregar dados admin:", err);
+            document.getElementById('lista-clientes-body').innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff4444;">Erro ao carregar dados. Verifique o console.</td></tr>';
         }
     }
 
