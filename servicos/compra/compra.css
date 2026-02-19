@@ -38,14 +38,6 @@ body {
     line-height: 1.6;
 }
 
-/* ===== GRID & CARDS ===== */
-.compra-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 30px;
-    align-items: start;
-}
-
 .service-summary-card, .form-card {
     background: linear-gradient(145deg, #0e2a47, #0b1c2d);
     padding: 40px;
@@ -207,6 +199,11 @@ input:focus, textarea:focus {
     cursor: not-allowed;
 }
 
+.row-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
 @media (max-width: 768px) {
     .compra-grid { grid-template-columns: 1fr; }
     .row-inputs { grid-template-columns: 1fr; }
@@ -225,12 +222,9 @@ input:focus, textarea:focus {
 /* Grid principal */
 .compra-grid {
     display: grid;
-    grid-template-columns: 0.8fr 1.2fr; /* Esquerda menor, Direita maior */
+    grid-template-columns: 0.8fr 1.2fr; /* Isso cria as duas colunas */
     gap: 30px;
-    align-items: start;
-    margin-top: 30px;
 }
-
 /* Estilo comum dos cards */
 .service-summary-card, .form-card {
     background: linear-gradient(145deg, #0e2a47, #0b1c2d) !important;
@@ -308,16 +302,6 @@ input:focus, textarea:focus {
     color: #bd9617;
 }
 
-input, textarea {
-    width: 100%;
-    padding: 12px 12px 12px 45px;
-    background: rgba(0, 0, 0, 0.2) !important;
-    border: 1px solid rgba(189, 150, 23, 0.2) !important;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 0.95rem;
-}
-
 input:focus {
     border-color: #bd9617 !important;
     outline: none;
@@ -358,4 +342,13 @@ input:focus {
     .service-summary-card {
         position: static;
     }
+}
+/* Isso faz o ícone de spinner girar quando o botão tiver a classe .loading */
+.btn-checkout i.fa-spinner {
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
