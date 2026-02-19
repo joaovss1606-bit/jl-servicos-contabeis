@@ -1,97 +1,83 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("pedidoForm");
-  const botao = document.getElementById("btnEnviar");
-  const camposObrigatorios = ["nome", "whatsapp", "email", "cpf"];
-
-  // --- BASE DE DADOS (MOCK) ---
-  const servicosMock = {
-    mei: {
-      basico: { titulo: "Plano MEI — Básico", categoriaLabel: "MEI", valor: "R$ 99,99", descricao: "Manutenção mensal essencial para seu MEI.", inclusos: ["DAS Mensal", "DASN Anual", "Suporte"] },
-      premium: { titulo: "Plano MEI — Premium", categoriaLabel: "MEI", valor: "R$ 159,99", descricao: "Gestão completa para o seu negócio.", inclusos: ["DAS Mensal", "Certidões", "Parcelamentos", "Suporte Prioritário"] },
-      "abertura-mei": { titulo: "Abertura de MEI", categoriaLabel: "MEI", valor: "R$ 148,99", descricao: "Formalização completa do seu CNPJ MEI.", inclusos: ["CNPJ", "Inscrição Municipal", "CCMEI"] },
-      "regularizacao-mei": { titulo: "Regularização de MEI", categoriaLabel: "MEI", valor: "R$ 198,99", descricao: "Coloque seu MEI em dia com o governo.", inclusos: ["Análise de Débitos", "Regularização Fiscal"] },
-      "baixa-mei": { titulo: "Baixa de MEI", categoriaLabel: "MEI", valor: "R$ 128,99", descricao: "Encerramento formal das atividades do MEI.", inclusos: ["Baixa CNPJ", "DASN de Extinção"] },
-      "encerramento-mei": { titulo: "Encerramento de MEI", categoriaLabel: "MEI", valor: "R$ 128,99", descricao: "Baixa completa do MEI junto aos órgãos oficiais.", inclusos: ["Encerramento no portal", "Baixa do CNPJ", "Orientação final"] },
-      "emissao-das": { titulo: "Emissão de DAS", categoriaLabel: "MEI", valor: "R$ 48,99", descricao: "Emissão da guia DAS do MEI.", inclusos: ["Cálculo do imposto", "Emissão da guia"] },
-      dasn: { titulo: "Declaração Anual do MEI (DASN-SIMEI)", categoriaLabel: "MEI", valor: "R$ 98,99", descricao: "Envio da declaração anual obrigatória do MEI.", inclusos: ["Apuração do faturamento", "Envio da declaração"] },
-      parcelamento: { titulo: "Parcelamento de Débitos do MEI", categoriaLabel: "MEI", valor: "R$ 178,99", descricao: "Parcelamento de débitos em atraso do MEI.", inclusos: ["Análise da dívida", "Simulação e parcelamento"] },
-      "alteracao-mei": { titulo: "Alteração de Dados do MEI", categoriaLabel: "MEI", valor: "R$ 78,99", descricao: "Alteração de dados cadastrais do MEI.", inclusos: ["Alteração no cadastro", "Confirmação das mudanças"] }
-    },
-    "pessoa-fisica": {
-      irpf: { titulo: "Imposto de Renda (IRPF)", categoriaLabel: "Pessoa Física", valor: "R$ 139,99", descricao: "Declaração anual completa e segura.", inclusos: ["Análise de Documentos", "Envio à Receita"] },
-      "cpf-regularizacao": { titulo: "Regularização de CPF", categoriaLabel: "Pessoa Física", valor: "R$ 79,99", descricao: "Regularize seu CPF suspenso ou pendente.", inclusos: ["Consulta Receita", "Protocolo de Regularização"] },
-      "planejamento-tributario": { titulo: "Planejamento Tributário", categoriaLabel: "Pessoa Física", valor: "R$ 199,99", descricao: "Estudo para redução legal de impostos.", inclusos: ["Análise de Renda", "Simulação Tributária"] },
-      "orientacao-fiscal-pf": { titulo: "Orientação Fiscal Pessoa Física", categoriaLabel: "Pessoa Física", valor: "R$ 119,99", descricao: "Consultoria para planejamento tributário de pessoas físicas.", inclusos: ["Análise de rendimentos", "Dicas de economia fiscal", "Suporte técnico"] }
-    },
-    contabeis: {
-      "consultoria-contabil": { titulo: "Consultoria Contábil", categoriaLabel: "Serviços Contábeis", valor: "R$ 199,99", descricao: "Suporte especializado para sua empresa.", inclusos: ["Análise de Balanço", "Orientação Fiscal"] },
-      "elaboracao-balanco": { titulo: "Elaboração de Balanço", categoriaLabel: "Serviços Contábeis", valor: "R$ 349,99", descricao: "Fechamento contábil e balanço patrimonial.", inclusos: ["DRE", "Balanço Patrimonial"] },
-      "regularizacao-empresa": { titulo: "Regularização de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 249,99", descricao: "Regularização de empresas (ME/EPP) em atraso.", inclusos: ["Certidões", "Regularização Junta/Receita"] },
-      "encerramento-empresa": { titulo: "Encerramento de Empresa", categoriaLabel: "Serviços Contábeis", valor: "R$ 499,99", descricao: "Baixa completa de empresas (ME/EPP).", inclusos: ["Distrato Social", "Baixa de Órgãos"] }
-    },
-    "certidoes-regularizacoes": {
-      "certidao-negativa": { titulo: "Certidão Negativa de Débitos", categoriaLabel: "Certidões", valor: "R$ 79,99", descricao: "Emissão de CND Federal, Estadual ou Municipal.", inclusos: ["Consulta de Débitos", "Emissão do PDF"] },
-      "certidao-estadual": { titulo: "Certidão Estadual", categoriaLabel: "Certidões", valor: "R$ 89,99", descricao: "Certidão de regularidade tributária estadual.", inclusos: ["Consulta SEFAZ", "Emissão"] },
-      "regularizacao-cadastral": { titulo: "Regularização Cadastral", categoriaLabel: "Certidões", valor: "R$ 99,99", descricao: "Ajustes de dados em cadastros oficiais.", inclusos: ["Protocolos", "Alteração Cadastral"] }
-    },
-    "certificado-digital": {
-      "emissao-a1": { titulo: "Certificado Digital A1", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 189,99", descricao: "Emissão de certificado digital para pessoa jurídica ou física.", inclusos: ["Validação Online", "Instalação"] },
-      "emissao-a3": { titulo: "Certificado Digital A3", categoriaLabel: "Certificado Digital", valor: "A partir de R$ 249,99", descricao: "Certificado em token ou cartão com validade de até 3 anos.", inclusos: ["Token incluso", "Suporte"] }
-    },
-    outros: {
-      "planilha-financeira": { titulo: "Planilha Financeira Pessoal", categoriaLabel: "Outros", valor: "R$ 59,99", descricao: "Organização completa das suas contas.", inclusos: ["Planilha Excel/Google", "Aula de uso"] },
-      "organizacao-documentos": { titulo: "Organização de Documentos", categoriaLabel: "Outros", valor: "R$ 149,99", descricao: "Digitalização e separação contábil de arquivos.", inclusos: ["Digitalização", "Classificação"] },
-      "orientacao-financeira": { titulo: "Orientação Financeira Básica", categoriaLabel: "Outros", valor: "R$ 119,99", descricao: "Consultoria simples para finanças pessoais.", inclusos: ["Sessão de 40min", "Plano de Ação"] }
-    }
-  };
-
-  const nomesCategorias = {
-    "mei": "MEI",
-    "pessoa-fisica": "Pessoa Física",
-    "contabeis": "Serviços Contábeis",
-    "certidoes-regularizacoes": "Certidões",
-    "certificado-digital": "Certificado Digital",
-    "outros": "Outros"
-  };
-
-  const params = new URLSearchParams(window.location.search);
-  const cat = params.get("categoria")?.trim();
-  const serv = (params.get("servico") || params.get("plano") || params.get("slug"))?.trim();
-  const dados = servicosMock[cat]?.[serv];
-
-  if (!dados) {
-      const elDesc = document.getElementById("descricaoServico");
-      if(elDesc) elDesc.innerHTML = `<span style="color: #ff4444;">Serviço não localizado.</span>`;
-      return;
-  }
-
-  // Preenchimento HTML
-  document.getElementById("nomeServico") && (document.getElementById("nomeServico").innerText = dados.titulo);
-  document.getElementById("descricaoServico") && (document.getElementById("descricaoServico").innerText = dados.descricao);
-  document.getElementById("valorServico") && (document.getElementById("valorServico").innerText = dados.valor);
-  document.getElementById("inclusosServico") && (document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join(""));
-
- // --- BREADCRUMB CORRIGIDO (Estrutura: raiz/servico/compra/) ---
-const bread = document.getElementById("breadcrumb");
-if (bread && cat) {
-    const nomeCatAmigavel = nomesCategorias[cat] || "Categoria";
+    const form = document.getElementById("pedidoForm");
+    const botao = document.getElementById("btnEnviar");
     
-    // Caminho para a categoria: sobe de 'compra', e entra na pasta da categoria
-    const linkCategoria = `../${cat}/index.html`; 
+    // --- BASE DE DADOS (Mantida a sua original) ---
+    const servicosMock = {
+        mei: {
+            basico: { titulo: "Plano MEI — Básico", valor: "R$ 99,99", descricao: "Manutenção mensal essencial para seu MEI.", inclusos: ["DAS Mensal", "DASN Anual", "Suporte"] },
+            premium: { titulo: "Plano MEI — Premium", valor: "R$ 159,99", descricao: "Gestão completa para o seu negócio.", inclusos: ["DAS Mensal", "Certidões", "Parcelamentos", "Suporte Prioritário"] },
+            "abertura-mei": { titulo: "Abertura de MEI", valor: "R$ 148,99", descricao: "Formalização completa do seu CNPJ MEI.", inclusos: ["CNPJ", "Inscrição Municipal", "CCMEI"] },
+            "regularizacao-mei": { titulo: "Regularização de MEI", valor: "R$ 198,99", descricao: "Coloque seu MEI em dia com o governo.", inclusos: ["Análise de Débitos", "Regularização Fiscal"] },
+            "baixa-mei": { titulo: "Baixa de MEI", valor: "R$ 128,99", descricao: "Encerramento formal das atividades do MEI.", inclusos: ["Baixa CNPJ", "DASN de Extinção"] },
+            "encerramento-mei": { titulo: "Encerramento de MEI", valor: "R$ 128,99", descricao: "Baixa completa do MEI junto aos órgãos oficiais.", inclusos: ["Encerramento no portal", "Baixa do CNPJ", "Orientação final"] },
+            "emissao-das": { titulo: "Emissão de DAS", valor: "R$ 48,99", descricao: "Emissão da guia DAS do MEI.", inclusos: ["Cálculo do imposto", "Emissão da guia"] },
+            dasn: { titulo: "Declaração Anual do MEI (DASN-SIMEI)", valor: "R$ 98,99", descricao: "Envio da declaração anual obrigatória do MEI.", inclusos: ["Apuração do faturamento", "Envio da declaração"] },
+            parcelamento: { titulo: "Parcelamento de Débitos do MEI", valor: "R$ 178,99", descricao: "Parcelamento de débitos em atraso do MEI.", inclusos: ["Análise da dívida", "Simulação e parcelamento"] },
+            "alteracao-mei": { titulo: "Alteração de Dados do MEI", valor: "R$ 78,99", descricao: "Alteração de dados cadastrais do MEI.", inclusos: ["Alteração no cadastro", "Confirmação das mudanças"] }
+        },
+        "pessoa-fisica": {
+            irpf: { titulo: "Imposto de Renda (IRPF)", valor: "R$ 139,99", descricao: "Declaração anual completa e segura.", inclusos: ["Análise de Documentos", "Envio à Receita"] },
+            "cpf-regularizacao": { titulo: "Regularização de CPF", valor: "R$ 79,99", descricao: "Regularize seu CPF suspenso ou pendente.", inclusos: ["Consulta Receita", "Protocolo de Regularização"] },
+            "planejamento-tributario": { titulo: "Planejamento Tributário", valor: "R$ 199,99", descricao: "Estudo para redução legal de impostos.", inclusos: ["Análise de Renda", "Simulação Tributária"] },
+            "orientacao-fiscal-pf": { titulo: "Orientação Fiscal Pessoa Física", valor: "R$ 119,99", descricao: "Consultoria para planejamento tributário de pessoas físicas.", inclusos: ["Análise de rendimentos", "Dicas de economia fiscal", "Suporte técnico"] }
+        },
+        contabeis: {
+            "consultoria-contabil": { titulo: "Consultoria Contábil", valor: "R$ 199,99", descricao: "Suporte especializado para sua empresa.", inclusos: ["Análise de Balanço", "Orientação Fiscal"] },
+            "elaboracao-balanco": { titulo: "Elaboração de Balanço", valor: "R$ 349,99", descricao: "Fechamento contábil e balanço patrimonial.", inclusos: ["DRE", "Balanço Patrimonial"] },
+            "regularizacao-empresa": { titulo: "Regularização de Empresa", valor: "R$ 249,99", descricao: "Regularização de empresas (ME/EPP) em atraso.", inclusos: ["Certidões", "Regularização Junta/Receita"] },
+            "encerramento-empresa": { titulo: "Encerramento de Empresa", valor: "R$ 499,99", descricao: "Baixa completa de empresas (ME/EPP).", inclusos: ["Distrato Social", "Baixa de Órgãos"] }
+        },
+        "certidoes-regularizacoes": {
+            "certidao-negativa": { titulo: "Certidão Negativa de Débitos", valor: "R$ 79,99", descricao: "Emissão de CND Federal, Estadual ou Municipal.", inclusos: ["Consulta de Débitos", "Emissão do PDF"] },
+            "certidao-estadual": { titulo: "Certidão Estadual", valor: "R$ 89,99", descricao: "Certidão de regularidade tributária estadual.", inclusos: ["Consulta SEFAZ", "Emissão"] },
+            "regularizacao-cadastral": { titulo: "Regularização Cadastral", valor: "R$ 99,99", descricao: "Ajustes de dados em cadastros oficiais.", inclusos: ["Protocolos", "Alteração Cadastral"] }
+        },
+        "certificado-digital": {
+            "emissao-a1": { titulo: "Certificado Digital A1", valor: "A partir de R$ 189,99", descricao: "Emissão de certificado digital para pessoa jurídica ou física.", inclusos: ["Validação Online", "Instalação"] },
+            "emissao-a3": { titulo: "Certificado Digital A3", valor: "A partir de R$ 249,99", descricao: "Certificado em token ou cartão com validade de até 3 anos.", inclusos: ["Token incluso", "Suporte"] }
+        },
+        outros: {
+            "planilha-financeira": { titulo: "Planilha Financeira Pessoal", valor: "R$ 59,99", descricao: "Organização completa das suas contas.", inclusos: ["Planilha Excel/Google", "Aula de uso"] },
+            "organizacao-documentos": { titulo: "Organização de Documentos", valor: "R$ 149,99", descricao: "Digitalização e separação contábil de arquivos.", inclusos: ["Digitalização", "Classificação"] },
+            "orientacao-financeira": { titulo: "Orientação Financeira Básica", valor: "R$ 119,99", descricao: "Consultoria simples para finanças pessoais.", inclusos: ["Sessão de 40min", "Plano de Ação"] }
+        }
+    };
 
-    bread.innerHTML = `
-        <a href="../../index.html">Início</a> 
-        <span> › </span> 
-        <a href="../index.html">Serviços</a> 
-        <span> › </span> 
-        <a href="${linkCategoria}">${nomeCatAmigavel}</a> 
-        <span> › </span> 
-        <strong style="color: #fff;">${dados.titulo}</strong>
-    `;
-}
+    const nomesCategorias = {
+        "mei": "MEI", "pessoa-fisica": "Pessoa Física", "contabeis": "Serviços Contábeis",
+        "certidoes-regularizacoes": "Certidões", "certificado-digital": "Certificado Digital", "outros": "Outros"
+    };
 
-// --- MÁSCARAS ---
-    const handleWhatsApp = (e) => {
+    // --- CARREGAMENTO DE DADOS ---
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get("categoria")?.trim();
+    const serv = (params.get("servico") || params.get("plano") || params.get("slug"))?.trim();
+    const dados = servicosMock[cat]?.[serv];
+
+    if (!dados) {
+        if(document.getElementById("descricaoServico")) 
+            document.getElementById("descricaoServico").innerHTML = `<span style="color: #ff4444;">Serviço não localizado.</span>`;
+        return;
+    }
+
+    document.getElementById("nomeServico").innerText = dados.titulo;
+    document.getElementById("descricaoServico").innerText = dados.descricao;
+    document.getElementById("valorServico").innerText = dados.valor;
+    document.getElementById("inclusosServico").innerHTML = dados.inclusos.map(i => `<li>${i}</li>`).join("");
+
+    // --- BREADCRUMB ---
+    const bread = document.getElementById("breadcrumb");
+    if (bread && cat) {
+        bread.innerHTML = `
+            <a href="../../index.html">Início</a> <span> › </span> 
+            <a href="../index.html">Serviços</a> <span> › </span> 
+            <a href="../${cat}/index.html">${nomesCategorias[cat] || "Categoria"}</a> <span> › </span> 
+            <strong style="color: #fff;">${dados.titulo}</strong>`;
+    }
+
+    // --- MÁSCARAS ---
+    const maskWhatsApp = (e) => {
         let v = e.target.value.replace(/\D/g, "");
         if (v.length > 11) v = v.slice(0, 11);
         v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
@@ -100,7 +86,7 @@ if (bread && cat) {
         validarFormulario();
     };
 
-    const handleCPF = (e) => {
+    const maskCPF = (e) => {
         let v = e.target.value.replace(/\D/g, "");
         if (v.length > 11) v = v.slice(0, 11);
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
@@ -110,81 +96,36 @@ if (bread && cat) {
         validarFormulario();
     };
 
-    document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
-    document.getElementById("cpf")?.addEventListener("input", handleCPF);
+    document.getElementById("whatsapp").addEventListener("input", maskWhatsApp);
+    document.getElementById("cpf").addEventListener("input", maskCPF);
 
-    // Adicione/Substitua apenas a parte do evento 'submit' e a 'validarFormulario'
-function validarFormulario() {
-    const nome = document.getElementById("nome").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const whatsapp = document.getElementById("whatsapp").value.replace(/\D/g, "");
-    const cpf = document.getElementById("cpf").value.replace(/\D/g, "");
+    // --- VALIDAÇÃO ---
+    function validarFormulario() {
+        const nome = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const whatsapp = document.getElementById("whatsapp").value.replace(/\D/g, "");
+        const cpf = document.getElementById("cpf").value.replace(/\D/g, "");
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    const nomeOk = nome.split(" ").length >= 2;
-    const emailOk = emailRegex.test(email);
-    const whatsappOk = whatsapp.length === 11;
-    const cpfOk = cpf.length === 11;
-
-    document.getElementById("btnEnviar").disabled = !(nomeOk && emailOk && whatsappOk && cpfOk);
-}
-
-// Dentro do seu DOMContentLoaded, no evento submit:
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const btn = document.getElementById("btnEnviar");
-    
-    btn.disabled = true;
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Enviando...`;
-
-    const mensagem = `🚀 *NOVO PEDIDO* ...`; // Sua lógica de mensagem aqui
-
-    setTimeout(() => {
-        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
-        btn.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
-        btn.disabled = false;
-    }, 1500);
-});
-
-    // Adiciona evento de escuta em todos os campos para validar
-    form.querySelectorAll('input, textarea').forEach(el => {
-        el.addEventListener("input", validarFormulario);
-    });
-
-    // --- ENVIO ---
-    if (form) {
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            
-            // Ativa visual de "Enviando"
-            botao.classList.add("loading");
-            botao.disabled = true;
-            botao.innerHTML = `<i class="fas fa-circle-notch"></i> Enviando pedido...`;
-
-            const mensagem = 
-`🚀 *NOVO PEDIDO - JL SERVIÇOS*
-🛠️ *Serviço:* ${dados.titulo}
-💰 *Valor:* ${dados.valor}
-
-👤 *DADOS DO CLIENTE:*
-📝 *Nome:* ${document.getElementById("nome").value}
-📱 *WhatsApp:* ${document.getElementById("whatsapp").value}
-📧 *E-mail:* ${document.getElementById("email").value}
-🆔 *CPF:* ${document.getElementById("cpf").value}
-💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
-
-            // Pequeno delay para o usuário ver o efeito de carregamento antes de abrir o zap
-            setTimeout(() => {
-                window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
-                
-                // Reseta o botão após o redirecionamento
-                setTimeout(() => {
-                    botao.classList.remove("loading");
-                    botao.disabled = false;
-                    botao.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
-                }, 2000);
-            }, 1200);
-        });
+        const isValido = nome.split(" ").length >= 2 && emailRegex.test(email) && whatsapp.length === 11 && cpf.length === 11;
+        botao.disabled = !isValido;
     }
+
+    form.querySelectorAll('input, textarea').forEach(el => el.addEventListener("input", validarFormulario));
+
+    // --- ENVIO ÚNICO ---
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        botao.disabled = true;
+        botao.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Enviando...`;
+
+        const msg = `🚀 *NOVO PEDIDO - JL SERVIÇOS*\n🛠️ *Serviço:* ${dados.titulo}\n💰 *Valor:* ${dados.valor}\n\n👤 *CLIENTE:*\n📝 *Nome:* ${document.getElementById("nome").value}\n📱 *WhatsApp:* ${document.getElementById("whatsapp").value}\n📧 *E-mail:* ${document.getElementById("email").value}\n🆔 *CPF:* ${document.getElementById("cpf").value}\n💬 *Obs:* ${document.getElementById("observacoes").value || "Nenhuma"}`;
+
+        setTimeout(() => {
+            window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(msg)}`, "_blank");
+            botao.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
+            botao.disabled = false;
+        }, 1200);
+    });
+});
 });
