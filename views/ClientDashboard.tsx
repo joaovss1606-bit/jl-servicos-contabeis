@@ -45,7 +45,7 @@ const ClientDashboard: React.FC<ClientDashboardProps> = ({
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
         <div>
           <h1 className="text-3xl font-black text-slate-900">Portal de Atendimento</h1>
-          <p className="text-slate-500 font-medium">Bem-vindo(a), {user.name}.</p>
+          <p className="text-slate-500 font-medium">Olá, {user.name}</p>
         </div>
         <div className="flex items-center gap-4">
            <div className="px-6 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm text-center">

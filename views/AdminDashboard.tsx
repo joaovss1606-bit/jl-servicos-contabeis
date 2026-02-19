@@ -98,7 +98,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           {activeView === 'OVERVIEW' && (
             <div className="space-y-8 animate-in fade-in">
               <div className="flex justify-between items-end">
-                <h2 className="text-3xl font-black text-slate-900">Visão Geral</h2>
+                <div>
+                  <h2 className="text-3xl font-black text-slate-900">Visão Geral</h2>
+                  <p className="text-slate-500 font-medium">Olá, {admin.name}</p>
+                </div>
                 <button onClick={exportClients} className="text-xs font-bold text-slate-500 border border-slate-200 px-4 py-2 rounded-xl hover:bg-white transition-all">
                   <i className="fas fa-download mr-2"></i> Exportar Base
                 </button>

@@ -36,7 +36,26 @@ const Navbar: React.FC<NavbarProps> = ({ auth, onLogout, onNavigate, identity })
           </div>
 
           <div className="flex items-center gap-4">
-            {!auth.isAuthenticated ? (
+            {auth.isAuthenticated && auth.user ? (
+              <div className="flex items-center gap-4">
+                <div 
+                  className="hidden sm:flex flex-col items-end cursor-pointer"
+                  onClick={() => onNavigate('DASHBOARD')}
+                >
+                  <span className="text-sm font-semibold text-slate-800">{auth.user.name}</span>
+                  <span className="text-[10px] text-slate-500 uppercase tracking-tighter">
+                    {auth.user.role === UserRole.ADMIN ? 'Contador' : 'Cliente'}
+                  </span>
+                </div>
+                <button 
+                  onClick={onLogout}
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all"
+                  title="Sair"
+                >
+                  <i className="fas fa-sign-out-alt"></i>
+                </button>
+              </div>
+            ) : (
               <>
                 <button 
                   onClick={() => onNavigate('LOGIN')}
@@ -52,22 +71,6 @@ const Navbar: React.FC<NavbarProps> = ({ auth, onLogout, onNavigate, identity })
                   Criar Conta
                 </button>
               </>
-            ) : (
-              <div className="flex items-center gap-4">
-                <div className="hidden sm:flex flex-col items-end">
-                  <span className="text-sm font-semibold text-slate-800">{auth.user?.name}</span>
-                  <span className="text-[10px] text-slate-500 uppercase tracking-tighter">
-                    {auth.user?.role === UserRole.ADMIN ? 'Contador' : 'Cliente'}
-                  </span>
-                </div>
-                <button 
-                  onClick={onLogout}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all"
-                  title="Sair"
-                >
-                  <i className="fas fa-sign-out-alt"></i>
-                </button>
-              </div>
             )}
           </div>
         </div>
