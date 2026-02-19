@@ -152,19 +152,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
               if (session) {
                   payload.cliente_id = session.user.id;
-                  
-                  // Atualiza o perfil (Permitido por RLS UPDATE authenticated)
-                  // Tenta forçar o nome real na tabela profiles
-                  await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
+                  // Tenta atualizar o perfil
+                  const { error: profileError } = await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
+                  if (profileError) {
+                      console.error("Erro RLS Perfil:", profileError);
+                      alert("⚠️ ERRO AO ATUALIZAR NOME:\n" + profileError.message);
+                  }
               }
 
-              // INSERÇÃO NA TABELA ASSINATURAS (Política INSERT public permite isso)
+              // Inserção na tabela assinaturas
               const { error: insertError } = await client.from('assinaturas').insert(payload);
               if (insertError) {
-                  console.error("Erro na assinatura:", insertError.message);
-                  // Se houver erro, pode ser que a tabela espere campos obrigatórios ou tenha restrições
-              } else {
-                  console.log("Pedido registrado com sucesso no banco de dados.");
+                  console.error("Erro RLS Assinatura:", insertError);
+                  alert("⚠️ ERRO AO GRAVAR PEDIDO:\n" + insertError.message);
               }
           }
       } catch (err) {
