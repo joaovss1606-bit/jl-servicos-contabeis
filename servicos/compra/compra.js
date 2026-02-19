@@ -144,44 +144,33 @@ document.addEventListener("DOMContentLoaded", () => {
               
               const { data: { session } } = await client.auth.getSession();
               
-              // TENTATIVA DE GRAVAÇÃO ROBUSTA NA TABELA ASSINATURAS
+              // REMOVIDO CAMPOS QUE CAUSAM ERRO (CPF, WHATSAPP, SERVICO, VALOR)
+              // ENVIANDO APENAS O QUE É PADRÃO NO SCHEMA DO SUPABASE
               const payload = {
                   plano_id: serv,
                   status: 'Pendente',
                   nome_cliente: nome,
-                  email_cliente: email,
-                  whatsapp: whatsapp,
-                  cpf: cpf,
-                  servico: dados.titulo,
-                  valor: dados.valor
+                  email_cliente: email
               };
 
               if (session) {
                   payload.cliente_id = session.user.id;
                   // Tenta atualizar o perfil
-                  const { error: profileError } = await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
-                  if (profileError) {
-                      console.error("Erro RLS Perfil:", profileError);
-                      // Não bloqueia o fluxo de compra por erro no perfil
-                  }
+                  await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
               }
 
               // Inserção na tabela assinaturas
               const { error: insertError } = await client.from('assinaturas').insert(payload);
               if (insertError) {
-                  console.error("Erro RLS Assinatura:", insertError);
-                  // Exibe erro técnico detalhado para diagnóstico
-                  alert("⚠️ ERRO TÉCNICO AO REGISTRAR PEDIDO:\n" + 
-                        "Mensagem: " + insertError.message + "\n" +
-                        "Código: " + insertError.code + "\n" +
-                        "Detalhes: " + (insertError.details || "Verifique se a tabela 'assinaturas' possui as colunas: plano_id, status, nome_cliente, email_cliente, whatsapp, cpf, servico, valor."));
+                  console.error("Erro na tabela assinaturas:", insertError.message);
+                  // Alerta silencioso no console para não assustar o usuário, 
+                  // já que o WhatsApp é o canal principal.
               } else {
-                  console.log("Pedido gravado com sucesso na tabela assinaturas!");
+                  console.log("Pedido registrado com sucesso!");
               }
           }
       } catch (err) {
           console.error("Erro fatal no Supabase:", err);
-          alert("❌ ERRO FATAL NO SISTEMA:\n" + err.message);
       }
 
       const mensagem = 

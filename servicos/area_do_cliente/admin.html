@@ -95,6 +95,8 @@
             const resProfiles = await supabaseClient.from('profiles').select('*');
             const { data: assinaturas, error: errorAssinaturas } = await supabaseClient.from('assinaturas').select('*');
 
+            if (errorAssinaturas) console.error("Erro ao carregar assinaturas:", errorAssinaturas.message);
+
             let profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com') || [];
 
             const body = document.getElementById('lista-clientes-body');
@@ -102,13 +104,7 @@
 
             if (profiles.length > 0) {
                 profiles.forEach(p => {
-                    // Lógica simplificada: Confia no campo 'nome' do banco de dados.
-                    let nomeExibicao = p.nome;
-                    
-                    // Fallback apenas se o nome estiver nulo ou vazio no banco.
-                    if (!nomeExibicao || nomeExibicao.trim() === '') {
-                        nomeExibicao = p.email ? p.email.split('@')[0] : 'Usuário';
-                    }
+                    let nomeExibicao = p.nome || p.email?.split('@')[0] || 'Usuário';
                     
                     // Buscar todas as assinaturas deste cliente
                     const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);
@@ -129,7 +125,7 @@
                             const row = document.createElement('tr');
                             row.innerHTML = `
                                 <td><strong>${nomeExibicao}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
-                                <td>${nomesServicos[sub.plano_id] || sub.plano_id}</td>
+                                <td>${nomesServicos[sub.plano_id] || sub.plano_id || 'Serviço'}</td>
                                 <td>
                                     <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
                                         <option value="Pendente" ${sub.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
