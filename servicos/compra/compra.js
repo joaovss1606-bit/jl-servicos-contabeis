@@ -168,16 +168,33 @@ document.addEventListener("DOMContentLoaded", () => {
               };
 
               if (session) {
+                  console.log("Usuário logado:", session.user.id);
                   payload.cliente_id = session.user.id;
-                  // Aproveita para garantir que o nome no perfil esteja correto
-                  await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
+                  
+                  // Atualiza o perfil para garantir o nome correto (inclusive para usuários antigos)
+                  const { error: profileError } = await client
+                      .from('profiles')
+                      .update({ nome: nome })
+                      .eq('id', session.user.id);
+                  
+                  if (profileError) {
+                      console.error("Erro ao atualizar perfil no pedido:", profileError.message);
+                      // Tenta INSERT caso o perfil não exista (raro, mas possível)
+                      await client.from('profiles').insert({ id: session.user.id, nome: nome, email: email, role: 'cliente' });
+                  } else {
+                      console.log("Perfil atualizado no pedido!");
+                  }
               }
 
               const { error: insertError } = await client.from('assinaturas').insert(payload);
-              if (insertError) throw insertError;
+              if (insertError) {
+                  console.error("Erro ao inserir assinatura:", insertError.message);
+              } else {
+                  console.log("Assinatura inserida com sucesso!");
+              }
           }
       } catch (err) {
-          console.error("Erro ao registrar pedido no banco:", err);
+          console.error("Erro fatal ao registrar pedido no banco:", err);
       }
 
       // Monta a mensagem para WhatsApp

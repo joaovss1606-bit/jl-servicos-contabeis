@@ -156,19 +156,30 @@
             if (error) throw error;
 
             if (data.user) {
-                // 2. Atualizar ou Inserir o perfil na tabela 'profiles'
-                // Usamos UPSERT para garantir que o nome correto seja salvo, mesmo que uma Trigger tenha criado o perfil como "Novo Cliente"
-                const { error: profileError } = await supabaseClient.from('profiles').upsert({
-                    id: data.user.id,
-                    nome: nome,
-                    email: email,
-                    role: 'cliente'
-                });
+                console.log("Usuário criado na Auth:", data.user.id);
+                
+                // 2. Tentar atualizar/inserir o perfil
+                // Se o Supabase tiver uma trigger, o perfil já pode existir. Tentamos atualizar primeiro.
+                const { error: updateError } = await supabaseClient
+                    .from('profiles')
+                    .update({ nome: nome, email: email, role: 'cliente' })
+                    .eq('id', data.user.id);
 
-                if (profileError) {
-                    console.error("Erro ao atualizar perfil:", profileError);
-                    // Tentativa secundária caso o erro seja de permissão (RLS) no UPSERT
-                    await supabaseClient.from('profiles').update({ nome: nome }).eq('id', data.user.id);
+                if (updateError) {
+                    console.warn("Erro ao atualizar perfil (pode não existir ainda):", updateError.message);
+                    // Se não atualizou, tentamos inserir
+                    const { error: insertError } = await supabaseClient
+                        .from('profiles')
+                        .insert({ id: data.user.id, nome: nome, email: email, role: 'cliente' });
+                    
+                    if (insertError) {
+                        console.error("Erro ao inserir perfil:", insertError.message);
+                        // Se falhar aqui, o usuário ainda foi criado no Auth, mas o perfil está com problemas (RLS?)
+                    } else {
+                        console.log("Perfil inserido com sucesso!");
+                    }
+                } else {
+                    console.log("Perfil atualizado com sucesso!");
                 }
 
                 alert("Cadastro realizado com sucesso!");
@@ -185,6 +196,7 @@
                 window.location.href = redirectUrl;
             }
         } catch (err) {
+            console.error("Erro fatal no cadastro:", err);
             alert("Erro no cadastro: " + err.message);
             btn.disabled = false;
             btn.innerText = "FINALIZAR CADASTRO";
