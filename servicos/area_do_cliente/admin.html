@@ -102,8 +102,14 @@
 
             if (profiles.length > 0) {
                 profiles.forEach(p => {
-                    // Usar sempre o campo 'nome' do Supabase quando disponível
-                    let nomeExibicao = p.nome || p.email?.split('@')[0] || 'Usuário';
+                    // LÓGICA DE EXIBIÇÃO: Prioridade absoluta ao campo 'nome' do banco de dados.
+                    // Não aplicamos filtros restritivos aqui para garantir que o que está no banco seja exibido.
+                    let nomeExibicao = p.nome;
+                    
+                    // Se o nome estiver realmente vazio ou nulo, usamos o email como fallback
+                    if (!nomeExibicao || nomeExibicao.trim() === '') {
+                        nomeExibicao = p.email ? p.email.split('@')[0] : 'Usuário';
+                    }
                     
                     // Buscar todas as assinaturas deste cliente
                     const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);
