@@ -90,62 +90,88 @@ if (bread && cat) {
     `;
 }
 
-  // --- MÁSCARAS CORRIGIDAS ---
- const handleWhatsApp = (e) => {
-    let v = e.target.value.replace(/\D/g, "");
-    if (v.length > 11) v = v.slice(0, 11);
-    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
-    v = v.replace(/(\d{5})(\d)/, "$1-$2");
-    e.target.value = v;
-    validarFormulario();
-};
+// --- MÁSCARAS ---
+    const handleWhatsApp = (e) => {
+        let v = e.target.value.replace(/\D/g, "");
+        if (v.length > 11) v = v.slice(0, 11);
+        v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+        v = v.replace(/(\d{5})(\d)/, "$1-$2");
+        e.target.value = v;
+        validarFormulario();
+    };
 
- const handleCPF = (e) => {
-    let v = e.target.value.replace(/\D/g, "");
-    if (v.length > 11) v = v.slice(0, 11);
-    v = v.replace(/(\d{3})(\d)/, "$1.$2");
-    v = v.replace(/(\d{3})(\d)/, "$1.$2");
-    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-    e.target.value = v;
-    validarFormulario();
-};
+    const handleCPF = (e) => {
+        let v = e.target.value.replace(/\D/g, "");
+        if (v.length > 11) v = v.slice(0, 11);
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+        v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        e.target.value = v;
+        validarFormulario();
+    };
 
-  document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
-  document.getElementById("cpf")?.addEventListener("input", handleCPF);
+    document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
+    document.getElementById("cpf")?.addEventListener("input", handleCPF);
 
-  function validarFormulario() {
-    const emailEl = document.getElementById("email");
-    if(!emailEl || !botao) return;
-    const emailOk = emailEl.value.includes("@") && emailEl.value.includes(".");
-    const obrigatoriosOk = camposObrigatorios.every(id => document.getElementById(id)?.value.trim().length >= 5);
-    botao.disabled = !(obrigatoriosOk && emailOk);
-  }
+    // --- VALIDAÇÃO REALTIME ---
+    function validarFormulario() {
+        if(!form || !botao) return;
+        
+        const emailVal = document.getElementById("email").value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailOk = emailRegex.test(emailVal);
+        
+        const whatsappOk = document.getElementById("whatsapp").value.length >= 14;
+        const cpfOk = document.getElementById("cpf").value.length === 14;
+        const nomeOk = document.getElementById("nome").value.trim().split(" ").length >= 2; // Exige nome e sobrenome
 
-  ["nome", "email"].forEach(id => document.getElementById(id)?.addEventListener("input", validarFormulario));
+        const todosPreenchidos = camposObrigatorios.every(id => document.getElementById(id).value.trim() !== "");
 
-  if (form) {
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        botao.disabled = true;
-        botao.innerHTML = `Enviando pedido...`;
+        if (todosPreenchidos && emailOk && whatsappOk && cpfOk && nomeOk) {
+            botao.disabled = false;
+        } else {
+            botao.disabled = true;
+        }
+    }
 
-        const mensagem = 
-`🚀 *NOVO PEDIDO*
+    // Adiciona evento de escuta em todos os campos para validar
+    form.querySelectorAll('input, textarea').forEach(el => {
+        el.addEventListener("input", validarFormulario);
+    });
+
+    // --- ENVIO ---
+    if (form) {
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            
+            // Ativa visual de "Enviando"
+            botao.classList.add("loading");
+            botao.disabled = true;
+            botao.innerHTML = `<i class="fas fa-circle-notch"></i> Enviando pedido...`;
+
+            const mensagem = 
+`🚀 *NOVO PEDIDO - JL SERVIÇOS*
 🛠️ *Serviço:* ${dados.titulo}
 💰 *Valor:* ${dados.valor}
 
-👤 *CLIENTE:*
+👤 *DADOS DO CLIENTE:*
 📝 *Nome:* ${document.getElementById("nome").value}
 📱 *WhatsApp:* ${document.getElementById("whatsapp").value}
 📧 *E-mail:* ${document.getElementById("email").value}
 🆔 *CPF:* ${document.getElementById("cpf").value}
 💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
 
-        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
-        setTimeout(() => {
-          botao.disabled = false;
-          botao.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
-        }, 3000);
-    });
-  }
+            // Pequeno delay para o usuário ver o efeito de carregamento antes de abrir o zap
+            setTimeout(() => {
+                window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
+                
+                // Reseta o botão após o redirecionamento
+                setTimeout(() => {
+                    botao.classList.remove("loading");
+                    botao.disabled = false;
+                    botao.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
+                }, 2000);
+            }, 1200);
+        });
+    }
 });
