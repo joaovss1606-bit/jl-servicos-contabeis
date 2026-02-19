@@ -154,12 +154,18 @@ document.addEventListener("DOMContentLoaded", () => {
                   payload.cliente_id = session.user.id;
                   
                   // Atualiza o perfil (Permitido por RLS UPDATE authenticated)
+                  // Tenta forçar o nome real na tabela profiles
                   await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
               }
 
-              // Insere a assinatura (Certifique-se que a política de INSERT em 'assinaturas' existe)
+              // INSERÇÃO NA TABELA ASSINATURAS (Política INSERT public permite isso)
               const { error: insertError } = await client.from('assinaturas').insert(payload);
-              if (insertError) console.error("Erro na assinatura:", insertError.message);
+              if (insertError) {
+                  console.error("Erro na assinatura:", insertError.message);
+                  // Se houver erro, pode ser que a tabela espere campos obrigatórios ou tenha restrições
+              } else {
+                  console.log("Pedido registrado com sucesso no banco de dados.");
+              }
           }
       } catch (err) {
           console.error("Erro fatal no Supabase:", err);
