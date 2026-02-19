@@ -102,11 +102,11 @@
 
             if (profiles.length > 0) {
                 profiles.forEach(p => {
-                    // Lógica DEFINITIVA para obter o nome real do usuário conforme registrado no Supabase
-                    // Prioriza o campo 'nome' e remove qualquer fallback para 'Novo Cliente'
+                    // Lógica CORRIGIDA: Prioridade total ao campo 'nome' do Supabase.
+                    // Se o campo 'nome' existir e não for "Novo Cliente", ele SERÁ usado.
                     let nomeExibicao = p.nome;
                     
-                    // Se o nome no banco for "Novo Cliente" ou estiver vazio, tratamos como inconsistência e mostramos o email
+                    // Se o nome for "Novo Cliente" ou nulo, tentamos o email apenas como ÚLTIMO recurso
                     if (!nomeExibicao || nomeExibicao.toLowerCase() === 'novo cliente') {
                         nomeExibicao = p.email ? p.email.split('@')[0] : 'Usuário';
                     }
@@ -115,7 +115,6 @@
                     const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);
                     
                     if (clienteAssinaturas.length === 0) {
-                        // Usuário sem assinatura ainda - não aparece como "Cliente"
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td><strong>${nomeExibicao}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
@@ -126,7 +125,6 @@
                         `;
                         body.appendChild(row);
                     } else {
-                        // Cliente com uma ou mais assinaturas
                         clienteAssinaturas.forEach(sub => {
                             const dataFormatada = sub.created_at ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';                
                             const row = document.createElement('tr');

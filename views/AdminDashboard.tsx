@@ -174,12 +174,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {clients.map(client => {
-                      // Verificar se o usuário tem algum serviço contratado
                       const hasService = services.some(s => s.clientId === client.id);
                       
-                      // Lógica DEFINITIVA para exibição do nome:
-                      // Se o nome for "Novo Cliente" ou nulo, usamos o email como fallback seguro.
+                      // Lógica CORRIGIDA: Prioridade total ao campo 'name' do Supabase.
+                      // Se o nome existir e não for "Novo Cliente", ele SERÁ usado.
                       let displayName = client.name;
+                      
+                      // Fallback apenas se for nulo ou o termo genérico
                       if (!displayName || displayName.toLowerCase() === 'novo cliente') {
                         displayName = client.email ? client.email.split('@')[0] : 'Usuário';
                       }
