@@ -24,6 +24,10 @@
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
         .logout-btn { margin-top: auto; color: #ff4444; text-decoration: none; cursor: pointer; font-weight: bold; }
         .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+        .client-info { display: flex; flex-direction: column; gap: 4px; }
+        .client-info strong { font-size: 1rem; color: #fff; }
+        .client-info small { color: #888; font-size: 0.75rem; }
+        .client-detail { color: var(--gold); font-size: 0.8rem; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -122,6 +126,8 @@
             if (profiles.length > 0) {
                 profiles.forEach(p => {
                     let nomeExibicao = p.nome || p.email?.split('@')[0] || 'Usuário';
+                    let whatsapp = p.whatsapp || 'Não informado';
+                    let cpf = p.cpf || 'Não informado';
                     
                     // Buscar todas as assinaturas deste cliente vinculadas pelo cliente_id
                     const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);
@@ -129,7 +135,14 @@
                     if (clienteAssinaturas.length === 0) {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td><strong>${nomeExibicao}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
+                            <td>
+                                <div class="client-info">
+                                    <strong>${nomeExibicao}</strong>
+                                    <small>${p.email}</small>
+                                    <span class="client-detail"><i class="fab fa-whatsapp"></i> ${whatsapp}</span>
+                                    <span class="client-detail"><i class="far fa-id-card"></i> ${cpf}</span>
+                                </div>
+                            </td>
                             <td><span style="color:#666;">Interessado / Sem Pedido</span></td>
                             <td><span class="status-badge" style="background:#f1c40f; color: black;">POTENCIAL</span></td>
                             <td style="color: #666;">---</td> 
@@ -141,7 +154,14 @@
                             const dataFormatada = sub.created_at ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';                
                             const row = document.createElement('tr');
                             row.innerHTML = `
-                                <td><strong>${nomeExibicao}</strong><br><small style="color:#888;">${p.email || p.id.substring(0,8)}</small></td>
+                                <td>
+                                    <div class="client-info">
+                                        <strong>${nomeExibicao}</strong>
+                                        <small>${p.email}</small>
+                                        <span class="client-detail"><i class="fab fa-whatsapp"></i> ${whatsapp}</span>
+                                        <span class="client-detail"><i class="far fa-id-card"></i> ${cpf}</span>
+                                    </div>
+                                </td>
                                 <td>${nomesServicos[sub.plano_id] || sub.plano_id || 'Serviço'}</td>
                                 <td>
                                     <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">

@@ -144,25 +144,28 @@ document.addEventListener("DOMContentLoaded", () => {
               
               const { data: { session } } = await client.auth.getSession();
               
-              // SELECIONANDO APENAS AS COLUNAS QUE EXISTEM NO BANCO DO USUÁRIO
-              const payload = {
-                  plano_id: serv,
-                  status: 'Pendente'
-              };
-
               if (session) {
-                  payload.cliente_id = session.user.id;
-                  // Atualiza o perfil (RLS UPDATE authenticated)
-                  await client.from('profiles').update({ nome: nome }).eq('id', session.user.id);
-              }
+                  // SALVANDO DADOS NO PERFIL (profiles)
+                  // Tenta atualizar Nome, WhatsApp e CPF na tabela profiles
+                  await client.from('profiles').update({ 
+                      nome: nome,
+                      whatsapp: whatsapp,
+                      cpf: cpf
+                  }).eq('id', session.user.id);
 
-              // Inserção na tabela assinaturas (RLS INSERT public)
-              const { error: insertError } = await client.from('assinaturas').insert(payload);
-              if (insertError) {
-                  console.error("Erro na tabela assinaturas:", insertError.message);
-                  alert("⚠️ Erro ao registrar pedido no banco:\n" + insertError.message);
-              } else {
-                  console.log("Pedido registrado com sucesso!");
+                  // REGISTRANDO PEDIDO (assinaturas)
+                  const payload = {
+                      cliente_id: session.user.id,
+                      plano_id: serv,
+                      status: 'Pendente'
+                  };
+
+                  const { error: insertError } = await client.from('assinaturas').insert(payload);
+                  if (insertError) {
+                      console.error("Erro na tabela assinaturas:", insertError.message);
+                  } else {
+                      console.log("Pedido registrado com sucesso!");
+                  }
               }
           }
       } catch (err) {
