@@ -102,14 +102,8 @@
 
             if (profiles.length > 0) {
                 profiles.forEach(p => {
-                    // Lógica CORRIGIDA: Prioridade total ao campo 'nome' do Supabase.
-                    // Se o campo 'nome' existir e não for "Novo Cliente", ele SERÁ usado.
-                    let nomeExibicao = p.nome;
-                    
-                    // Se o nome for "Novo Cliente" ou nulo, tentamos o email apenas como ÚLTIMO recurso
-                    if (!nomeExibicao || nomeExibicao.toLowerCase() === 'novo cliente') {
-                        nomeExibicao = p.email ? p.email.split('@')[0] : 'Usuário';
-                    }
+                    // Usar sempre o campo 'nome' do Supabase quando disponível
+                    let nomeExibicao = p.nome || p.email?.split('@')[0] || 'Usuário';
                     
                     // Buscar todas as assinaturas deste cliente
                     const clienteAssinaturas = (assinaturas || []).filter(s => s.cliente_id === p.id);
