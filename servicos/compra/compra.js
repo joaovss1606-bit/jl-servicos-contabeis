@@ -139,13 +139,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- ENVIO DO FORMULÁRIO ---
   if (form) {
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       // Ativa visual de "Enviando"
       botao.classList.add("loading");
       botao.disabled = true;
       botao.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Enviando pedido...`;
+
+      // 1. Tentar registrar no Supabase se o usuário estiver logado
+      try {
+          if (typeof supabase !== 'undefined') {
+              const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
+              const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c'; 
+              const client = supabase.createClient(SB_URL, SB_KEY);
+              
+              const { data: { session } } = await client.auth.getSession();
+              if (session) {
+                  await client.from('assinaturas').insert({
+                      cliente_id: session.user.id,
+                      plano_id: serv,
+                      status: 'Pendente'
+                  });
+              }
+          }
+      } catch (err) {
+          console.error("Erro ao registrar pedido no banco:", err);
+      }
 
       // Monta a mensagem para WhatsApp
       const mensagem = 

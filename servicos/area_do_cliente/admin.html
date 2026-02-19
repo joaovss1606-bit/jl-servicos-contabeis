@@ -111,18 +111,19 @@
 
             // Se não retornar nada, tentar buscar da auth (se possível via metadata) ou mostrar erro específico
             if (!resProfiles.data || resProfiles.data.length === 0) {
-                debugContent.innerHTML += "<br><span style='color:orange;'>Aviso: Nenhum perfil retornado da tabela 'profiles'. Verifique as permissões RLS.</span>";
+                debugContent.innerHTML += "<br><span style='color:orange;'>Aviso: Nenhum perfil retornado da tabela 'profiles'.</span>";
             }
 
             let profiles = resProfiles.data?.filter(p => p.role !== 'admin' && p.email !== 'jlservicoscontabeis0@gmail.com') || [];
 
-            // Se não temos perfis mas temos assinaturas, criar perfis temporários a partir das assinaturas
+            // Garantir que perfis sem assinaturas sejam incluídos (já estão no filter acima)
+            // Se profiles ainda estiver vazio, mas houver assinaturas, fazemos o fallback
             if (profiles.length === 0 && assinaturas && assinaturas.length > 0) {
                 const uniqueClientIds = [...new Set(assinaturas.map(s => s.cliente_id))];
                 profiles = uniqueClientIds.map(id => ({
                     id: id,
-                    nome: "Cliente (Perfil Restrito)",
-                    email: "Consulte na assinatura"
+                    nome: "Cliente (Sem Perfil Criado)",
+                    email: "ID: " + id.substring(0,8)
                 }));
             }
 
