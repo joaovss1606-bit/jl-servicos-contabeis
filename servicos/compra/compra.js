@@ -113,26 +113,39 @@ if (bread && cat) {
     document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
     document.getElementById("cpf")?.addEventListener("input", handleCPF);
 
-    // --- VALIDAÇÃO REALTIME ---
-    function validarFormulario() {
-        if(!form || !botao) return;
-        
-        const emailVal = document.getElementById("email").value;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const emailOk = emailRegex.test(emailVal);
-        
-        const whatsappOk = document.getElementById("whatsapp").value.length >= 14;
-        const cpfOk = document.getElementById("cpf").value.length === 14;
-        const nomeOk = document.getElementById("nome").value.trim().split(" ").length >= 2; // Exige nome e sobrenome
+    // Adicione/Substitua apenas a parte do evento 'submit' e a 'validarFormulario'
+function validarFormulario() {
+    const nome = document.getElementById("nome").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const whatsapp = document.getElementById("whatsapp").value.replace(/\D/g, "");
+    const cpf = document.getElementById("cpf").value.replace(/\D/g, "");
 
-        const todosPreenchidos = camposObrigatorios.every(id => document.getElementById(id).value.trim() !== "");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    const nomeOk = nome.split(" ").length >= 2;
+    const emailOk = emailRegex.test(email);
+    const whatsappOk = whatsapp.length === 11;
+    const cpfOk = cpf.length === 11;
 
-        if (todosPreenchidos && emailOk && whatsappOk && cpfOk && nomeOk) {
-            botao.disabled = false;
-        } else {
-            botao.disabled = true;
-        }
-    }
+    document.getElementById("btnEnviar").disabled = !(nomeOk && emailOk && whatsappOk && cpfOk);
+}
+
+// Dentro do seu DOMContentLoaded, no evento submit:
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("btnEnviar");
+    
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Enviando...`;
+
+    const mensagem = `🚀 *NOVO PEDIDO* ...`; // Sua lógica de mensagem aqui
+
+    setTimeout(() => {
+        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, "_blank");
+        btn.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
+        btn.disabled = false;
+    }, 1500);
+});
 
     // Adiciona evento de escuta em todos os campos para validar
     form.querySelectorAll('input, textarea').forEach(el => {
