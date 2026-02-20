@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- BASE DE DADOS (MOCK) ---
   const servicosMock = {
     mei: {
-      basico: { titulo: "Plano MEI — Básico", categoriaLabel: "MEI", valor: "R$ 59,99", descricao: "Manutenção mensal essencial para seu MEI.", inclusos: ["DAS Mensal", "DASN Anual", "Suporte"] },
-      premium: { titulo: "Plano MEI — Premium", categoriaLabel: "MEI", valor: "R$ 89,99", descricao: "Gestão completa para o seu negócio.", inclusos: ["DAS Mensal", "Certidões", "Parcelamentos", "Suporte Prioritário"] },
+      "mei-plano-basico": { titulo: "Plano MEI Básico", valor: "R$ 59,99/mês", categoriaLabel: "MEI", valor: "R$ 59,99", descricao: "Manutenção mensal essencial para seu MEI.", inclusos: ["DAS Mensal", "DASN Anual", "Suporte"] },
+      "mei-plano-premium": { titulo: "Plano MEI Premium", valor: "R$ 89,99/mês", categoriaLabel: "MEI", valor: "R$ 89,99", descricao: "Gestão completa para o seu negócio.", inclusos: ["DAS Mensal", "Certidões", "Parcelamentos", "Suporte Prioritário"] },
       "abertura-mei": { titulo: "Abertura de MEI", categoriaLabel: "MEI", valor: "R$ 99,99", descricao: "Formalização completa do seu CNPJ MEI.", inclusos: ["CNPJ", "Inscrição Municipal", "CCMEI"] },
       "regularizacao-mei": { titulo: "Regularização de MEI", categoriaLabel: "MEI", valor: "R$ 139,99", descricao: "Coloque seu MEI em dia com o governo.", inclusos: ["Análise de Débitos", "Regularização Fiscal"] },
       "baixa-mei": { titulo: "Baixa de MEI", categoriaLabel: "MEI", valor: "R$ 128,99", descricao: "Encerramento formal das atividades do MEI.", inclusos: ["Baixa CNPJ", "DASN de Extinção"] },

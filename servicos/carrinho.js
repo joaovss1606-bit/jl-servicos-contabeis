@@ -1,4 +1,4 @@
-// GERENCIAMENTO DO CARRINHO DE SERVIÇOS - VERSÃO ESTÁVEL
+// GERENCIAMENTO DO CARRINHO DE SERVIÇOS - COM SUPORTE A PLANOS
 
 // Estilos do Modal
 const styleModal = document.createElement('style');
@@ -235,16 +235,34 @@ document.addEventListener('click', async function(e) {
 
   if (!categoria || !servico) return;
 
-  const card = link.closest('.service-card') || link.closest('.service-link-card') || link.closest('[style*="background:#0e2a47"]');
+  // Suportar tanto serviços avulsos quanto planos mensais
+  let card = link.closest('.service-card') || link.closest('.service-link-card');
+  
+  // Se não encontrou, procurar por divs com border de #bd9617 (planos mensais)
+  if (!card) {
+    card = link.closest('div[style*="border"][style*="#bd9617"]');
+  }
+  
   if (!card) return;
 
-  const spans = card.querySelectorAll('span');
   let titulo = '';
   let valor = '';
 
+  // Tentar extrair de spans (serviços avulsos)
+  const spans = card.querySelectorAll('span');
   if (spans.length >= 3) {
     titulo = spans[0]?.textContent?.trim() || '';
     valor = spans[1]?.textContent?.trim() || '';
+  }
+
+  // Se não encontrou, tentar extrair de h3 e div com preço (planos mensais)
+  if (!titulo || !valor) {
+    const h3 = card.querySelector('h3');
+    const divPreco = card.querySelector('div[style*="color:#bd9617"][style*="font-size"]');
+    if (h3 && divPreco) {
+      titulo = h3.textContent?.trim() || '';
+      valor = divPreco.textContent?.trim() || '';
+    }
   }
 
   if (!titulo || !valor) return;
