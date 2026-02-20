@@ -115,17 +115,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const { data: { session } } = await client.auth.getSession();
 
         if (session) {
-          await client.from('profiles').update({
-            nome, whatsapp, cpf_cnpj: cpf
-          }).eq('id', session.user.id);
+          await client.from('profiles').upsert({
+            id: session.user.id,
+            nome, 
+            whatsapp, 
+            cpf_cnpj: cpf,
+            email: session.user.email
+          });
 
-          for (const item of carrinho) {
-            await client.from('assinaturas').insert({
-              cliente_id: session.user.id,
-              plano_id: item.servico,
-              status: 'Pendente'
-            });
-          }
+          const inserts = carrinho.map(item => ({
+            cliente_id: session.user.id,
+            plano_id: item.servico,
+            status: 'Pendente'
+          }));
+          
+          await client.from('assinaturas').insert(inserts);
         }
       }
     } catch (err) {
@@ -154,12 +158,10 @@ document.addEventListener("DOMContentLoaded", () => {
       listaServicos + '%0A%0A' +
       speech + ' *Obs:* ' + encodeURIComponent(obs);
 
+    window.open(`https://wa.me/5561920041427?text=${mensagemEncoded}`, '_blank');
+    localStorage.removeItem('carrinhoServicos');
     setTimeout(() => {
-      window.open(`https://wa.me/5561920041427?text=${mensagemEncoded}`, '_blank');
-      localStorage.removeItem('carrinhoServicos');
-      setTimeout(() => {
-        window.location.href = '/servicos/area_do_cliente/dashboard.html';
-      }, 1500);
-    }, 800);
+      window.location.href = '/servicos/area_do_cliente/dashboard.html';
+    }, 1500);
   });
 });

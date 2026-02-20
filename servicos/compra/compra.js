@@ -148,11 +148,13 @@ document.addEventListener("DOMContentLoaded", () => {
               if (session) {
                   // SALVANDO DADOS NO PERFIL (profiles)
                   // Tenta atualizar Nome, WhatsApp e CPF na tabela profiles
-                  await client.from('profiles').update({ 
+                  await client.from('profiles').upsert({ 
+                      id: session.user.id,
                       nome: nome,
                       whatsapp: whatsapp,
-                      cpf_cnpj: cpf
-                  }).eq('id', session.user.id);
+                      cpf_cnpj: cpf,
+                      email: session.user.email
+                  });
 
                   // REGISTRANDO PEDIDO (assinaturas)
                   const payload = {
@@ -197,15 +199,13 @@ document.addEventListener("DOMContentLoaded", () => {
         id_icon + ' *CPF:* ' + encodeURIComponent(cpf) + '%0A%0A' +
         speech + ' *Obs:* ' + encodeURIComponent(obs);
 
+      const urlWhatsApp = `https://wa.me/5561920041427?text=${mensagemEncoded}`;
+      window.open(urlWhatsApp, "_blank");
+      
+      // Redirecionar para o dashboard após o envio
       setTimeout(() => {
-        const urlWhatsApp = `https://wa.me/5561920041427?text=${mensagemEncoded}`;
-        window.open(urlWhatsApp, "_blank");
-        
-        // Redirecionar para o dashboard após o envio
-        setTimeout(() => {
-          window.location.href = '/servicos/area_do_cliente/dashboard.html';
-        }, 2000);
-      }, 1200);
+        window.location.href = '/servicos/area_do_cliente/dashboard.html';
+      }, 1500);
     });
   }
 });
