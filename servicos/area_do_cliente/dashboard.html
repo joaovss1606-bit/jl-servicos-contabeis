@@ -246,6 +246,10 @@
 
                 // Renderizar Avisos de Cancelamento pelo Admin
                 canceladasComMotivo.forEach(sub => {
+                    // Verificar se o usuário já fechou este aviso específico
+                    const avisoFechado = localStorage.getItem(`aviso_cancelado_${sub.id}`);
+                    if (avisoFechado) return;
+
                     const nomeServico = nomesServicos[sub.plano_id] || sub.plano_id;
                     const alertDiv = document.createElement('div');
                     alertDiv.style = "background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; border-radius: 10px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; position: relative;";
@@ -257,7 +261,7 @@
                             <strong style="color: #ff4444; display: block; font-size: 0.85rem; margin-bottom: 2px;">Serviço Cancelado: ${nomeServico}</strong>
                             <p style="margin: 0; font-size: 0.75rem; color: #ccc;">Motivo: <strong>${sub.motivo_cancelamento}</strong>. Entre em contato para mais informações.</p>
                         </div>
-                        <button onclick="this.parentElement.remove()" style="background: none; border: none; color: #888; cursor: pointer; padding: 5px; position: absolute; top: 5px; right: 5px;"><i class="fas fa-times"></i></button>
+                        <button onclick="fecharAvisoCancelamento('${sub.id}', this.parentElement)" style="background: none; border: none; color: #888; cursor: pointer; padding: 5px; position: absolute; top: 5px; right: 5px;"><i class="fas fa-times"></i></button>
                     `;
                     listaServicos.appendChild(alertDiv);
                 });
@@ -347,6 +351,17 @@
                 alert('Erro ao cancelar pedido.');
                 btn.disabled = false;
                 btn.innerText = 'Sim, Cancelar';
+            }
+        }
+
+        function fecharAvisoCancelamento(id, elemento) {
+            localStorage.setItem(`aviso_cancelado_${id}`, 'true');
+            elemento.remove();
+            
+            // Se não houver mais nada na lista, mostrar mensagem de vazio
+            const lista = document.getElementById('lista-servicos');
+            if (lista.children.length === 0) {
+                lista.innerHTML = "<p style='font-size:0.85rem; color:#888;'>Nenhum serviço contratado ainda.</p>";
             }
         }
     </script>
