@@ -479,22 +479,47 @@
         async function confirmarCancelamentoAdmin() {
             const motivo = document.getElementById('cancel-motivo-select').value;
             const btn = document.getElementById('btn-confirmar-cancel-admin');
+            
+            if (!idAssinaturaParaCancelar) {
+                alert("Erro: Nenhuma assinatura selecionada.");
+                return;
+            }
+
             try {
                 btn.disabled = true;
                 btn.innerText = "Cancelando...";
-                const { error } = await supabaseClient.from('assinaturas').update({ status: 'Cancelado', motivo_cancelamento: motivo }).eq('id', idAssinaturaParaCancelar);
-                if (error) throw error;
                 
+                console.log("Tentando cancelar assinatura:", idAssinaturaParaCancelar, "com motivo:", motivo);
+
+                const { data, error } = await supabaseClient
+                    .from('assinaturas')
+                    .update({ 
+                        status: 'Cancelado', 
+                        motivo_cancelamento: motivo 
+                    })
+                    .eq('id', idAssinaturaParaCancelar)
+                    .select();
+
+                if (error) {
+                    console.error("Erro detalhado do Supabase:", error);
+                    throw error;
+                }
+                
+                console.log("Resposta do cancelamento:", data);
+
+                // Atualizar dados locais
                 const index = dadosOriginais.assinaturas.findIndex(s => s.id === idAssinaturaParaCancelar);
                 if (index !== -1) {
                     dadosOriginais.assinaturas[index].status = 'Cancelado';
                     dadosOriginais.assinaturas[index].motivo_cancelamento = motivo;
                 }
-                alert("Pedido cancelado!");
+
+                alert("Pedido cancelado com sucesso!");
                 fecharModalCancelAdmin();
                 renderizarTabelaFiltrada();
             } catch (err) {
-                alert("Erro ao cancelar.");
+                console.error("Erro capturado no catch:", err);
+                alert("Erro ao cancelar: " + (err.message || "Erro desconhecido. Verifique o console."));
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Confirmar Cancelamento";
