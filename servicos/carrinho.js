@@ -1,17 +1,8 @@
-// GERENCIAMENTO DO CARRINHO DE SERVIÇOS - VERSÃO FINAL ROBUSTA
+// GERENCIAMENTO DO CARRINHO DE SERVIÇOS - VERSÃO ESTÁVEL
 
-// Inicializar estilos do Modal
+// Estilos do Modal
 const styleModal = document.createElement('style');
 styleModal.textContent = `
-  #modalConfirmacao {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-  }
-
   .modal-overlay {
     display: none;
     position: fixed;
@@ -24,6 +15,10 @@ styleModal.textContent = `
     align-items: center;
     justify-content: center;
     z-index: 9999;
+  }
+
+  .modal-overlay.active {
+    display: flex;
   }
 
   .modal-content {
@@ -75,7 +70,6 @@ styleModal.textContent = `
 
   .modal-btn-confirm:hover {
     background: #a68414;
-    transform: translateY(-2px);
   }
 
   .modal-btn-cancel {
@@ -86,91 +80,75 @@ styleModal.textContent = `
 
   .modal-btn-cancel:hover {
     background: rgba(255, 68, 68, 0.3);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 600px) {
-    .modal-content {
-      padding: 30px 20px;
-      max-width: 90%;
-    }
-
-    .modal-btn {
-      min-width: 100px;
-      padding: 10px 15px;
-      font-size: 0.9rem;
-    }
   }
 `;
 document.head.appendChild(styleModal);
 
-// Modal de Confirmação Personalizado
-function mostrarModalConfirmacao(titulo, mensagem, onConfirm, onCancel = null) {
-  let modal = document.getElementById('modalConfirmacao');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'modalConfirmacao';
-    modal.innerHTML = `
-      <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-          <h2 id="modalTitulo" style="color: #bd9617; font-family: 'Playfair Display', serif; margin-bottom: 15px; font-size: 1.5rem;"></h2>
-          <p id="modalMensagem" style="color: rgba(255,255,255,0.9); margin-bottom: 30px; line-height: 1.6; white-space: pre-wrap;"></p>
-          <div class="modal-buttons">
-            <button id="modalConfirm" class="modal-btn modal-btn-confirm">Confirmar</button>
-            <button id="modalCancel" class="modal-btn modal-btn-cancel">Cancelar</button>
-          </div>
+// Criar modal uma única vez
+function criarModal() {
+  if (document.getElementById('modalConfirmacao')) return;
+  
+  const modal = document.createElement('div');
+  modal.id = 'modalConfirmacao';
+  modal.innerHTML = `
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-content">
+        <h2 id="modalTitulo" style="color: #bd9617; font-family: 'Playfair Display', serif; margin-bottom: 15px; font-size: 1.5rem;"></h2>
+        <p id="modalMensagem" style="color: rgba(255,255,255,0.9); margin-bottom: 30px; line-height: 1.6;"></p>
+        <div class="modal-buttons">
+          <button id="modalConfirm" class="modal-btn modal-btn-confirm">Confirmar</button>
+          <button id="modalCancel" class="modal-btn modal-btn-cancel">Cancelar</button>
         </div>
       </div>
-    `;
-    document.body.appendChild(modal);
-  }
-
-  document.getElementById('modalTitulo').textContent = titulo;
-  document.getElementById('modalMensagem').textContent = mensagem;
-  document.getElementById('modalOverlay').style.display = 'flex';
-
-  const btnConfirm = document.getElementById('modalConfirm');
-  const btnCancel = document.getElementById('modalCancel');
-  const overlay = document.getElementById('modalOverlay');
-
-  // Remover listeners antigos
-  const newConfirm = btnConfirm.cloneNode(true);
-  const newCancel = btnCancel.cloneNode(true);
-  btnConfirm.parentNode.replaceChild(newConfirm, btnConfirm);
-  btnCancel.parentNode.replaceChild(newCancel, btnCancel);
-
-  const fecharModal = () => {
-    overlay.style.display = 'none';
-  };
-
-  const handleConfirm = () => {
-    fecharModal();
-    if (onConfirm) onConfirm();
-  };
-
-  const handleCancel = () => {
-    fecharModal();
-    if (onCancel) onCancel();
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target === overlay) {
-      fecharModal();
-    }
-  };
-
-  document.getElementById('modalConfirm').addEventListener('click', handleConfirm);
-  document.getElementById('modalCancel').addEventListener('click', handleCancel);
-  overlay.addEventListener('click', handleOverlayClick);
+    </div>
+  `;
+  document.body.appendChild(modal);
 }
 
-// Funções de Carrinho
+// Mostrar modal
+function mostrarModalConfirmacao(titulo, mensagem, onConfirm, onCancel) {
+  criarModal();
+  
+  const overlay = document.getElementById('modalOverlay');
+  const btnConfirm = document.getElementById('modalConfirm');
+  const btnCancel = document.getElementById('modalCancel');
+  
+  document.getElementById('modalTitulo').textContent = titulo;
+  document.getElementById('modalMensagem').textContent = mensagem;
+  
+  overlay.classList.add('active');
+  
+  const handleConfirm = () => {
+    overlay.classList.remove('active');
+    btnConfirm.removeEventListener('click', handleConfirm);
+    btnCancel.removeEventListener('click', handleCancel);
+    overlay.removeEventListener('click', handleOverlay);
+    if (onConfirm) onConfirm();
+  };
+  
+  const handleCancel = () => {
+    overlay.classList.remove('active');
+    btnConfirm.removeEventListener('click', handleConfirm);
+    btnCancel.removeEventListener('click', handleCancel);
+    overlay.removeEventListener('click', handleOverlay);
+    if (onCancel) onCancel();
+  };
+  
+  const handleOverlay = (e) => {
+    if (e.target === overlay) handleCancel();
+  };
+  
+  btnConfirm.addEventListener('click', handleConfirm);
+  btnCancel.addEventListener('click', handleCancel);
+  overlay.addEventListener('click', handleOverlay);
+}
+
+// Funções do Carrinho
 function adicionarAoCarrinho(categoria, servico, titulo, valor) {
   let carrinho = JSON.parse(localStorage.getItem('carrinhoServicos')) || [];
   carrinho.push({ categoria, servico, titulo, valor, id: Date.now() });
   localStorage.setItem('carrinhoServicos', JSON.stringify(carrinho));
   atualizarCarrinho();
-  console.log('Serviço adicionado ao carrinho:', { categoria, servico, titulo, valor });
 }
 
 function atualizarCarrinho() {
@@ -242,8 +220,12 @@ async function finalizarCarrinho() {
   window.location.href = '/servicos/compra/index.html?carrinho=1';
 }
 
-// Interceptar cliques em links de serviço
+// Interceptar cliques em serviços
+let processandoClique = false;
+
 document.addEventListener('click', async function(e) {
+  if (processandoClique) return;
+  
   const link = e.target.closest('a[href*="/servicos/area_do_cliente/index.html"]');
   if (!link) return;
 
@@ -253,7 +235,6 @@ document.addEventListener('click', async function(e) {
 
   if (!categoria || !servico) return;
 
-  // Extrair dados do card
   const card = link.closest('.service-card') || link.closest('.service-link-card') || link.closest('[style*="background:#0e2a47"]');
   if (!card) return;
 
@@ -273,37 +254,39 @@ document.addEventListener('click', async function(e) {
 
   e.preventDefault();
   e.stopPropagation();
+  
+  processandoClique = true;
 
   const { data: { session } } = await client.auth.getSession();
 
   if (session) {
-    // Usuário logado: mostrar opção de adicionar ao carrinho ou ir direto para compra
     mostrarModalConfirmacao(
       'Adicionar ao Carrinho',
       'Deseja adicionar "' + titulo + '" ao carrinho?\n\nVocê poderá adicionar mais serviços depois.',
       () => {
         adicionarAoCarrinho(categoria, servico, titulo, valor);
+        processandoClique = false;
       },
       () => {
-        // Ir direto para compra (sem carrinho)
+        processandoClique = false;
         window.location.href = link.href;
       }
     );
   } else {
-    // Usuário não logado: mostrar opção de adicionar ao carrinho ou finalizar (ir para login)
     mostrarModalConfirmacao(
       'Adicionar ao Carrinho',
       'Deseja adicionar "' + titulo + '" ao carrinho?\n\nVocê poderá adicionar mais serviços antes de finalizar.',
       () => {
         adicionarAoCarrinho(categoria, servico, titulo, valor);
+        processandoClique = false;
       },
       () => {
-        // Ir para login/compra
+        processandoClique = false;
         window.location.href = link.href;
       }
     );
   }
-}, true); // Usar captura para interceptar antes dos handlers padrão
+}, true);
 
-// Atualizar carrinho ao carregar a página
+// Atualizar carrinho ao carregar
 document.addEventListener('DOMContentLoaded', atualizarCarrinho);
