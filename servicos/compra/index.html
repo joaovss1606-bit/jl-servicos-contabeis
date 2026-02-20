@@ -22,6 +22,14 @@
     .breadcrumb-custom span {
       margin: 0 8px;
     }
+    #btnAdicionarMais:not(:disabled) {
+      background: #bd9617 !important;
+      color: white !important;
+    }
+    #btnAdicionarMais:not(:disabled):hover {
+      background: #a68414 !important;
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 
@@ -92,7 +100,7 @@
           <button type="submit" disabled id="btnEnviar" class="btn-checkout" style="flex: 1; min-width: 200px;">
             Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>
           </button>
-          <button type="button" disabled id="btnAdicionarMais" class="btn-checkout" style="flex: 1; min-width: 200px; background: rgba(189, 150, 23, 0.3); border: 2px solid #bd9617;">
+          <button type="button" disabled id="btnAdicionarMais" class="btn-checkout" style="flex: 1; min-width: 200px; background: rgba(189, 150, 23, 0.3); border: 2px solid #bd9617; transition: 0.3s;">
             Adicionar Mais Serviços? <i class="fas fa-plus"></i>
           </button>
         </div>
