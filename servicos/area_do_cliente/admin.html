@@ -327,8 +327,27 @@
 
     async function atualizarStatus(subId, novoStatus) {
         if (!subId || subId === 'undefined' || subId === 'null') return alert("Cliente sem assinatura registrada.");
-        const { error } = await supabaseClient.from('assinaturas').update({ status: novoStatus }).eq('id', subId);
-        if (!error) alert("Status atualizado!");
+        
+        try {
+            const { error } = await supabaseClient
+                .from('assinaturas')
+                .update({ status: novoStatus })
+                .eq('id', subId);
+            
+            if (error) throw error;
+            
+            // Atualizar os dados locais para refletir a mudança sem recarregar a página inteira
+            const index = dadosOriginais.assinaturas.findIndex(s => s.id === subId);
+            if (index !== -1) {
+                dadosOriginais.assinaturas[index].status = novoStatus;
+            }
+            
+            alert("Status atualizado com sucesso!");
+            renderizarTabelaFiltrada();
+        } catch (err) {
+            console.error("Erro ao atualizar status:", err);
+            alert("Erro ao atualizar status. Verifique o console.");
+        }
     }
 
     function abrirModal(id, nome) {

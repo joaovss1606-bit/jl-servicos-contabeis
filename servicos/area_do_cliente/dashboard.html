@@ -193,6 +193,61 @@
             }
         }
     });
+
+    // --- LÓGICA DE CANCELAMENTO ---
+    let assinaturaSelecionada = null;
+
+    function abrirModalCancelamento(assinaturaId, servicoNome) {
+        assinaturaSelecionada = assinaturaId;
+        document.getElementById('modalMensagemCancelar').textContent = `Tem certeza que deseja cancelar o pedido de "${servicoNome}"?`;
+        document.getElementById('modalCancelar').classList.add('active');
+    }
+
+    function fecharModalCancelamento() {
+        document.getElementById('modalCancelar').classList.remove('active');
+        assinaturaSelecionada = null;
+    }
+
+    async function confirmarCancelamento() {
+        if (!assinaturaSelecionada) return;
+        
+        const btnConfirmar = document.querySelector('.modal-btn-confirm');
+        const originalText = btnConfirmar.textContent;
+        
+        try {
+            btnConfirmar.disabled = true;
+            btnConfirmar.textContent = 'Cancelando...';
+            
+            const { error } = await supabaseClient
+                .from('assinaturas')
+                .update({ status: 'Cancelado' })
+                .eq('id', assinaturaSelecionada);
+            
+            if (error) throw error;
+            
+            fecharModalCancelamento();
+            location.reload();
+        } catch (err) {
+            console.error('Erro ao cancelar:', err);
+            alert('Erro ao cancelar pedido. Tente novamente.');
+        } finally {
+            btnConfirmar.disabled = false;
+            btnConfirmar.textContent = originalText;
+        }
+    }
 </script>
+
+<!-- Modal de Cancelamento -->
+<div id="modalCancelar" class="modal-cancelar">
+    <div class="modal-content-cancel">
+        <h2>Cancelar Pedido?</h2>
+        <p id="modalMensagemCancelar" style="color: #ccc; margin: 15px 0;">Tem certeza que deseja cancelar este pedido?</p>
+        <div class="modal-buttons">
+            <button class="modal-btn-confirm" onclick="confirmarCancelamento()">Sim, Cancelar</button>
+            <button class="modal-btn-cancel" onclick="fecharModalCancelamento()">Não, Voltar</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
