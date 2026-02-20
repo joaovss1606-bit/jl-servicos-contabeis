@@ -173,9 +173,30 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Erro fatal no Supabase:", err);
       }
 
-
       const obs = document.getElementById("observacoes")?.value || "Nenhuma";
-      const mensagem = "🚀 *NOVO PEDIDO - JL SERVIÇOS*\n🛠️ *Serviço:* " + dados.titulo + "\n💰 *Valor:* " + dados.valor + "\n👤 *DADOS DO CLIENTE:*\n📝 *Nome:* " + nome + "\n📱 *WhatsApp:* " + whatsapp + "\n📧 *E-mail:* " + email + "\n🆔 *CPF:* " + cpf + "\n💬 *Obs:* " + obs;
+      
+      // Emojis usando Unicode diretos (UTF-16 surrogates) para maior compatibilidade
+      const rocket = '\uD83D\uDE80'; // 🚀
+      const tools = '\uD83D\uDEE0';  // 🛠
+      const money = '\uD83D\uDCB0';  // 💰
+      const person = '\uD83D\uDC64'; // 👤
+      const clipboard = '\uD83D\uDCDD'; // 📝
+      const phone = '\uD83D\uDCF1';  // 📱
+      const email_icon = '\uD83D\uDCE7'; // 📧
+      const id_icon = '\uD83C\uDD94'; // 🆔
+      const comment = '\uD83D\uDCAA'; // 💪 (usando braço forte para obs ou \uD83D\uDCAF para 100)
+      const speech = '\uD83D\uDCA1'; // 💡
+
+      const mensagem = 
+        rocket + ' *NOVO PEDIDO - JL SERVIÇOS*\n\n' +
+        tools + ' *Serviço:* ' + dados.titulo + '\n' +
+        money + ' *Valor:* ' + dados.valor + '\n\n' +
+        person + ' *DADOS DO CLIENTE:*\n' +
+        clipboard + ' *Nome:* ' + nome + '\n' +
+        phone + ' *WhatsApp:* ' + whatsapp + '\n' +
+        email_icon + ' *E-mail:* ' + email + '\n' +
+        id_icon + ' *CPF:* ' + cpf + '\n\n' +
+        speech + ' *Obs:* ' + obs;
 
       setTimeout(() => {
         const urlWhatsApp = `https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`;

@@ -1,4 +1,4 @@
-// LÓGICA DE CARRINHO - VERSÃO SIMPLES E ESTÁVEL
+// LÓGICA DE CARRINHO - COM EMOJIS UNICODE CORRETOS
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
@@ -102,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("email").value.trim();
     const whatsapp = document.getElementById("whatsapp").value;
     const cpf = document.getElementById("cpf").value;
+    const obs = document.getElementById("observacoes")?.value || "Nenhuma";
 
     botao.disabled = true;
     botao.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Enviando...';
@@ -131,9 +132,27 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     }
 
-    const listaServicos = carrinho.map(item => `  • ${item.titulo} (${item.valor})`).join('\n');
-    const obs = document.getElementById("observacoes")?.value || "Nenhuma";
-    const mensagem = "🚀 *NOVO PEDIDO - JL SERVIÇOS*\n👤 *DADOS DO CLIENTE:*\n📝 *Nome:* " + nome + "\n📱 *WhatsApp:* " + whatsapp + "\n📧 *E-mail:* " + email + "\n🆔 *CPF:* " + cpf + "\n\n🛠️ *SERVIÇOS SOLICITADOS:*\n" + listaServicos + "\n\n💬 *Obs:* " + obs;
+    // Criar mensagem com emojis Unicode diretos (UTF-16 surrogates) para maior compatibilidade
+    const listaServicos = carrinho.map(item => `  \u2022 ${item.titulo} (${item.valor})`).join('\n');
+    const rocket = '\uD83D\uDE80'; // 🚀
+    const person = '\uD83D\uDC64'; // 👤
+    const clipboard = '\uD83D\uDCDD'; // 📝
+    const phone = '\uD83D\uDCF1';  // 📱
+    const email_icon = '\uD83D\uDCE7'; // 📧
+    const id_icon = '\uD83C\uDD94'; // 🆔
+    const tools = '\uD83D\uDEE0';  // 🛠
+    const speech = '\uD83D\uDCA1'; // 💡
+
+    const mensagem = 
+      rocket + ' *NOVO PEDIDO - JL SERVIÇOS*\n\n' +
+      person + ' *DADOS DO CLIENTE:*\n' +
+      clipboard + ' *Nome:* ' + nome + '\n' +
+      phone + ' *WhatsApp:* ' + whatsapp + '\n' +
+      email_icon + ' *E-mail:* ' + email + '\n' +
+      id_icon + ' *CPF:* ' + cpf + '\n\n' +
+      tools + ' *SERVIÇOS SOLICITADOS:*\n' +
+      listaServicos + '\n\n' +
+      speech + ' *Obs:* ' + obs;
 
     setTimeout(() => {
       window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, '_blank');

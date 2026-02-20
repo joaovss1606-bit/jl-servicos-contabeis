@@ -21,7 +21,17 @@
         .btn-action { background: var(--gold); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: 600; }
         .logout-btn { margin-top: auto; color: #ff4444; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .doc-item { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:10px; }
-        .service-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 0; }
+        .service-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .btn-cancel { background: rgba(255, 68, 68, 0.2); color: #ff4444; border: 1px solid #ff4444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.3s; }
+        .btn-cancel:hover { background: rgba(255, 68, 68, 0.3); }
+        .status-cancelado { color: #ff4444; text-decoration: line-through; opacity: 0.7; }
+        .modal-cancelar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 10000; }
+        .modal-cancelar.active { display: flex; }
+        .modal-content-cancel { background: rgba(10, 25, 47, 0.95); border: 2px solid #bd9617; border-radius: 15px; padding: 30px; max-width: 400px; width: 90%; }
+        .modal-content-cancel h2 { color: #bd9617; margin-top: 0; }
+        .modal-buttons { display: flex; gap: 12px; margin-top: 25px; }
+        .modal-btn-confirm { background: #ff4444; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: 600; }
+        .modal-btn-cancel { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -135,10 +145,15 @@
                     const status = sub.status || "Pendente";
                     const cor = status === 'Ativo' ? '#25d366' : (status === 'Pendente' ? '#f1c40f' : '#ff4444');
                     const corTexto = status === 'Pendente' ? 'black' : 'white';
+                    const podeCancel = (status === 'Ativo' || status === 'Pendente');
+                    const btnCancel = podeCancel ? `<button class="btn-cancel" onclick="abrirModalCancelamento('${sub.id}', '${nomesServicos[sub.plano_id] || sub.plano_id}')">Cancelar</button>` : '';
                     return `
                         <div class="service-item">
-                            <p style="margin:0; font-weight:bold; font-size:0.9rem;">${nomesServicos[sub.plano_id] || sub.plano_id}</p>
-                            <span class="status-badge" style="background:${cor}; color:${corTexto}; font-size:0.6rem;">${status}</span>
+                            <div>
+                                <p style="margin:0; font-weight:bold; font-size:0.9rem;">${nomesServicos[sub.plano_id] || sub.plano_id}</p>
+                                <span class="status-badge" style="background:${cor}; color:${corTexto}; font-size:0.6rem;">${status}</span>
+                            </div>
+                            ${btnCancel}
                         </div>
                     `;
                 }).join('');
