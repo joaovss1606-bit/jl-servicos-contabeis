@@ -59,9 +59,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const cpfOk = cpf.length === 11;
     const todosOk = nomeOk && emailOk && whatsappOk && cpfOk;
 
-    document.getElementById("btnEnviar").disabled = !todosOk;
-    if (btnAdicionarMais) {
-      btnAdicionarMais.disabled = !todosOk;
+    const btnEnviar = document.getElementById("btnEnviar");
+    const btnAdicionarMaisEl = document.getElementById("btnAdicionarMais");
+    
+    if (btnEnviar) {
+      btnEnviar.disabled = !todosOk;
+    }
+    if (btnAdicionarMaisEl) {
+      btnAdicionarMaisEl.disabled = !todosOk;
     }
   }
 
@@ -87,13 +92,22 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
   document.getElementById("cpf")?.addEventListener("input", handleCPF);
 
-  form.querySelectorAll('input, textarea').forEach(el => {
-    el.addEventListener("input", validarFormulario);
-  });
+  if (form) {
+    form.querySelectorAll('input, textarea').forEach(el => {
+      el.addEventListener("input", validarFormulario);
+    });
+  }
+
+  // Chamar validação inicial
+  setTimeout(() => {
+    validarFormulario();
+  }, 100);
 
   // Botão "Adicionar mais serviços?"
-  if (btnAdicionarMais) {
-    btnAdicionarMais.addEventListener("click", () => {
+  const btnAdicionarMaisEl = document.getElementById("btnAdicionarMais");
+  if (btnAdicionarMaisEl) {
+    btnAdicionarMaisEl.addEventListener("click", (e) => {
+      e.preventDefault();
       window.location.href = '/servicos/index.html';
     });
   }
