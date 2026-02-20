@@ -1,25 +1,21 @@
-// LÓGICA DE CARRINHO PARA MÚLTIPLOS SERVIÇOS - VERSÃO ROBUSTA
+// LÓGICA DE CARRINHO PARA MÚLTIPLOS SERVIÇOS - VERSÃO FINAL COM VALIDAÇÃO ABSOLUTA
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const isCarrinho = params.get("carrinho") === "1";
 
   if (!isCarrinho) {
-    console.log('Não é carrinho, retornando');
     return;
   }
-
-  console.log('Iniciando lógica de carrinho');
 
   const form = document.getElementById("pedidoForm");
   const botao = document.getElementById("btnEnviar");
   const btnAdicionarMais = document.getElementById("btnAdicionarMais");
 
   const carrinho = JSON.parse(localStorage.getItem('carrinhoServicos')) || [];
-  console.log('Carrinho carregado:', carrinho);
 
-  if (!form) {
-    console.error('Formulário não encontrado');
+  if (!form || !botao || !btnAdicionarMais) {
+    console.error('Elementos não encontrados');
     return;
   }
 
@@ -59,15 +55,16 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join('');
   }
 
-  // Validação robusta do formulário
-  function validarFormulario() {
+  // VALIDAÇÃO ABSOLUTA - Função que valida TUDO
+  function validarFormularioAbsoluto() {
     const nomeInput = document.getElementById("nome");
     const emailInput = document.getElementById("email");
     const whatsappInput = document.getElementById("whatsapp");
     const cpfInput = document.getElementById("cpf");
 
     if (!nomeInput || !emailInput || !whatsappInput || !cpfInput) {
-      console.error('Um ou mais campos não foram encontrados');
+      botao.disabled = true;
+      btnAdicionarMais.disabled = true;
       return;
     }
 
@@ -83,24 +80,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const cpfOk = cpf.length === 11;
     const todosOk = nomeOk && emailOk && whatsappOk && cpfOk;
 
-    console.log('Validação:', { nomeOk, emailOk, whatsappOk, cpfOk, todosOk });
+    // FORÇAR A ATUALIZAÇÃO DOS BOTÕES
+    botao.disabled = !todosOk;
+    btnAdicionarMais.disabled = !todosOk;
 
-    if (botao) {
-      botao.disabled = !todosOk;
-    }
-    if (btnAdicionarMais) {
-      btnAdicionarMais.disabled = !todosOk;
-      console.log('Botão adicionar mais:', btnAdicionarMais.disabled ? 'desabilitado' : 'habilitado');
-    }
+    console.log('Validação:', { nomeOk, emailOk, whatsappOk, cpfOk, todosOk, btnDisabled: botao.disabled });
   }
 
+  // Handlers de formatação
   const handleWhatsApp = (e) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 11) v = v.slice(0, 11);
     v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
     v = v.replace(/(\d{5})(\d)/, "$1-$2");
     e.target.value = v;
-    validarFormulario();
+    validarFormularioAbsoluto();
   };
 
   const handleCPF = (e) => {
@@ -110,43 +104,68 @@ document.addEventListener("DOMContentLoaded", () => {
     v = v.replace(/(\d{3})(\d)/, "$1.$2");
     v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
     e.target.value = v;
-    validarFormulario();
+    validarFormularioAbsoluto();
   };
 
-  // Adicionar listeners aos campos
+  // Adicionar listeners a TODOS os campos
   const inputWhatsApp = document.getElementById("whatsapp");
   const inputCPF = document.getElementById("cpf");
   const inputNome = document.getElementById("nome");
   const inputEmail = document.getElementById("email");
 
-  if (inputWhatsApp) inputWhatsApp.addEventListener("input", handleWhatsApp);
-  if (inputCPF) inputCPF.addEventListener("input", handleCPF);
-  if (inputNome) inputNome.addEventListener("input", validarFormulario);
-  if (inputEmail) inputEmail.addEventListener("input", validarFormulario);
+  if (inputWhatsApp) {
+    inputWhatsApp.addEventListener("input", handleWhatsApp);
+    inputWhatsApp.addEventListener("change", validarFormularioAbsoluto);
+    inputWhatsApp.addEventListener("blur", validarFormularioAbsoluto);
+  }
 
-  // Adicionar listeners a todos os inputs
+  if (inputCPF) {
+    inputCPF.addEventListener("input", handleCPF);
+    inputCPF.addEventListener("change", validarFormularioAbsoluto);
+    inputCPF.addEventListener("blur", validarFormularioAbsoluto);
+  }
+
+  if (inputNome) {
+    inputNome.addEventListener("input", validarFormularioAbsoluto);
+    inputNome.addEventListener("change", validarFormularioAbsoluto);
+    inputNome.addEventListener("blur", validarFormularioAbsoluto);
+  }
+
+  if (inputEmail) {
+    inputEmail.addEventListener("input", validarFormularioAbsoluto);
+    inputEmail.addEventListener("change", validarFormularioAbsoluto);
+    inputEmail.addEventListener("blur", validarFormularioAbsoluto);
+  }
+
+  // Adicionar listeners a TODOS os inputs do formulário
   const inputs = form.querySelectorAll('input, textarea');
   inputs.forEach(el => {
-    el.addEventListener("input", validarFormulario);
-    el.addEventListener("change", validarFormulario);
-    el.addEventListener("blur", validarFormulario);
+    el.addEventListener("input", validarFormularioAbsoluto);
+    el.addEventListener("change", validarFormularioAbsoluto);
+    el.addEventListener("blur", validarFormularioAbsoluto);
+    el.addEventListener("keyup", validarFormularioAbsoluto);
   });
 
-  // Validação inicial
-  validarFormulario();
+  // Validação inicial IMEDIATA
+  validarFormularioAbsoluto();
+
+  // Validação periódica a cada 100ms para garantir
+  const intervalValidacao = setInterval(() => {
+    validarFormularioAbsoluto();
+  }, 100);
 
   // Botão "Adicionar mais serviços?"
-  if (btnAdicionarMais) {
-    btnAdicionarMais.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      window.location.href = '/servicos/index.html';
-    });
-  }
+  btnAdicionarMais.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    clearInterval(intervalValidacao);
+    window.location.href = '/servicos/index.html';
+  });
 
   // Enviar pedido (múltiplos serviços)
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    clearInterval(intervalValidacao);
 
     const nome = document.getElementById("nome").value.trim();
     const email = document.getElementById("email").value.trim();

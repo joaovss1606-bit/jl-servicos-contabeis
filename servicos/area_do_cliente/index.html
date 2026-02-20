@@ -175,7 +175,10 @@
             } else {
                 const urlParams = new URLSearchParams(window.location.search);
                 const servico = urlParams.get('servico');
-                if (servico) target = `/servicos/compra/index.html?${urlParams.toString()}`;
+                // NOVO: Se há um serviço na URL, redirecionar para compra APENAS se não vier do carrinho
+                if (servico && !urlParams.get('carrinho')) {
+                    target = `/servicos/compra/index.html?${urlParams.toString()}`;
+                }
             }
         } catch (e) { console.error(e); }
         

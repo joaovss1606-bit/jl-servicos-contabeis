@@ -1,4 +1,4 @@
-// GERENCIAMENTO DO CARRINHO DE SERVIÇOS - VERSÃO ROBUSTA
+// GERENCIAMENTO DO CARRINHO DE SERVIÇOS - VERSÃO FINAL ROBUSTA
 
 // Inicializar estilos do Modal
 const styleModal = document.createElement('style');
@@ -243,7 +243,7 @@ async function finalizarCarrinho() {
 }
 
 // Interceptar cliques em links de serviço
-document.addEventListener('click', function(e) {
+document.addEventListener('click', async function(e) {
   const link = e.target.closest('a[href*="/servicos/area_do_cliente/index.html"]');
   if (!link) return;
 
@@ -271,12 +271,13 @@ document.addEventListener('click', function(e) {
   const client = initSupabase();
   if (!client) return;
 
-  client.auth.getSession().then(({ data: { session } }) => {
-    if (!session) return;
+  e.preventDefault();
+  e.stopPropagation();
 
-    e.preventDefault();
-    e.stopPropagation();
+  const { data: { session } } = await client.auth.getSession();
 
+  if (session) {
+    // Usuário logado: mostrar opção de adicionar ao carrinho ou ir direto para compra
     mostrarModalConfirmacao(
       'Adicionar ao Carrinho',
       'Deseja adicionar "' + titulo + '" ao carrinho?\n\nVocê poderá adicionar mais serviços depois.',
@@ -284,10 +285,24 @@ document.addEventListener('click', function(e) {
         adicionarAoCarrinho(categoria, servico, titulo, valor);
       },
       () => {
+        // Ir direto para compra (sem carrinho)
         window.location.href = link.href;
       }
     );
-  });
+  } else {
+    // Usuário não logado: mostrar opção de adicionar ao carrinho ou finalizar (ir para login)
+    mostrarModalConfirmacao(
+      'Adicionar ao Carrinho',
+      'Deseja adicionar "' + titulo + '" ao carrinho?\n\nVocê poderá adicionar mais serviços antes de finalizar.',
+      () => {
+        adicionarAoCarrinho(categoria, servico, titulo, valor);
+      },
+      () => {
+        // Ir para login/compra
+        window.location.href = link.href;
+      }
+    );
+  }
 }, true); // Usar captura para interceptar antes dos handlers padrão
 
 // Atualizar carrinho ao carregar a página
