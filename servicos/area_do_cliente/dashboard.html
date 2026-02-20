@@ -128,7 +128,8 @@
             ]);
 
             const profile = resProfile.data;
-            const assinaturas = resAssinaturas.data || [];
+            // Filtrar assinaturas para ocultar as canceladas no dashboard do cliente
+            const assinaturas = (resAssinaturas.data || []).filter(sub => sub.status !== 'Cancelado');
             const docs = resDocs.data || [];
 
             // --- LÓGICA DE NOME ---
