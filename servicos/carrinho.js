@@ -205,19 +205,23 @@ async function finalizarCarrinho() {
     return;
   }
 
+  const targetUrl = '/servicos/compra/index.html?carrinho=1';
+  
   const client = initSupabase();
   if (!client) {
+    localStorage.setItem('returnTo', targetUrl);
     window.location.href = '/servicos/area_do_cliente/index.html';
     return;
   }
 
   const { data: { session } } = await client.auth.getSession();
   if (!session) {
+    localStorage.setItem('returnTo', targetUrl);
     window.location.href = '/servicos/area_do_cliente/index.html';
     return;
   }
 
-  window.location.href = '/servicos/compra/index.html?carrinho=1';
+  window.location.href = targetUrl;
 }
 
 // Interceptar cliques em serviços

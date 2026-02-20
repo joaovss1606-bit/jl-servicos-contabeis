@@ -200,10 +200,10 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         const urlWhatsApp = `https://wa.me/5561920041427?text=${mensagemEncoded}`;
         window.open(urlWhatsApp, "_blank");
+        
+        // Redirecionar para o dashboard após o envio
         setTimeout(() => {
-          botao.classList.remove("loading");
-          botao.disabled = false;
-          botao.innerHTML = `Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>`;
+          window.location.href = '/servicos/area_do_cliente/dashboard.html';
         }, 2000);
       }, 1200);
     });

@@ -173,11 +173,18 @@
             if (profile?.role === 'admin' || user.email === EMAIL_ADMIN) {
                 target = "/servicos/area_do_cliente/admin.html";
             } else {
-                const urlParams = new URLSearchParams(window.location.search);
-                const servico = urlParams.get('servico');
-                // NOVO: Se há um serviço na URL, redirecionar para compra APENAS se não vier do carrinho
-                if (servico && !urlParams.get('carrinho')) {
-                    target = `/servicos/compra/index.html?${urlParams.toString()}`;
+                // Verificar se há uma URL de retorno salva (ex: vindo do carrinho)
+                const returnTo = localStorage.getItem('returnTo');
+                if (returnTo) {
+                    localStorage.removeItem('returnTo');
+                    target = returnTo;
+                } else {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const servico = urlParams.get('servico');
+                    // Se há um serviço na URL (compra direta), redirecionar para compra
+                    if (servico) {
+                        target = `/servicos/compra/index.html?${urlParams.toString()}`;
+                    }
                 }
             }
         } catch (e) { console.error(e); }

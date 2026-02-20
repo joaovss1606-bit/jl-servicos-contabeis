@@ -169,7 +169,9 @@
                 }
 
                 alert("Cadastro realizado com sucesso! Você será redirecionado para o login.");
-                window.location.href = 'index.html';
+                const urlParams = new URLSearchParams(window.location.search);
+                const target = urlParams.toString() ? `index.html?${urlParams.toString()}` : 'index.html';
+                window.location.href = target;
             }
         } catch (err) {
             console.error("Erro no cadastro:", err.message);
