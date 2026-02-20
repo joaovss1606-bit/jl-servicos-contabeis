@@ -9,65 +9,153 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --gold: #bd9617; --dark-blue: #0a192f; --glass: rgba(255, 255, 255, 0.05); }
-        body { background: var(--dark-blue); color: white; font-family: 'Montserrat', sans-serif; margin: 0; display: flex; }
-        .sidebar { width: 250px; height: 100vh; background: rgba(0,0,0,0.3); border-right: 1px solid rgba(189, 150, 23, 0.2); padding: 30px 20px; display: flex; flex-direction: column; position: sticky; top: 0; }
-        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .welcome-section h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 0; }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--dark-blue); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; }
+        
+        /* Header & Nav */
+        header {
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(189, 150, 23, 0.2);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .logo-area h2 { color: var(--gold); font-family: 'Playfair Display'; font-size: 1.5rem; }
+        
+        /* Menu Hambúrguer */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .menu-toggle span {
+            width: 30px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: rgba(10, 25, 47, 0.98);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(189, 150, 23, 0.3);
+            padding: 80px 30px;
+            transition: 0.4s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 1000;
+        }
+        .nav-menu.active { right: 0; }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+        .nav-menu a:hover { background: rgba(189, 150, 23, 0.1); color: var(--gold); }
+        .nav-menu a.active { background: rgba(189, 150, 23, 0.2); color: var(--gold); }
+        .logout-btn { color: #ff4444 !important; margin-top: auto; border: 1px solid rgba(255, 68, 68, 0.2); }
+        .logout-btn:hover { background: rgba(255, 68, 68, 0.1) !important; }
+
+        /* Main Content */
+        .main-content { padding: 40px 30px; max-width: 1200px; margin: 0 auto; }
+        .welcome-section { margin-bottom: 40px; }
+        .welcome-section h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 5px; }
+        .welcome-section p { color: #888; font-size: 0.9rem; }
+
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         .card { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 25px; transition: 0.3s; }
         .card:hover { border-color: var(--gold); transform: translateY(-5px); }
         .card i { font-size: 2rem; color: var(--gold); margin-bottom: 15px; display: block; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
-        .btn-action { background: var(--gold); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: 600; }
-        .logout-btn { margin-top: auto; color: #ff4444; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .doc-item { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:10px; }
-        .service-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .btn-cancel { background: rgba(255, 68, 68, 0.2); color: #ff4444; border: 1px solid #ff4444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.3s; }
-        .btn-cancel:hover { background: rgba(255, 68, 68, 0.3); }
-        .status-cancelado { color: #ff4444; text-decoration: line-through; opacity: 0.7; }
-        .modal-cancelar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 10000; }
+        .card h3 { margin-bottom: 20px; font-family: 'Playfair Display'; font-size: 1.3rem; }
+
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+        .btn-action { background: var(--gold); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: 600; transition: 0.3s; }
+        .btn-action:hover { background: #a68414; }
+        
+        .doc-item { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:12px; border-radius:10px; margin-bottom:10px; border: 1px solid rgba(255,255,255,0.05); }
+        .service-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .btn-cancel { background: rgba(255, 68, 68, 0.1); color: #ff4444; border: 1px solid rgba(255, 68, 68, 0.3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: 0.3s; }
+        .btn-cancel:hover { background: rgba(255, 68, 68, 0.2); }
+
+        /* Modais */
+        .modal-cancelar { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(5px); }
         .modal-cancelar.active { display: flex; }
-        .modal-content-cancel { background: rgba(10, 25, 47, 0.95); border: 2px solid #bd9617; border-radius: 15px; padding: 30px; max-width: 400px; width: 90%; }
-        .modal-content-cancel h2 { color: #bd9617; margin-top: 0; }
-        .modal-buttons { display: flex; gap: 12px; margin-top: 25px; }
-        .modal-btn-confirm { background: #ff4444; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: 600; }
-        .modal-btn-cancel { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: 600; }
+        .modal-content-cancel { background: #0a192f; border: 2px solid var(--gold); border-radius: 20px; padding: 35px; max-width: 450px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal-content-cancel h2 { color: var(--gold); font-family: 'Playfair Display'; margin-bottom: 15px; }
+        .modal-buttons { display: flex; gap: 15px; margin-top: 30px; }
+        .modal-btn-confirm { background: #ff4444; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: 700; }
+        .modal-btn-cancel { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: 700; }
+
+        @media (max-width: 768px) {
+            .main-content { padding: 30px 20px; }
+            .welcome-section h1 { font-size: 1.8rem; }
+        }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <h2 style="color: var(--gold); font-family: 'Playfair Display';">JL Painel</h2>
-        <nav style="margin-top: 40px;">
-            <p style="font-size: 0.8rem; color: #888;">Navegação</p>
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                <a href="../../index.html" style="color: #fff; text-decoration: none;"><i class="fas fa-home"></i> Voltar ao Site</a>
-                <a href="#" style="color: var(--gold); text-decoration: none;"><i class="fas fa-columns"></i> Dashboard</a>
-            </div>
-        </nav>
+    <header>
+        <div class="logo-area">
+            <h2>JL Painel</h2>
+        </div>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav class="nav-menu" id="navMenu">
+        <a href="../../index.html"><i class="fas fa-home"></i> Início</a>
+        <a href="../index.html"><i class="fas fa-concierge-bell"></i> Serviços</a>
+        <a href="#" class="active"><i class="fas fa-columns"></i> Dashboard</a>
         <a onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair do Painel</a>
-    </aside>
+    </nav>
 
     <main class="main-content">
         <section class="welcome-section">
             <h1 id="user-name">Carregando...</h1>
-            <p id="user-email" style="color: #888;"></p>
+            <p id="user-email"></p>
         </section>
 
         <div class="dashboard-grid">
             <div class="card">
                 <i class="fas fa-id-card"></i>
                 <h3>Seus Serviços</h3>
-                <div id="lista-servicos" style="max-height: 300px; overflow-y: auto;">
-                    <p style="font-size: 0.8rem; color: #888;">Buscando pedidos...</p>
+                <div id="lista-servicos" style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                    <p style="font-size: 0.85rem; color: #888;">Buscando seus pedidos...</p>
                 </div>
             </div>
 
             <div class="card">
                 <i class="fas fa-folder-open"></i>
                 <h3>Meus Documentos</h3>
-                <div id="lista-documentos" style="max-height: 250px; overflow-y: auto; margin-top:15px;">
-                    <p style="font-size: 0.8rem; color: #888;">Buscando arquivos...</p>
+                <div id="lista-documentos" style="max-height: 300px; overflow-y: auto; margin-top:15px; padding-right: 5px;">
+                    <p style="font-size: 0.85rem; color: #888;">Buscando arquivos...</p>
                 </div>
                 <button class="btn-action" onclick="location.reload()">
                     <i class="fas fa-sync-alt"></i> Atualizar Lista
@@ -77,200 +165,190 @@
             <div class="card">
                 <i class="fab fa-whatsapp"></i>
                 <h3>Suporte Direto</h3>
-                <p style="font-size: 0.9rem;">Dúvidas? Fale com a contabilidade.</p>
+                <p style="font-size: 0.9rem; line-height: 1.6; color: #ccc;">Dúvidas sobre seus serviços? Fale diretamente com nossa equipe contábil.</p>
                 <button class="btn-action" style="background: #25d366;" onclick="abrirWhatsapp()">
-                    Iniciar Chat
+                    <i class="fab fa-whatsapp"></i> Iniciar Chat
                 </button>
             </div>
         </div>
     </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="cliente.js"></script>
-
-<script>
-    const nomesServicos = {
-        'abertura-mei': 'Abertura de MEI', 
-        'mei-plano-basico': 'Plano MEI Básico', 
-        'mei-plano-premium': 'Plano MEI Premium', 
-        'irpf': 'Declaração IRPF',
-        'regularizacao-mei': 'Regularização de MEI',
-        'baixa-mei': 'Baixa de MEI',
-        'emissao-das': 'Emissão de DAS',
-        'dasn-anual': 'DASN (Anual)',
-        'parcelamento-mei': 'Parcelamento de Débitos',
-        'alteracao-mei': 'Alteração de Dados',
-        'cpf-regularizacao': 'Regularização de CPF',
-        'planejamento-tributario': 'Planejamento Tributário'
-    };
-
-    function abrirWhatsapp(msg = "Olá! Sou cliente JL e preciso de suporte.") {
-        window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    async function carregarDadosDashboard(user) {
-        try {
-            // --- FORÇAR ATUALIZAÇÃO DO NOME NO PERFIL ---
-            // Como o usuário está logado aqui, as políticas de RLS 'authenticated' permitem o UPDATE.
-            // Isso corrige o problema de usuários novos ou antigos que ficaram com "Novo Cliente".
-            const realName = user.user_metadata?.full_name || user.user_metadata?.display_name;
-            if (realName && realName.toLowerCase() !== "novo cliente") {
-                await supabaseClient
-                    .from('profiles')
-                    .update({ nome: realName })
-                    .eq('id', user.id);
-            }
-
-            const [resProfile, resAssinaturas, resDocs] = await Promise.all([
-                supabaseClient.from('profiles').select('*').eq('id', user.id).maybeSingle(),
-                supabaseClient.from('assinaturas').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false }),
-                supabaseClient.from('documentos').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false })
-            ]);
-
-            const profile = resProfile.data;
-            // Filtrar assinaturas para ocultar as canceladas no dashboard do cliente
-            const assinaturas = (resAssinaturas.data || []).filter(sub => sub.status !== 'Cancelado');
-            const docs = resDocs.data || [];
-
-            // --- LÓGICA DE NOME ---
-            let finalName = profile?.nome || user.user_metadata?.full_name || user.email?.split('@')[0] || "Cliente";
-            if (finalName.toLowerCase() === "novo cliente") finalName = user.email?.split('@')[0] || "Cliente";
-
-            document.getElementById('user-name').innerText = "Olá, " + finalName;
-            document.getElementById('user-email').innerText = user.email;
-
-            // --- LISTA DE SERVIÇOS ---
-            const listaServicos = document.getElementById('lista-servicos');
-            listaServicos.innerHTML = '';
-
-            // 1. Renderizar Avisos de Cancelamento pelo Admin
-            canceladasComMotivo.forEach(sub => {
-                const nomeServico = nomesServicos[sub.plano_id] || sub.plano_id;
-                const alertDiv = document.createElement('div');
-                alertDiv.style = "background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; border-radius: 10px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; position: relative;";
-                alertDiv.innerHTML = `
-                    <div style="background: #ff4444; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.8rem;">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div style="flex-grow: 1; padding-right: 20px;">
-                        <strong style="color: #ff4444; display: block; font-size: 0.85rem; margin-bottom: 2px;">Serviço Cancelado: ${nomeServico}</strong>
-                        <p style="margin: 0; font-size: 0.75rem; color: #ccc;">Motivo: <strong>${sub.motivo_cancelamento}</strong>. Entre em contato para mais informações.</p>
-                    </div>
-                    <button onclick="this.parentElement.remove()" style="background: none; border: none; color: #888; cursor: pointer; padding: 5px; position: absolute; top: 5px; right: 5px;"><i class="fas fa-times"></i></button>
-                `;
-                listaServicos.appendChild(alertDiv);
-            });
-
-            // 2. Renderizar Serviços Ativos/Pendentes
-            if (assinaturas.length > 0) {
-                const htmlServicos = assinaturas.map(sub => {
-                    const status = sub.status || "Pendente";
-                    const cor = status === 'Ativo' ? '#25d366' : (status === 'Pendente' ? '#f1c40f' : '#ff4444');
-                    const corTexto = status === 'Pendente' ? 'black' : 'white';
-                    const podeCancel = (status === 'Ativo' || status === 'Pendente');
-                    const btnCancel = podeCancel ? `<button class="btn-cancel" onclick="abrirModalCancelamento('${sub.id}', '${nomesServicos[sub.plano_id] || sub.plano_id}')">Cancelar</button>` : '';
-                    return `
-                        <div class="service-item">
-                            <div>
-                                <p style="margin:0; font-weight:bold; font-size:0.9rem;">${nomesServicos[sub.plano_id] || sub.plano_id}</p>
-                                <span class="status-badge" style="background:${cor}; color:${corTexto}; font-size:0.6rem;">${status}</span>
-                            </div>
-                            ${btnCancel}
-                        </div>
-                    `;
-                }).join('');
-                listaServicos.innerHTML += htmlServicos;
-            } else if (canceladasComMotivo.length === 0) {
-                listaServicos.innerHTML = "<p style='font-size:0.8rem; color:#888;'>Nenhum serviço contratado ainda.</p>";
-            }
-
-            // --- LISTA DE DOCUMENTOS ---
-            const listaDocs = document.getElementById('lista-documentos');
-            if (docs.length > 0) {
-                listaDocs.innerHTML = docs.map(doc => `
-                    <div class="doc-item">
-                        <span style="font-size:0.8rem;"><i class="far fa-file-pdf" style="color:#ff4444;"></i> ${doc.nome_arquivo}</span>
-                        <a href="${doc.url_arquivo}" target="_blank" style="color:var(--gold); text-decoration:none; font-size:0.7rem; font-weight:bold;">BAIXAR</a>
-                    </div>
-                `).join('');
-            } else {
-                listaDocs.innerHTML = "<p style='font-size:0.7rem; color:#666;'>Nada disponível ainda.</p>";
-            }
-        } catch (err) {
-            console.error("Erro ao carregar dados:", err);
-            document.getElementById('user-name').innerText = "Olá, Cliente";
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-        const user = await checkUser();
-        if (user) {
-            carregarDadosDashboard(user);
-            const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com"; 
-            if (user.email === EMAIL_ADMIN) {
-                const btnAdmin = document.createElement('button');
-                btnAdmin.innerHTML = '<i class="fas fa-user-shield"></i> Voltar ao Admin';
-                btnAdmin.style = "position:fixed; bottom:20px; right:20px; background:#bd9617; color:white; border:none; padding:12px 20px; border-radius:30px; z-index:9999; cursor:pointer; font-weight:bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);";
-                btnAdmin.onclick = () => window.location.href = '/servicos/area_do_cliente/admin.html';
-                document.body.appendChild(btnAdmin);
-            }
-        }
-    });
-
-    // --- LÓGICA DE CANCELAMENTO ---
-    let assinaturaSelecionada = null;
-
-    function abrirModalCancelamento(assinaturaId, servicoNome) {
-        assinaturaSelecionada = assinaturaId;
-        document.getElementById('modalMensagemCancelar').textContent = `Tem certeza que deseja cancelar o pedido de "${servicoNome}"?`;
-        document.getElementById('modalCancelar').classList.add('active');
-    }
-
-    function fecharModalCancelamento() {
-        document.getElementById('modalCancelar').classList.remove('active');
-        assinaturaSelecionada = null;
-    }
-
-    async function confirmarCancelamento() {
-        if (!assinaturaSelecionada) return;
-        
-        const btnConfirmar = document.querySelector('.modal-btn-confirm');
-        const originalText = btnConfirmar.textContent;
-        
-        try {
-            btnConfirmar.disabled = true;
-            btnConfirmar.textContent = 'Cancelando...';
-            
-            const { error } = await supabaseClient
-                .from('assinaturas')
-                .update({ status: 'Cancelado' })
-                .eq('id', assinaturaSelecionada);
-            
-            if (error) throw error;
-            
-            fecharModalCancelamento();
-            location.reload();
-        } catch (err) {
-            console.error('Erro ao cancelar:', err);
-            alert('Erro ao cancelar pedido. Tente novamente.');
-        } finally {
-            btnConfirmar.disabled = false;
-            btnConfirmar.textContent = originalText;
-        }
-    }
-</script>
-
-<!-- Modal de Cancelamento -->
-<div id="modalCancelar" class="modal-cancelar">
-    <div class="modal-content-cancel">
-        <h2>Cancelar Pedido?</h2>
-        <p id="modalMensagemCancelar" style="color: #ccc; margin: 15px 0;">Tem certeza que deseja cancelar este pedido?</p>
-        <div class="modal-buttons">
-            <button class="modal-btn-confirm" onclick="confirmarCancelamento()">Sim, Cancelar</button>
-            <button class="modal-btn-cancel" onclick="fecharModalCancelamento()">Não, Voltar</button>
+    <!-- Modal de Cancelamento -->
+    <div id="modalCancelar" class="modal-cancelar">
+        <div class="modal-content-cancel">
+            <h2>Cancelar Pedido?</h2>
+            <p id="modalMensagemCancelar" style="color: #ccc; margin: 15px 0; line-height: 1.5;">Tem certeza que deseja cancelar este pedido?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn-confirm" id="btnConfirmarCancel" onclick="confirmarCancelamento()">Sim, Cancelar</button>
+                <button class="modal-btn-cancel" onclick="fecharModalCancelamento()">Não, Voltar</button>
+            </div>
         </div>
     </div>
-</div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="cliente.js"></script>
+    <script>
+        const nomesServicos = {
+            'abertura-mei': 'Abertura de MEI', 
+            'mei-plano-basico': 'Plano MEI Básico', 
+            'mei-plano-premium': 'Plano MEI Premium', 
+            'irpf': 'Declaração IRPF',
+            'regularizacao-mei': 'Regularização de MEI',
+            'baixa-mei': 'Baixa de MEI',
+            'emissao-das': 'Emissão de DAS',
+            'dasn-anual': 'DASN (Anual)',
+            'parcelamento-mei': 'Parcelamento de Débitos',
+            'alteracao-mei': 'Alteração de Dados',
+            'cpf-regularizacao': 'Regularização de CPF',
+            'planejamento-tributario': 'Planejamento Tributário'
+        };
+
+        // Menu Hambúrguer
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        function abrirWhatsapp(msg = "Olá! Sou cliente JL e preciso de suporte.") {
+            window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        async function carregarDadosDashboard(user) {
+            try {
+                // 1. Buscar dados em paralelo
+                const [resProfile, resAssinaturas, resDocs] = await Promise.all([
+                    supabaseClient.from('profiles').select('*').eq('id', user.id).maybeSingle(),
+                    supabaseClient.from('assinaturas').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false }),
+                    supabaseClient.from('documentos').select('*').eq('cliente_id', user.id).order('created_at', { ascending: false })
+                ]);
+
+                const profile = resProfile.data;
+                const todasAssinaturas = resAssinaturas.data || [];
+                const docs = resDocs.data || [];
+
+                // 2. Lógica de Identificação (Saudação)
+                // Prioridade: Nome no perfil > Nome no metadata > Email
+                let finalName = profile?.nome || user.user_metadata?.nome || user.user_metadata?.full_name || user.user_metadata?.display_name || user.email?.split('@')[0] || "Cliente";
+                if (finalName.toLowerCase() === "novo cliente") finalName = user.email?.split('@')[0] || "Cliente";
+
+                document.getElementById('user-name').innerText = "Olá, " + finalName;
+                document.getElementById('user-email').innerText = user.email;
+
+                // 3. Renderizar Serviços
+                const listaServicos = document.getElementById('lista-servicos');
+                listaServicos.innerHTML = '';
+
+                // Separar ativas das canceladas com motivo (avisos)
+                const assinaturasAtivas = todasAssinaturas.filter(sub => sub.status !== 'Cancelado');
+                const canceladasComMotivo = todasAssinaturas.filter(sub => sub.status === 'Cancelado' && sub.motivo_cancelamento);
+
+                // Renderizar Avisos de Cancelamento pelo Admin
+                canceladasComMotivo.forEach(sub => {
+                    const nomeServico = nomesServicos[sub.plano_id] || sub.plano_id;
+                    const alertDiv = document.createElement('div');
+                    alertDiv.style = "background: rgba(255, 68, 68, 0.1); border: 1px solid #ff4444; border-radius: 10px; padding: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; position: relative;";
+                    alertDiv.innerHTML = `
+                        <div style="background: #ff4444; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.8rem;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div style="flex-grow: 1; padding-right: 20px;">
+                            <strong style="color: #ff4444; display: block; font-size: 0.85rem; margin-bottom: 2px;">Serviço Cancelado: ${nomeServico}</strong>
+                            <p style="margin: 0; font-size: 0.75rem; color: #ccc;">Motivo: <strong>${sub.motivo_cancelamento}</strong>. Entre em contato para mais informações.</p>
+                        </div>
+                        <button onclick="this.parentElement.remove()" style="background: none; border: none; color: #888; cursor: pointer; padding: 5px; position: absolute; top: 5px; right: 5px;"><i class="fas fa-times"></i></button>
+                    `;
+                    listaServicos.appendChild(alertDiv);
+                });
+
+                // Renderizar Serviços Ativos/Pendentes
+                if (assinaturasAtivas.length > 0) {
+                    const htmlServicos = assinaturasAtivas.map(sub => {
+                        const status = sub.status || "Pendente";
+                        const cor = status === 'Ativo' ? '#25d366' : (status === 'Pendente' ? '#f1c40f' : '#ff4444');
+                        const corTexto = status === 'Pendente' ? 'black' : 'white';
+                        const podeCancel = (status === 'Ativo' || status === 'Pendente');
+                        const btnCancel = podeCancel ? `<button class="btn-cancel" onclick="abrirModalCancelamento('${sub.id}', '${nomesServicos[sub.plano_id] || sub.plano_id}')">Cancelar</button>` : '';
+                        return `
+                            <div class="service-item">
+                                <div>
+                                    <p style="margin:0; font-weight:bold; font-size:0.9rem;">${nomesServicos[sub.plano_id] || sub.plano_id}</p>
+                                    <span class="status-badge" style="background:${cor}; color:${corTexto}; font-size:0.6rem;">${status}</span>
+                                </div>
+                                ${btnCancel}
+                            </div>
+                        `;
+                    }).join('');
+                    listaServicos.innerHTML += htmlServicos;
+                } else if (canceladasComMotivo.length === 0) {
+                    listaServicos.innerHTML = "<p style='font-size:0.85rem; color:#888;'>Nenhum serviço contratado ainda.</p>";
+                }
+
+                // 4. Renderizar Documentos
+                const listaDocs = document.getElementById('lista-documentos');
+                if (docs.length > 0) {
+                    listaDocs.innerHTML = docs.map(doc => `
+                        <div class="doc-item">
+                            <span style="font-size:0.85rem;"><i class="far fa-file-pdf" style="color:#ff4444; margin-right: 8px;"></i> ${doc.nome_arquivo}</span>
+                            <a href="${doc.url_arquivo}" target="_blank" style="color:var(--gold); text-decoration:none; font-size:0.75rem; font-weight:bold;">BAIXAR</a>
+                        </div>
+                    `).join('');
+                } else {
+                    listaDocs.innerHTML = "<p style='font-size:0.8rem; color:#666;'>Nenhum documento disponível ainda.</p>";
+                }
+
+            } catch (err) {
+                console.error("Erro ao carregar dashboard:", err);
+                document.getElementById('user-name').innerText = "Olá, Cliente";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await checkUser();
+            if (user) {
+                carregarDadosDashboard(user);
+                
+                // Botão flutuante para Admin (se for o caso)
+                const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com"; 
+                if (user.email === EMAIL_ADMIN) {
+                    const btnAdmin = document.createElement('button');
+                    btnAdmin.innerHTML = '<i class="fas fa-user-shield"></i> Painel Admin';
+                    btnAdmin.style = "position:fixed; bottom:20px; right:20px; background:#bd9617; color:white; border:none; padding:12px 20px; border-radius:30px; z-index:999; cursor:pointer; font-weight:bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3);";
+                    btnAdmin.onclick = () => window.location.href = '/servicos/area_do_cliente/admin.html';
+                    document.body.appendChild(btnAdmin);
+                }
+            }
+        });
+
+        // Lógica de Cancelamento
+        let assinaturaSelecionada = null;
+        function abrirModalCancelamento(assinaturaId, servicoNome) {
+            assinaturaSelecionada = assinaturaId;
+            document.getElementById('modalMensagemCancelar').textContent = `Tem certeza que deseja cancelar o pedido de "${servicoNome}"?`;
+            document.getElementById('modalCancelar').classList.add('active');
+        }
+        function fecharModalCancelamento() {
+            document.getElementById('modalCancelar').classList.remove('active');
+            assinaturaSelecionada = null;
+        }
+        async function confirmarCancelamento() {
+            if (!assinaturaSelecionada) return;
+            const btn = document.getElementById('btnConfirmarCancel');
+            try {
+                btn.disabled = true;
+                btn.innerText = 'Cancelando...';
+                const { error } = await supabaseClient.from('assinaturas').update({ status: 'Cancelado' }).eq('id', assinaturaSelecionada);
+                if (error) throw error;
+                fecharModalCancelamento();
+                location.reload();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao cancelar pedido.');
+                btn.disabled = false;
+                btn.innerText = 'Sim, Cancelar';
+            }
+        }
+    </script>
 </body>
 </html>

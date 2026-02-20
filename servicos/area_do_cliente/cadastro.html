@@ -155,6 +155,7 @@
 
             if (data.user) {
                 // 2. Tentar inserir o perfil na tabela 'profiles'
+                // Usamos upsert para o caso de o admin já ter criado um perfil temporário com este email
                 const { error: profileError } = await supabaseClient
                     .from('profiles')
                     .upsert({ 
@@ -162,7 +163,7 @@
                         nome: nome, 
                         email: email, 
                         role: 'cliente' 
-                    });
+                    }, { onConflict: 'email' });
 
                 if (profileError) {
                     console.error("Erro no perfil:", profileError.message);
