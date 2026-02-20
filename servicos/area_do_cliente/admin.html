@@ -89,7 +89,23 @@
         th { text-align: left; color: var(--gold); border-bottom: 1px solid rgba(189, 150, 23, 0.3); padding: 15px 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
         td { padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
         
-        .status-select { background: #1a2a44; color: white; border: 1px solid var(--gold); padding: 6px; border-radius: 5px; font-size: 0.85rem; outline: none; }
+        /* Estilo unificado para Selects */
+        select, .status-select, .filter-input { 
+            background: #0a192f !important; 
+            color: var(--gold) !important; 
+            border: 1px solid var(--gold) !important; 
+            padding: 8px; 
+            border-radius: 8px; 
+            font-size: 0.85rem; 
+            outline: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+        }
+        select option {
+            background: #0a192f;
+            color: var(--gold);
+        }
+
         .btn-upload { background: var(--gold); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: 0.3s; }
         .btn-upload:hover { background: #a68414; transform: translateY(-2px); }
         
@@ -97,14 +113,14 @@
         #upload-area, #novo-pedido-area, #cancelamento-motivo-area { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 0.8rem; color: var(--gold); margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group select { width: 100%; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 12px; border-radius: 8px; outline: none; transition: 0.3s; }
+        .form-group input { width: 100%; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 12px; border-radius: 8px; outline: none; transition: 0.3s; }
         .form-group input:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
         
-        .services-list-admin { border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.2); }
+        .services-list-admin { border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.2); }
         .service-option { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .service-option:last-child { border-bottom: none; }
         .service-option input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--gold); }
-        .service-option label { margin-bottom: 0; cursor: pointer; flex-grow: 1; font-size: 0.85rem; }
+        .service-option label { margin-bottom: 0; cursor: pointer; flex-grow: 1; font-size: 0.85rem; color: #ccc; }
         
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; backdrop-filter: blur(5px); }
         .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
@@ -117,8 +133,7 @@
         .filters-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
         .filter-group { display: flex; flex-direction: column; gap: 8px; }
         .filter-group label { font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .filter-input { background: rgba(0,0,0,0.2); color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; outline: none; transition: 0.3s; }
-        .filter-input:focus { border-color: var(--gold); }
+        
         .btn-clear { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; align-self: flex-end; font-size: 0.85rem; font-weight: 600; }
         .btn-clear:hover { background: rgba(255,255,255,0.2); }
 
@@ -181,11 +196,11 @@
                 </div>
                 <div class="filter-group">
                     <label>Data de Envio</label>
-                    <input type="date" id="filter-data" class="filter-input">
+                    <input type="date" id="filter-data" class="filter-input" style="background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--gold); padding: 10px; border-radius: 8px;">
                 </div>
                 <div class="filter-group" style="grid-column: span 2;">
                     <label>Buscar Cliente (Nome/Email/CPF)</label>
-                    <input type="text" id="filter-search" class="filter-input" placeholder="Digite para buscar...">
+                    <input type="text" id="filter-search" class="filter-input" placeholder="Digite para buscar..." style="background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--gold); padding: 10px; border-radius: 8px;">
                 </div>
                 <button class="btn-clear" onclick="limparFiltros()">Limpar</button>
             </div>
@@ -276,17 +291,39 @@
     <script src="cliente.js"></script>
     <script>
         const nomesServicos = {
+            // MEI
             'abertura-mei': 'Abertura de MEI', 
             'mei-plano-basico': 'Plano MEI Básico', 
             'mei-plano-premium': 'Plano MEI Premium', 
-            'irpf': 'Declaração IRPF',
             'regularizacao-mei': 'Regularização de MEI',
             'baixa-mei': 'Baixa de MEI',
             'emissao-das': 'Emissão de DAS',
             'dasn-anual': 'DASN (Anual)',
-            'parcelamento-mei': 'Parcelamento de Débitos',
-            'alteracao-mei': 'Alteração de Dados',
+            'parcelamento-mei': 'Parcelamento de Débitos MEI',
+            'alteracao-mei': 'Alteração de Dados MEI',
+            'encerramento-mei': 'Encerramento de MEI',
+            // Pessoa Física
+            'irpf': 'Declaração IRPF',
             'cpf-regularizacao': 'Regularização de CPF',
+            'carne-leao': 'Carnê-Leão',
+            // Contábeis
+            'consultoria-contabil': 'Consultoria Contábil',
+            'regularizacao-empresa': 'Regularização de Empresa',
+            'alteracao-contratual': 'Alteração Contratual',
+            'abertura-empresa': 'Abertura de Empresa',
+            'encerramento-empresa': 'Encerramento de Empresa',
+            // Certidões
+            'certidao-negativa': 'Certidão Negativa de Débitos',
+            'certidao-fgts': 'Certidão de FGTS',
+            'certidao-trabalhista': 'Certidão Trabalhista (CNDT)',
+            'certidao-debitos': 'Certidão de Débitos Previdenciários',
+            // Certificado Digital
+            'certificado-cpf': 'Certificado Digital e-CPF',
+            'certificado-cnpj': 'Certificado Digital e-CNPJ',
+            'renovacao-certificado': 'Renovação de Certificado Digital',
+            // Outros
+            'regularizacao-pendencias': 'Regularização de Pendências',
+            'emissao-notas': 'Emissão de Notas Fiscais',
             'planejamento-tributario': 'Planejamento Tributário'
         };
 
@@ -320,6 +357,7 @@
 
         function popularFiltroServicos() {
             const select = document.getElementById('filter-servico');
+            select.innerHTML = '<option value="">Todos os Serviços</option>';
             const servicosUnicos = [...new Set(dadosOriginais.assinaturas.map(s => s.plano_id))];
             servicosUnicos.forEach(id => {
                 const opt = document.createElement('option');
@@ -343,7 +381,6 @@
             dadosOriginais.profiles.forEach(p => {
                 const assinaturasDoCliente = dadosOriginais.assinaturas.filter(s => s.cliente_id === p.id);
                 
-                // Se não tem assinatura e o filtro de status é POTENCIAL ou vazio
                 if (assinaturasDoCliente.length === 0) {
                     if (statusFiltro === '' || statusFiltro === 'POTENCIAL') {
                         if (p.nome?.toLowerCase().includes(buscaFiltro) || p.email?.toLowerCase().includes(buscaFiltro) || p.cpf_cnpj?.includes(buscaFiltro)) {
@@ -354,7 +391,6 @@
                     return;
                 }
 
-                // Se tem assinaturas, filtrar cada uma
                 assinaturasDoCliente.forEach(s => {
                     const matchStatus = !statusFiltro || s.status === statusFiltro;
                     const matchServico = !servicoFiltro || s.plano_id === servicoFiltro;
@@ -540,13 +576,10 @@
                 btn.disabled = true;
                 btn.innerText = "Processando...";
 
-                // 1. Tentar encontrar ou criar perfil
                 let { data: profile } = await supabaseClient.from('profiles').select('id').eq('email', email).maybeSingle();
                 let clienteId = profile?.id;
 
                 if (!clienteId) {
-                    // Como admin não pode criar Auth sem senha, apenas criamos o perfil. 
-                    // O cliente precisará se cadastrar com este email para "reivindicar" os pedidos.
                     const tempId = crypto.randomUUID();
                     const { data: newProfile, error: pErr } = await supabaseClient.from('profiles').insert({
                         id: tempId, nome, email, whatsapp, cpf_cnpj: cpf, role: 'cliente'
@@ -557,7 +590,6 @@
                     await supabaseClient.from('profiles').update({ nome, whatsapp, cpf_cnpj: cpf }).eq('id', clienteId);
                 }
 
-                // 2. Inserir assinaturas
                 const inserts = selecionados.map(s => ({ cliente_id: clienteId, plano_id: s, status: 'Pendente' }));
                 await supabaseClient.from('assinaturas').insert(inserts);
 
