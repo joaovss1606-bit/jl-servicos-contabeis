@@ -20,7 +20,7 @@
         .status-select { background: #1a2a44; color: white; border: 1px solid var(--gold); padding: 5px; border-radius: 5px; }
         .btn-upload { background: var(--gold); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
         .btn-upload:hover { background: #a68414; }
-        #upload-area, #novo-pedido-area { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #16243d; padding: 30px; border-radius: 15px; border: 1px solid var(--gold); z-index: 1000; box-shadow: 0 0 30px rgba(0,0,0,0.5); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        #upload-area, #novo-pedido-area, #cancelamento-motivo-area { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #16243d; padding: 30px; border-radius: 15px; border: 1px solid var(--gold); z-index: 1000; box-shadow: 0 0 30px rgba(0,0,0,0.5); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-size: 0.8rem; color: var(--gold); margin-bottom: 5px; }
         .form-group input, .form-group select { width: 100%; background: #1a2a44; color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 10px; border-radius: 5px; box-sizing: border-box; }
@@ -154,6 +154,26 @@
         <div style="margin-top: 20px; display: flex; gap: 10px;">
             <button class="btn-upload" id="btn-finalizar-pedido" onclick="finalizarPedidoAdmin()" style="flex: 1; background: #25d366;">Finalizar Pedido</button>
             <button onclick="fecharModalNovoPedido()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:white; cursor:pointer; padding: 10px; border-radius: 5px;">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal Motivo Cancelamento -->
+    <div id="cancelamento-motivo-area">
+        <h3>Justificativa de Cancelamento</h3>
+        <p style="font-size: 0.85rem; color: #ccc; margin-bottom: 15px;">Selecione o motivo do cancelamento. O cliente verá este aviso no dashboard dele.</p>
+        <div class="form-group">
+            <label>Motivo</label>
+            <select id="cancel-motivo-select" class="filter-input" style="width: 100%;">
+                <option value="Serviço não prestado">Serviço não prestado</option>
+                <option value="Não foi feito o pagamento">Não foi feito o pagamento</option>
+                <option value="Documentação incompleta">Documentação incompleta</option>
+                <option value="Pedido duplicado">Pedido duplicado</option>
+                <option value="Outros">Outros</option>
+            </select>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button class="btn-upload" id="btn-confirmar-cancel-admin" onclick="confirmarCancelamentoAdmin()" style="flex: 1; background: #ff4444;">Confirmar Cancelamento</button>
+            <button onclick="fecharModalCancelAdmin()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:white; cursor:pointer; padding: 10px; border-radius: 5px;">Voltar</button>
         </div>
     </div>
 
@@ -367,21 +387,36 @@
         renderizarTabelaFiltrada();
     }
 
+    let idAssinaturaParaCancelar = null;
+    let statusAnteriorParaCancelar = null;
+
     async function atualizarStatus(subId, novoStatus) {
         if (!subId || subId === 'undefined' || subId === 'null') return alert("Cliente sem assinatura registrada.");
         
+        // Se o novo status for "Cancelado", abrir modal de motivo
+        if (novoStatus === 'Cancelado') {
+            idAssinaturaParaCancelar = subId;
+            // Guardar status anterior caso o admin desista
+            const sub = dadosOriginais.assinaturas.find(s => s.id === subId);
+            statusAnteriorParaCancelar = sub ? sub.status : 'Pendente';
+            
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('cancelamento-motivo-area').style.display = 'block';
+            return;
+        }
+
         try {
             const { error } = await supabaseClient
                 .from('assinaturas')
-                .update({ status: novoStatus })
+                .update({ status: novoStatus, motivo_cancelamento: null }) // Limpar motivo se reativar
                 .eq('id', subId);
             
             if (error) throw error;
             
-            // Atualizar os dados locais para refletir a mudança sem recarregar a página inteira
             const index = dadosOriginais.assinaturas.findIndex(s => s.id === subId);
             if (index !== -1) {
                 dadosOriginais.assinaturas[index].status = novoStatus;
+                dadosOriginais.assinaturas[index].motivo_cancelamento = null;
             }
             
             alert("Status atualizado com sucesso!");
@@ -389,6 +424,53 @@
         } catch (err) {
             console.error("Erro ao atualizar status:", err);
             alert("Erro ao atualizar status. Verifique o console.");
+        }
+    }
+
+    function fecharModalCancelAdmin() {
+        // Resetar o select para o status anterior na tabela se o admin cancelar o modal
+        if (idAssinaturaParaCancelar) {
+            renderizarTabelaFiltrada();
+        }
+        fecharModal();
+        idAssinaturaParaCancelar = null;
+    }
+
+    async function confirmarCancelamentoAdmin() {
+        if (!idAssinaturaParaCancelar) return;
+        
+        const motivo = document.getElementById('cancel-motivo-select').value;
+        const btn = document.getElementById('btn-confirmar-cancel-admin');
+
+        try {
+            btn.disabled = true;
+            btn.innerText = "Cancelando...";
+
+            const { error } = await supabaseClient
+                .from('assinaturas')
+                .update({ 
+                    status: 'Cancelado', 
+                    motivo_cancelamento: motivo 
+                })
+                .eq('id', idAssinaturaParaCancelar);
+            
+            if (error) throw error;
+
+            const index = dadosOriginais.assinaturas.findIndex(s => s.id === idAssinaturaParaCancelar);
+            if (index !== -1) {
+                dadosOriginais.assinaturas[index].status = 'Cancelado';
+                dadosOriginais.assinaturas[index].motivo_cancelamento = motivo;
+            }
+
+            alert("✅ Pedido cancelado com sucesso!");
+            fecharModalCancelAdmin();
+            renderizarTabelaFiltrada();
+        } catch (err) {
+            console.error(err);
+            alert("Erro ao cancelar: " + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Confirmar Cancelamento";
         }
     }
 
@@ -403,6 +485,7 @@
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('upload-area').style.display = 'none';
         document.getElementById('novo-pedido-area').style.display = 'none';
+        document.getElementById('cancelamento-motivo-area').style.display = 'none';
     }
 
     function abrirModalNovoPedido() {

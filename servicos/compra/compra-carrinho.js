@@ -132,30 +132,30 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     }
 
-    // Criar mensagem com emojis Unicode diretos (UTF-16 surrogates) para maior compatibilidade
-    const listaServicos = carrinho.map(item => `  \u2022 ${item.titulo} (${item.valor})`).join('\n');
-    const rocket = '\uD83D\uDE80'; // 🚀
-    const person = '\uD83D\uDC64'; // 👤
-    const clipboard = '\uD83D\uDCDD'; // 📝
-    const phone = '\uD83D\uDCF1';  // 📱
-    const email_icon = '\uD83D\uDCE7'; // 📧
-    const id_icon = '\uD83C\uDD94'; // 🆔
-    const tools = '\uD83D\uDEE0';  // 🛠
-    const speech = '\uD83D\uDCA1'; // 💡
+    // Criar mensagem com emojis codificados diretamente para URL
+    const listaServicos = carrinho.map(item => `  %E2%80%A2 ${encodeURIComponent(item.titulo)} (${encodeURIComponent(item.valor)})`).join('%0A');
+    const rocket = '%F0%9F%9A%80'; // 🚀
+    const person = '%F0%9F%91%A4'; // 👤
+    const clipboard = '%F0%9F%93%9D'; // 📝
+    const phone = '%F0%9F%93%B1';  // 📱
+    const email_icon = '%F0%9F%93%A7'; // 📧
+    const id_icon = '%F0%9F%86%94'; // 🆔
+    const tools = '%F0%9F%9B%A0';  // 🛠️
+    const speech = '%F0%9F%92%A1'; // 💡
 
-    const mensagem = 
-      rocket + ' *NOVO PEDIDO - JL SERVIÇOS*\n\n' +
-      person + ' *DADOS DO CLIENTE:*\n' +
-      clipboard + ' *Nome:* ' + nome + '\n' +
-      phone + ' *WhatsApp:* ' + whatsapp + '\n' +
-      email_icon + ' *E-mail:* ' + email + '\n' +
-      id_icon + ' *CPF:* ' + cpf + '\n\n' +
-      tools + ' *SERVIÇOS SOLICITADOS:*\n' +
-      listaServicos + '\n\n' +
-      speech + ' *Obs:* ' + obs;
+    const mensagemEncoded = 
+      rocket + ' *NOVO PEDIDO - JL SERVIÇOS*%0A%0A' +
+      person + ' *DADOS DO CLIENTE:*%0A' +
+      clipboard + ' *Nome:* ' + encodeURIComponent(nome) + '%0A' +
+      phone + ' *WhatsApp:* ' + encodeURIComponent(whatsapp) + '%0A' +
+      email_icon + ' *E-mail:* ' + encodeURIComponent(email) + '%0A' +
+      id_icon + ' *CPF:* ' + encodeURIComponent(cpf) + '%0A%0A' +
+      tools + ' *SERVIÇOS SOLICITADOS:*%0A' +
+      listaServicos + '%0A%0A' +
+      speech + ' *Obs:* ' + encodeURIComponent(obs);
 
     setTimeout(() => {
-      window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, '_blank');
+      window.open(`https://wa.me/5561920041427?text=${mensagemEncoded}`, '_blank');
       localStorage.removeItem('carrinhoServicos');
       setTimeout(() => {
         window.location.href = '/servicos/area_do_cliente/dashboard.html';

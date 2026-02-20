@@ -175,31 +175,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const obs = document.getElementById("observacoes")?.value || "Nenhuma";
       
-      // Emojis usando Unicode diretos (UTF-16 surrogates) para maior compatibilidade
-      const rocket = '\uD83D\uDE80'; // 🚀
-      const tools = '\uD83D\uDEE0';  // 🛠
-      const money = '\uD83D\uDCB0';  // 💰
-      const person = '\uD83D\uDC64'; // 👤
-      const clipboard = '\uD83D\uDCDD'; // 📝
-      const phone = '\uD83D\uDCF1';  // 📱
-      const email_icon = '\uD83D\uDCE7'; // 📧
-      const id_icon = '\uD83C\uDD94'; // 🆔
-      const comment = '\uD83D\uDCAA'; // 💪 (usando braço forte para obs ou \uD83D\uDCAF para 100)
-      const speech = '\uD83D\uDCA1'; // 💡
+      // Emojis codificados diretamente para URL para evitar problemas de renderização/transmissão
+      const rocket = '%F0%9F%9A%80'; // 🚀
+      const tools = '%F0%9F%9B%A0';  // 🛠️
+      const money = '%F0%9F%92%B0';  // 💰
+      const person = '%F0%9F%91%A4'; // 👤
+      const clipboard = '%F0%9F%93%9D'; // 📝
+      const phone = '%F0%9F%93%B1';  // 📱
+      const email_icon = '%F0%9F%93%A7'; // 📧
+      const id_icon = '%F0%9F%86%94'; // 🆔
+      const speech = '%F0%9F%92%A1'; // 💡
 
-      const mensagem = 
-        rocket + ' *NOVO PEDIDO - JL SERVIÇOS*\n\n' +
-        tools + ' *Serviço:* ' + dados.titulo + '\n' +
-        money + ' *Valor:* ' + dados.valor + '\n\n' +
-        person + ' *DADOS DO CLIENTE:*\n' +
-        clipboard + ' *Nome:* ' + nome + '\n' +
-        phone + ' *WhatsApp:* ' + whatsapp + '\n' +
-        email_icon + ' *E-mail:* ' + email + '\n' +
-        id_icon + ' *CPF:* ' + cpf + '\n\n' +
-        speech + ' *Obs:* ' + obs;
+      const mensagemEncoded = 
+        rocket + ' *NOVO PEDIDO - JL SERVIÇOS*%0A%0A' +
+        tools + ' *Serviço:* ' + encodeURIComponent(dados.titulo) + '%0A' +
+        money + ' *Valor:* ' + encodeURIComponent(dados.valor) + '%0A%0A' +
+        person + ' *DADOS DO CLIENTE:*%0A' +
+        clipboard + ' *Nome:* ' + encodeURIComponent(nome) + '%0A' +
+        phone + ' *WhatsApp:* ' + encodeURIComponent(whatsapp) + '%0A' +
+        email_icon + ' *E-mail:* ' + encodeURIComponent(email) + '%0A' +
+        id_icon + ' *CPF:* ' + encodeURIComponent(cpf) + '%0A%0A' +
+        speech + ' *Obs:* ' + encodeURIComponent(obs);
 
       setTimeout(() => {
-        const urlWhatsApp = `https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`;
+        const urlWhatsApp = `https://wa.me/5561920041427?text=${mensagemEncoded}`;
         window.open(urlWhatsApp, "_blank");
         setTimeout(() => {
           botao.classList.remove("loading");
