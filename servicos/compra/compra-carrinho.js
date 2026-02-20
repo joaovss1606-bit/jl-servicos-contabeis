@@ -48,25 +48,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Validação do formulário
   function validarFormulario() {
-    const nome = document.getElementById("nome").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const whatsapp = document.getElementById("whatsapp").value.replace(/\D/g, "");
-    const cpf = document.getElementById("cpf").value.replace(/\D/g, "");
+    const nome = document.getElementById("nome")?.value?.trim() || '';
+    const email = document.getElementById("email")?.value?.trim() || '';
+    const whatsapp = (document.getElementById("whatsapp")?.value || '').replace(/\D/g, "");
+    const cpf = (document.getElementById("cpf")?.value || '').replace(/\D/g, "");
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const nomeOk = nome.split(" ").length >= 2;
+    const nomeOk = nome.split(" ").length >= 2 && nome.length > 0;
     const emailOk = emailRegex.test(email);
     const whatsappOk = whatsapp.length === 11;
     const cpfOk = cpf.length === 11;
     const todosOk = nomeOk && emailOk && whatsappOk && cpfOk;
 
-    const btnEnviar = document.getElementById("btnEnviar");
-    const btnAdicionarMaisEl = document.getElementById("btnAdicionarMais");
-    
-    if (btnEnviar) {
-      btnEnviar.disabled = !todosOk;
+    if (botao) {
+      botao.disabled = !todosOk;
     }
-    if (btnAdicionarMaisEl) {
-      btnAdicionarMaisEl.disabled = !todosOk;
+    if (btnAdicionarMais) {
+      btnAdicionarMais.disabled = !todosOk;
     }
   }
 
@@ -89,25 +87,34 @@ document.addEventListener("DOMContentLoaded", () => {
     validarFormulario();
   };
 
-  document.getElementById("whatsapp")?.addEventListener("input", handleWhatsApp);
-  document.getElementById("cpf")?.addEventListener("input", handleCPF);
+  const inputWhatsApp = document.getElementById("whatsapp");
+  const inputCPF = document.getElementById("cpf");
+  
+  if (inputWhatsApp) {
+    inputWhatsApp.addEventListener("input", handleWhatsApp);
+  }
+  if (inputCPF) {
+    inputCPF.addEventListener("input", handleCPF);
+  }
 
   if (form) {
-    form.querySelectorAll('input, textarea').forEach(el => {
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(el => {
       el.addEventListener("input", validarFormulario);
+      el.addEventListener("change", validarFormulario);
     });
   }
 
-  // Chamar validação inicial
+  // Chamar validação inicial após um pequeno delay
   setTimeout(() => {
     validarFormulario();
-  }, 100);
+  }, 50);
 
   // Botão "Adicionar mais serviços?"
-  const btnAdicionarMaisEl = document.getElementById("btnAdicionarMais");
-  if (btnAdicionarMaisEl) {
-    btnAdicionarMaisEl.addEventListener("click", (e) => {
+  if (btnAdicionarMais) {
+    btnAdicionarMais.addEventListener("click", (e) => {
       e.preventDefault();
+      e.stopPropagation();
       window.location.href = '/servicos/index.html';
     });
   }
