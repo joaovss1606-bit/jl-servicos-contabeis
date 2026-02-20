@@ -267,5 +267,125 @@
   </div>
 </footer>
 
+<!-- CARRINHO FLUTUANTE DE SERVIÇOS -->
+<div id="carrinhoFlutante" class="carrinho-flutuante" style="display: none;">
+  <div class="carrinho-header">
+    <h3 style="margin: 0; color: #bd9617; font-family: 'Playfair Display', serif; font-size: 1.1rem;">
+      <i class="fas fa-shopping-cart"></i> Meus Serviços
+    </h3>
+    <button onclick="fecharCarrinho()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">&times;</button>
+  </div>
+  <div id="carrinhoLista" class="carrinho-lista" style="max-height: 250px; overflow-y: auto;"></div>
+  <div class="carrinho-footer">
+    <button onclick="finalizarCarrinho()" class="btn-finalizar-carrinho">
+      Finalizar Pedido <i class="fas fa-check"></i>
+    </button>
+    <button onclick="limparCarrinho()" class="btn-limpar-carrinho">
+      Limpar <i class="fas fa-trash"></i>
+    </button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/servicos/area_do_cliente/cliente.js"></script>
+<script src="/servicos/carrinho.js"></script>
+
+<style>
+  .carrinho-flutuante {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(10, 25, 47, 0.95);
+    border: 2px solid #bd9617;
+    border-radius: 15px;
+    width: 320px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+  }
+
+  .carrinho-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(189, 150, 23, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .carrinho-lista {
+    padding: 10px 0;
+  }
+
+  .carrinho-item {
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+  }
+
+  .carrinho-item:hover {
+    background: rgba(189, 150, 23, 0.1);
+  }
+
+  .carrinho-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+  }
+
+  .carrinho-footer {
+    padding: 15px 20px;
+    border-top: 1px solid rgba(189, 150, 23, 0.3);
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-finalizar-carrinho {
+    flex-grow: 1;
+    background: #bd9617;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: 0.3s;
+  }
+
+  .btn-finalizar-carrinho:hover {
+    background: #a68414;
+  }
+
+  .btn-limpar-carrinho {
+    background: rgba(255, 68, 68, 0.2);
+    color: #ff4444;
+    border: 1px solid #ff4444;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: 0.3s;
+  }
+
+  .btn-limpar-carrinho:hover {
+    background: rgba(255, 68, 68, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .carrinho-flutuante {
+      width: 280px;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
+</style>
+
 </body>
 </html>

@@ -88,9 +88,14 @@
           </div>
         </div>
         <textarea id="observacoes" placeholder="Alguma observação adicional?"></textarea>
-        <button type="submit" disabled id="btnEnviar" class="btn-checkout">
-          Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>
-        </button>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button type="submit" disabled id="btnEnviar" class="btn-checkout" style="flex: 1; min-width: 200px;">
+            Confirmar e Enviar via WhatsApp <i class="fab fa-whatsapp"></i>
+          </button>
+          <button type="button" disabled id="btnAdicionarMais" class="btn-checkout" style="flex: 1; min-width: 200px; background: rgba(189, 150, 23, 0.3); border: 2px solid #bd9617;">
+            Adicionar Mais Serviços? <i class="fas fa-plus"></i>
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -126,6 +131,8 @@
 
 <!-- CARREGAMENTO DA BIBLIOTECA SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- SCRIPT DE CARRINHO (MÚLTIPLOS SERVIÇOS) -->
+<script src="./compra-carrinho.js?v=1.0"></script>
 <!-- SCRIPT DE COMPRA -->
 <script src="./compra.js?v=2.0"></script>
 
