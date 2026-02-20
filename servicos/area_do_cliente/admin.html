@@ -20,7 +20,15 @@
         .status-select { background: #1a2a44; color: white; border: 1px solid var(--gold); padding: 5px; border-radius: 5px; }
         .btn-upload { background: var(--gold); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
         .btn-upload:hover { background: #a68414; }
-        #upload-area { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #16243d; padding: 30px; border-radius: 15px; border: 1px solid var(--gold); z-index: 1000; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        #upload-area, #novo-pedido-area { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #16243d; padding: 30px; border-radius: 15px; border: 1px solid var(--gold); z-index: 1000; box-shadow: 0 0 30px rgba(0,0,0,0.5); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.8rem; color: var(--gold); margin-bottom: 5px; }
+        .form-group input, .form-group select { width: 100%; background: #1a2a44; color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 10px; border-radius: 5px; box-sizing: border-box; }
+        .services-list-admin { border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 10px; max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.2); }
+        .service-option { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .service-option:last-child { border-bottom: none; }
+        .service-option input[type="checkbox"] { width: auto; }
+        .service-option label { margin-bottom: 0; cursor: pointer; flex-grow: 1; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; }
         .logout-btn { margin-top: auto; color: #ff4444; text-decoration: none; cursor: pointer; font-weight: bold; }
         .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
@@ -58,7 +66,10 @@
         <div class="admin-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="margin: 0;">Clientes e Assinaturas</h3>
-                <div id="counter-info" style="font-size: 0.85rem; color: #888;"></div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div id="counter-info" style="font-size: 0.85rem; color: #888;"></div>
+                    <button class="btn-upload" onclick="abrirModalNovoPedido()" style="background: #25d366;"><i class="fas fa-plus"></i> Novo Pedido</button>
+                </div>
             </div>
 
             <!-- Filtros -->
@@ -113,6 +124,37 @@
         <input type="file" id="file-input" accept=".pdf" style="margin-bottom: 20px;"><br>
         <button class="btn-upload" onclick="executarUpload()">Confirmar Envio</button>
         <button onclick="fecharModal()" style="background:none; border:none; color:white; cursor:pointer; margin-left:10px;">Cancelar</button>
+    </div>
+
+    <!-- Modal Novo Pedido -->
+    <div id="novo-pedido-area">
+        <h3>Cadastrar Novo Pedido</h3>
+        <div class="form-group">
+            <label>Nome do Cliente</label>
+            <input type="text" id="novo-nome" placeholder="Nome Completo">
+        </div>
+        <div class="form-group">
+            <label>E-mail do Cliente</label>
+            <input type="email" id="novo-email" placeholder="email@exemplo.com">
+        </div>
+        <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="text" id="novo-whatsapp" placeholder="(00) 00000-0000">
+        </div>
+        <div class="form-group">
+            <label>CPF/CNPJ</label>
+            <input type="text" id="novo-cpf" placeholder="000.000.000-00">
+        </div>
+        <div class="form-group">
+            <label>Selecione os Serviços</label>
+            <div id="lista-servicos-selecao" class="services-list-admin">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button class="btn-upload" id="btn-finalizar-pedido" onclick="finalizarPedidoAdmin()" style="flex: 1; background: #25d366;">Finalizar Pedido</button>
+            <button onclick="fecharModalNovoPedido()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:white; cursor:pointer; padding: 10px; border-radius: 5px;">Cancelar</button>
+        </div>
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -360,6 +402,107 @@
     function fecharModal() {
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('upload-area').style.display = 'none';
+        document.getElementById('novo-pedido-area').style.display = 'none';
+    }
+
+    function abrirModalNovoPedido() {
+        const container = document.getElementById('lista-servicos-selecao');
+        container.innerHTML = '';
+        
+        // Criar lista de checkboxes com os serviços disponíveis
+        Object.keys(nomesServicos).forEach(id => {
+            const div = document.createElement('div');
+            div.className = 'service-option';
+            div.innerHTML = `
+                <input type="checkbox" id="svc-${id}" value="${id}">
+                <label for="svc-${id}">${nomesServicos[id]}</label>
+            `;
+            container.appendChild(div);
+        });
+
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('novo-pedido-area').style.display = 'block';
+    }
+
+    function fecharModalNovoPedido() {
+        fecharModal();
+    }
+
+    async function finalizarPedidoAdmin() {
+        const nome = document.getElementById('novo-nome').value.trim();
+        const email = document.getElementById('novo-email').value.trim();
+        const whatsapp = document.getElementById('novo-whatsapp').value.trim();
+        const cpf = document.getElementById('novo-cpf').value.trim();
+        const btn = document.getElementById('btn-finalizar-pedido');
+
+        const checkboxes = document.querySelectorAll('#lista-servicos-selecao input[type="checkbox"]:checked');
+        const servicosSelecionados = Array.from(checkboxes).map(cb => cb.value);
+
+        if (!nome || !email || servicosSelecionados.length === 0) {
+            return alert("Por favor, preencha Nome, E-mail e selecione ao menos um serviço.");
+        }
+
+        try {
+            btn.disabled = true;
+            btn.innerText = "Processando...";
+
+            // 1. Verificar se o usuário já existe no profiles pelo email
+            let { data: profile, error: profileError } = await supabaseClient
+                .from('profiles')
+                .select('id')
+                .eq('email', email)
+                .maybeSingle();
+
+            let clienteId;
+
+            if (profile) {
+                clienteId = profile.id;
+                // Atualizar dados se já existir
+                await supabaseClient.from('profiles').update({
+                    nome: nome,
+                    whatsapp: whatsapp,
+                    cpf_cnpj: cpf
+                }).eq('id', clienteId);
+            } else {
+                // Se não existir, criamos um registro temporário no profiles
+                // Nota: O ideal seria criar via Auth, mas como admin estamos apenas registrando o interesse/serviço.
+                // O cliente criará a conta depois com o mesmo email e o trigger vinculará ou o admin pode convidar.
+                // Para este fluxo, vamos inserir no profiles (se a RLS permitir) ou apenas registrar o erro.
+                const { data: newProfile, error: insertError } = await supabaseClient
+                    .from('profiles')
+                    .insert({
+                        email: email,
+                        nome: nome,
+                        whatsapp: whatsapp,
+                        cpf_cnpj: cpf,
+                        role: 'user'
+                    })
+                    .select()
+                    .single();
+                
+                if (insertError) throw insertError;
+                clienteId = newProfile.id;
+            }
+
+            // 2. Inserir as assinaturas
+            for (const planoId of servicosSelecionados) {
+                await supabaseClient.from('assinaturas').insert({
+                    cliente_id: clienteId,
+                    plano_id: planoId,
+                    status: 'Ativo' // Admin inserindo geralmente já é um serviço ativo/fechado
+                });
+            }
+
+            alert("✅ Pedido finalizado com sucesso! O cliente verá os serviços ao acessar o dashboard.");
+            fecharModalNovoPedido();
+            carregarDadosAdmin(); // Recarregar tabela
+        } catch (err) {
+            console.error(err);
+            alert("Erro ao finalizar pedido: " + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Finalizar Pedido";
+        }
     }
 
     async function executarUpload() {
