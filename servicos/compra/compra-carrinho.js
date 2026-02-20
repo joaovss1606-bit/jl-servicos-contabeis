@@ -132,17 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const listaServicos = carrinho.map(item => `  • ${item.titulo} (${item.valor})`).join('\n');
-    const mensagem = `🚀 *NOVO PEDIDO - JL SERVIÇOS*
-👤 *DADOS DO CLIENTE:*
-📝 *Nome:* ${nome}
-📱 *WhatsApp:* ${whatsapp}
-📧 *E-mail:* ${email}
-🆔 *CPF:* ${cpf}
-
-🛠️ *SERVIÇOS SOLICITADOS:*
-${listaServicos}
-
-💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
+    const obs = document.getElementById("observacoes")?.value || "Nenhuma";
+    const mensagem = "🚀 *NOVO PEDIDO - JL SERVIÇOS*\n👤 *DADOS DO CLIENTE:*\n📝 *Nome:* " + nome + "\n📱 *WhatsApp:* " + whatsapp + "\n📧 *E-mail:* " + email + "\n🆔 *CPF:* " + cpf + "\n\n🛠️ *SERVIÇOS SOLICITADOS:*\n" + listaServicos + "\n\n💬 *Obs:* " + obs;
 
     setTimeout(() => {
       window.open(`https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`, '_blank');

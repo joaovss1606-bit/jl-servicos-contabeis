@@ -173,19 +173,11 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Erro fatal no Supabase:", err);
       }
 
-      const mensagem = 
-`🚀 *NOVO PEDIDO - JL SERVIÇOS*
-🛠️ *Serviço:* ${dados.titulo}
-💰 *Valor:* ${dados.valor}
-👤 *DADOS DO CLIENTE:*
-📝 *Nome:* ${nome}
-📱 *WhatsApp:* ${whatsapp}
-📧 *E-mail:* ${email}
-🆔 *CPF:* ${cpf}
-💬 *Obs:* ${document.getElementById("observacoes")?.value || "Nenhuma"}`;
+
+      const obs = document.getElementById("observacoes")?.value || "Nenhuma";
+      const mensagem = "🚀 *NOVO PEDIDO - JL SERVIÇOS*\n🛠️ *Serviço:* " + dados.titulo + "\n💰 *Valor:* " + dados.valor + "\n👤 *DADOS DO CLIENTE:*\n📝 *Nome:* " + nome + "\n📱 *WhatsApp:* " + whatsapp + "\n📧 *E-mail:* " + email + "\n🆔 *CPF:* " + cpf + "\n💬 *Obs:* " + obs;
 
       setTimeout(() => {
-        // Usando encodeURIComponent para garantir que emojis e caracteres especiais sejam codificados corretamente para a URL
         const urlWhatsApp = `https://wa.me/5561920041427?text=${encodeURIComponent(mensagem)}`;
         window.open(urlWhatsApp, "_blank");
         setTimeout(() => {
