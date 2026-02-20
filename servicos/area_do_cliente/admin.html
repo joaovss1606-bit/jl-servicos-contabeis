@@ -345,7 +345,9 @@
                     supabaseClient.from('assinaturas').select('*').order('created_at', { ascending: false })
                 ]);
 
-                dadosOriginais.profiles = resProfiles.data || [];
+                // Filtrar para não mostrar o admin na lista de clientes
+                const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
+                dadosOriginais.profiles = (resProfiles.data || []).filter(p => p.email !== EMAIL_ADMIN && p.role !== 'admin');
                 dadosOriginais.assinaturas = resAssinaturas.data || [];
 
                 popularFiltroServicos();
