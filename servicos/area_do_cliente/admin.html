@@ -110,11 +110,11 @@
         .btn-upload:hover { background: #a68414; transform: translateY(-2px); }
         
         /* Modais */
-        #upload-area, #novo-pedido-area, #cancelamento-motivo-area { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        #upload-area, #novo-pedido-area, #cancelamento-motivo-area, #faq-resposta-area { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 0.8rem; color: var(--gold); margin-bottom: 8px; font-weight: 600; }
-        .form-group input { width: 100%; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 12px; border-radius: 8px; outline: none; transition: 0.3s; }
-        .form-group input:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+        .form-group input, .form-group textarea { width: 100%; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 12px; border-radius: 8px; outline: none; transition: 0.3s; font-family: inherit; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
         
         .services-list-admin { border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.2); }
         .service-option { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -136,6 +136,24 @@
         
         .btn-clear { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; align-self: flex-end; font-size: 0.85rem; font-weight: 600; }
         .btn-clear:hover { background: rgba(255,255,255,0.2); }
+
+        /* FAQ Notification */
+        .faq-notification {
+            background: rgba(189, 150, 23, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(189, 150, 23, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(189, 150, 23, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(189, 150, 23, 0); }
+        }
 
         @media (max-width: 768px) {
             .main-content { padding: 30px 20px; }
@@ -165,6 +183,9 @@
     <main class="main-content">
         <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Painel Administrativo</h1>
         <p style="color: #888; margin-bottom: 40px;">Olá, <span id="admin-name" style="color: var(--gold); font-weight: 600;">JL Serviços Contábeis Online</span>. Gerencie seus clientes e pedidos.</p>
+
+        <!-- Notificação de FAQ -->
+        <div id="faq-alert-container"></div>
 
         <div class="admin-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
@@ -199,80 +220,84 @@
                 </div>
                 <div class="filter-group" style="grid-column: span 2;">
                     <label>Buscar Cliente (Nome/Email/CPF)</label>
-                    <input type="text" id="filter-search" class="filter-input" placeholder="Digite para buscar..." style="background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--gold); padding: 10px; border-radius: 8px;">
+                    <input type="text" id="search-input" class="filter-input" placeholder="Digite para buscar..." style="width: 100%;">
                 </div>
-                <button class="btn-clear" onclick="limparFiltros()">Limpar</button>
+                <button class="btn-clear" onclick="limparFiltros()">Limpar Filtros</button>
             </div>
 
-            <table id="table-clientes">
+            <table>
                 <thead>
                     <tr>
                         <th>Cliente</th>
                         <th>Serviço</th>
+                        <th>Data Pedido</th>
                         <th>Status</th>
-                        <th>Data Envio</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody id="lista-clientes-body">
-                    <tr><td colspan="5" style="text-align:center; padding: 40px; color: #888;">Carregando dados...</td></tr>
+                <tbody id="tabela-clientes">
+                    <tr><td colspan="5" style="text-align:center; padding:40px; color:#666;">Carregando dados...</td></tr>
                 </tbody>
             </table>
         </div>
     </main>
 
     <div class="overlay" id="overlay" onclick="fecharModal()"></div>
-    
+
+    <!-- Modal Upload -->
     <div id="upload-area">
-        <h3 id="modal-title" style="color: var(--gold); margin-bottom: 20px;">Subir Documento</h3>
+        <h2 style="margin-bottom: 20px;">Enviar Documento</h2>
         <div class="form-group">
-            <label>Arquivo PDF</label>
-            <input type="file" id="file-input" accept=".pdf">
+            <label>Nome do Arquivo</label>
+            <input type="text" id="doc-nome" placeholder="Ex: Guia DAS Janeiro">
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 25px;">
-            <button class="btn-upload" onclick="executarUpload()" style="flex: 1;">Confirmar Envio</button>
-            <button onclick="fecharModal()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:white; cursor:pointer; padding: 10px; border-radius: 8px; flex: 1;">Cancelar</button>
+        <div class="form-group">
+            <label>URL do Arquivo (Link S3/Supabase)</label>
+            <input type="text" id="doc-url" placeholder="https://...">
         </div>
+        <button class="btn-upload" onclick="confirmarUpload()" style="width: 100%; padding: 15px;">Finalizar Envio</button>
     </div>
 
     <!-- Modal Novo Pedido -->
     <div id="novo-pedido-area">
-        <h3 style="color: var(--gold); margin-bottom: 20px;">Cadastrar Novo Pedido</h3>
+        <h2 style="margin-bottom: 10px;">Novo Pedido</h2>
+        <p style="color: #888; font-size: 0.8rem; margin-bottom: 25px;">Insira os dados do cliente e selecione os serviços.</p>
+        
         <div class="form-group">
-            <label>Nome do Cliente</label>
-            <input type="text" id="novo-nome" placeholder="Nome Completo">
+            <label>Nome Completo</label>
+            <input type="text" id="novo-nome" placeholder="Nome do cliente">
         </div>
         <div class="form-group">
-            <label>E-mail do Cliente</label>
-            <input type="email" id="novo-email" placeholder="email@exemplo.com">
+            <label>E-mail</label>
+            <input type="email" id="novo-email" placeholder="email@cliente.com">
         </div>
         <div class="form-group">
             <label>WhatsApp</label>
-            <input type="text" id="novo-whatsapp" placeholder="(00) 00000-0000">
+            <input type="text" id="novo-whatsapp" placeholder="61999999999">
         </div>
         <div class="form-group">
-            <label>CPF/CNPJ</label>
+            <label>CPF ou CNPJ</label>
             <input type="text" id="novo-cpf" placeholder="000.000.000-00">
         </div>
+        
         <div class="form-group">
             <label>Selecione os Serviços</label>
-            <div id="lista-servicos-selecao" class="services-list-admin">
+            <div class="services-list-admin" id="lista-servicos-admin">
                 <!-- Preenchido via JS -->
             </div>
         </div>
-        <div style="margin-top: 25px; display: flex; gap: 10px;">
-            <button class="btn-upload" id="btn-finalizar-pedido" onclick="finalizarPedidoAdmin()" style="flex: 1; background: #25d366;">Finalizar Pedido</button>
-            <button onclick="fecharModalNovoPedido()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:white; cursor:pointer; padding: 10px; border-radius: 8px; flex: 1;">Cancelar</button>
-        </div>
+        
+        <button class="btn-upload" onclick="confirmarNovoPedido()" style="width: 100%; padding: 15px; background: #25d366;">Finalizar Pedido</button>
     </div>
 
     <!-- Modal Motivo Cancelamento -->
     <div id="cancelamento-motivo-area">
-        <h3 style="color: #ff4444; margin-bottom: 15px;">Justificativa de Cancelamento</h3>
-        <p style="font-size: 0.85rem; color: #ccc; margin-bottom: 20px; line-height: 1.5;">Selecione o motivo do cancelamento. O cliente verá este aviso no dashboard dele.</p>
+        <h2 style="margin-bottom: 15px; color: #ff4444;">Motivo do Cancelamento</h2>
+        <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 20px;">Por favor, selecione o motivo do cancelamento para informar ao cliente.</p>
+        
         <div class="form-group">
-            <label>Motivo</label>
-            <select id="cancel-motivo-select" class="filter-input" style="width: 100%;">
+            <label>Selecione o Motivo</label>
+            <select id="cancel-motivo-select" style="width: 100%; padding: 12px;">
                 <option value="Serviço não prestado">Serviço não prestado</option>
                 <option value="Não foi feito o pagamento">Não foi feito o pagamento</option>
                 <option value="Documentação incompleta">Documentação incompleta</option>
@@ -280,51 +305,58 @@
                 <option value="Outros">Outros</option>
             </select>
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 25px;">
-            <button class="btn-upload" id="btn-confirmar-cancel-admin" onclick="confirmarCancelamentoAdmin()" style="flex: 1; background: #ff4444;">Confirmar Cancelamento</button>
-            <button onclick="fecharModalCancelAdmin()" style="background:none; border:1px solid rgba(255,255,255,0.2); color:white; cursor:pointer; padding: 10px; border-radius: 8px; flex: 1;">Voltar</button>
-        </div>
+        
+        <button id="btn-confirmar-cancel-admin" class="btn-upload" onclick="confirmarCancelamentoAdmin()" style="width: 100%; padding: 15px; background: #ff4444;">Confirmar Cancelamento</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="cliente.js"></script>
+    <!-- Modal Resposta FAQ -->
+    <div id="faq-resposta-area">
+        <h2 style="margin-bottom: 15px;">Responder Dúvida</h2>
+        <div class="form-group">
+            <label>Pergunta do Cliente</label>
+            <p id="faq-pergunta-texto" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; font-size: 0.9rem; color: #eee;"></p>
+        </div>
+        <div class="form-group">
+            <label>Sua Resposta</label>
+            <textarea id="faq-resposta-texto" rows="5" placeholder="Digite a resposta que será publicada no FAQ..."></textarea>
+        </div>
+        <button id="btn-publicar-faq" class="btn-upload" onclick="publicarRespostaFAQ()" style="width: 100%; padding: 15px; background: var(--gold);">Publicar Resposta</button>
+    </div>
+
+    <script src="../cliente.js"></script>
     <script>
         const nomesServicos = {
-            // MEI
-            'abertura-mei': 'Abertura de MEI', 
-            'mei-plano-basico': 'Plano MEI Básico', 
-            'mei-plano-premium': 'Plano MEI Premium', 
-            'regularizacao-mei': 'Regularização de MEI',
+            'abertura-mei': 'Abertura de MEI',
+            'plano-mensal-mei': 'Plano Mensal MEI',
+            'regularizacao-mei': 'Regularização MEI',
             'baixa-mei': 'Baixa de MEI',
-            'emissao-das': 'Emissão de DAS',
-            'dasn-anual': 'DASN (Anual)',
-            'parcelamento-mei': 'Parcelamento de Débitos MEI',
+            'das-mei': 'Emissão de DAS',
+            'dasn-mei': 'Declaração Anual (DASN)',
+            'parcelamento-mei': 'Parcelamento MEI',
             'alteracao-mei': 'Alteração de Dados MEI',
-            'encerramento-mei': 'Encerramento de MEI',
-            // Pessoa Física
-            'irpf': 'Declaração IRPF',
+            'irpf': 'Imposto de Renda (IRPF)',
             'cpf-regularizacao': 'Regularização de CPF',
             'carne-leao': 'Carnê-Leão',
-            // Contábeis
             'consultoria-contabil': 'Consultoria Contábil',
-            'regularizacao-empresa': 'Regularização de Empresa',
-            'alteracao-contratual': 'Alteração Contratual',
             'abertura-empresa': 'Abertura de Empresa',
+            'alteracao-empresa': 'Alteração de Empresa',
             'encerramento-empresa': 'Encerramento de Empresa',
-            // Certidões
-            'certidao-negativa': 'Certidão Negativa de Débitos',
-            'certidao-fgts': 'Certidão de FGTS',
-            'certidao-trabalhista': 'Certidão Trabalhista (CNDT)',
-            'certidao-debitos': 'Certidão de Débitos Previdenciários',
-            // Certificado Digital
-            'certificado-cpf': 'Certificado Digital e-CPF',
-            'certificado-cnpj': 'Certificado Digital e-CNPJ',
-            'renovacao-certificado': 'Renovação de Certificado Digital',
-            // Outros
-            'regularizacao-pendencias': 'Regularização de Pendências',
+            'cnd-federal': 'Certidão Negativa Federal',
+            'cnd-estadual': 'Certidão Negativa Estadual',
+            'cnd-municipal': 'Certidão Negativa Municipal',
+            'cnd-fgts': 'Certidão FGTS',
+            'cnd-trabalhista': 'Certidão Trabalhista',
+            'e-cpf': 'Certificado Digital e-CPF',
+            'e-cnpj': 'Certificado Digital e-CNPJ',
+            'renovacao-certificado': 'Renovação de Certificado',
             'emissao-notas': 'Emissão de Notas Fiscais',
             'planejamento-tributario': 'Planejamento Tributário'
         };
+
+        let dadosOriginais = { profiles: [], assinaturas: [], faqs: [] };
+        let clienteSelecionado = null;
+        let idAssinaturaParaCancelar = null;
+        let faqSelecionada = null;
 
         // Menu Hambúrguer
         const menuToggle = document.getElementById('menuToggle');
@@ -334,25 +366,87 @@
             navMenu.classList.toggle('active');
         });
 
-        let dadosOriginais = { profiles: [], assinaturas: [] };
-        let clienteSelecionado = null;
-
         async function carregarDadosAdmin() {
             try {
-                const [resProfiles, resAssinaturas] = await Promise.all([
+                const [resProfiles, resAssinaturas, resFaqs] = await Promise.all([
                     supabaseClient.from('profiles').select('*').order('created_at', { ascending: false }),
-                    supabaseClient.from('assinaturas').select('*').order('created_at', { ascending: false })
+                    supabaseClient.from('assinaturas').select('*').order('created_at', { ascending: false }),
+                    supabaseClient.from('faq').select('*').eq('status', 'pendente').order('created_at', { ascending: false })
                 ]);
 
                 // Filtrar para não mostrar o admin na lista de clientes
                 const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
                 dadosOriginais.profiles = (resProfiles.data || []).filter(p => p.email !== EMAIL_ADMIN && p.role !== 'admin');
                 dadosOriginais.assinaturas = resAssinaturas.data || [];
+                dadosOriginais.faqs = resFaqs.data || [];
 
                 popularFiltroServicos();
                 renderizarTabelaFiltrada();
+                renderizarAlertasFAQ();
             } catch (err) {
                 console.error("Erro ao carregar dados:", err);
+            }
+        }
+
+        function renderizarAlertasFAQ() {
+            const container = document.getElementById('faq-alert-container');
+            container.innerHTML = '';
+            
+            if (dadosOriginais.faqs.length > 0) {
+                dadosOriginais.faqs.forEach(faq => {
+                    const div = document.createElement('div');
+                    div.className = 'faq-notification';
+                    div.innerHTML = `
+                        <div>
+                            <strong style="color: var(--gold); display: block;">Nova Pergunta de ${faq.cliente_nome || 'Cliente'}</strong>
+                            <span style="font-size: 0.85rem; color: #ccc;">"${faq.pergunta.substring(0, 60)}${faq.pergunta.length > 60 ? '...' : ''}"</span>
+                        </div>
+                        <button class="btn-upload" onclick="abrirModalRespostaFAQ('${faq.id}')">Responder</button>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+        }
+
+        function abrirModalRespostaFAQ(id) {
+            faqSelecionada = dadosOriginais.faqs.find(f => f.id === id);
+            if (!faqSelecionada) return;
+            
+            document.getElementById('faq-pergunta-texto').innerText = faqSelecionada.pergunta;
+            document.getElementById('faq-resposta-texto').value = '';
+            
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('faq-resposta-area').style.display = 'block';
+        }
+
+        async function publicarRespostaFAQ() {
+            const resposta = document.getElementById('faq-resposta-texto').value;
+            if (!resposta) return alert("Digite uma resposta!");
+            
+            const btn = document.getElementById('btn-publicar-faq');
+            try {
+                btn.disabled = true;
+                btn.innerText = "Publicando...";
+                
+                const { error } = await supabaseClient
+                    .from('faq')
+                    .update({ 
+                        resposta: resposta, 
+                        status: 'publicada',
+                        respondida_em: new Date().toISOString()
+                    })
+                    .eq('id', faqSelecionada.id);
+
+                if (error) throw error;
+                
+                alert("Resposta publicada com sucesso!");
+                fecharModal();
+                carregarDadosAdmin();
+            } catch (err) {
+                alert("Erro ao publicar resposta.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Publicar Resposta";
             }
         }
 
@@ -361,10 +455,10 @@
             select.innerHTML = '<option value="">Todos os Serviços</option>';
             const servicosUnicos = [...new Set(dadosOriginais.assinaturas.map(s => s.plano_id))];
             servicosUnicos.forEach(id => {
-                const opt = document.createElement('option');
-                opt.value = id;
-                opt.textContent = nomesServicos[id] || id;
-                select.appendChild(opt);
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = nomesServicos[id] || id;
+                select.appendChild(option);
             });
         }
 
@@ -372,105 +466,204 @@
             const statusFiltro = document.getElementById('filter-status').value;
             const servicoFiltro = document.getElementById('filter-servico').value;
             const dataFiltro = document.getElementById('filter-data').value;
-            const buscaFiltro = document.getElementById('filter-search').value.toLowerCase();
+            const buscaFiltro = document.getElementById('search-input').value.toLowerCase();
 
-            const tbody = document.getElementById('lista-clientes-body');
+            const tbody = document.getElementById('tabela-clientes');
             tbody.innerHTML = '';
 
             let count = 0;
 
-            dadosOriginais.profiles.forEach(p => {
-                const assinaturasDoCliente = dadosOriginais.assinaturas.filter(s => s.cliente_id === p.id);
+            dadosOriginais.profiles.forEach(perfil => {
+                const assinaturasDoCliente = dadosOriginais.assinaturas.filter(s => s.cliente_id === perfil.id);
                 
+                // Se não tem assinatura e o filtro de status é "POTENCIAL", ou se não tem filtro de status
                 if (assinaturasDoCliente.length === 0) {
-                    if (statusFiltro === '' || statusFiltro === 'POTENCIAL') {
-                        if (p.nome?.toLowerCase().includes(buscaFiltro) || p.email?.toLowerCase().includes(buscaFiltro) || p.cpf_cnpj?.includes(buscaFiltro)) {
-                            adicionarLinhaTabela(p, null);
+                    if (statusFiltro === "" || statusFiltro === "POTENCIAL") {
+                        if (perfil.nome?.toLowerCase().includes(buscaFiltro) || perfil.email?.toLowerCase().includes(buscaFiltro) || perfil.cpf?.includes(buscaFiltro)) {
+                            tbody.innerHTML += criarLinhaTabela(perfil, null);
                             count++;
                         }
                     }
                     return;
                 }
 
-                assinaturasDoCliente.forEach(s => {
-                    const matchStatus = !statusFiltro || s.status === statusFiltro;
-                    const matchServico = !servicoFiltro || s.plano_id === servicoFiltro;
-                    const matchData = !dataFiltro || s.created_at.startsWith(dataFiltro);
-                    const matchBusca = !buscaFiltro || p.nome?.toLowerCase().includes(buscaFiltro) || p.email?.toLowerCase().includes(buscaFiltro) || p.cpf_cnpj?.includes(buscaFiltro);
+                // Se tem assinaturas, filtrar cada uma
+                assinaturasDoCliente.forEach(sub => {
+                    const matchStatus = !statusFiltro || (statusFiltro !== "POTENCIAL" && sub.status === statusFiltro);
+                    const matchServico = !servicoFiltro || sub.plano_id === servicoFiltro;
+                    const matchData = !dataFiltro || sub.created_at.startsWith(dataFiltro);
+                    const matchBusca = perfil.nome?.toLowerCase().includes(buscaFiltro) || perfil.email?.toLowerCase().includes(buscaFiltro) || perfil.cpf?.includes(buscaFiltro);
 
-                    if (matchStatus && matchServico && matchData && matchBusca && statusFiltro !== 'POTENCIAL') {
-                        adicionarLinhaTabela(p, s);
+                    if (matchStatus && matchServico && matchData && matchBusca) {
+                        tbody.innerHTML += criarLinhaTabela(perfil, sub);
                         count++;
                     }
                 });
             });
 
-            document.getElementById('counter-info').innerText = `${count} registro(s) encontrado(s)`;
-            if (count === 0) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; color: #888;">Nenhum resultado encontrado.</td></tr>';
+            document.getElementById('counter-info').innerText = `${count} registros encontrados`;
         }
 
-        function adicionarLinhaTabela(p, s) {
-            const tbody = document.getElementById('lista-clientes-body');
-            const tr = document.createElement('tr');
+        function criarLinhaTabela(perfil, sub) {
+            const data = sub ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';
+            const status = sub ? sub.status : 'POTENCIAL';
+            const cor = status === 'Ativo' ? '#25d366' : (status === 'Pendente' ? '#f1c40f' : (status === 'Cancelado' ? '#ff4444' : '#888'));
+            const corTexto = (status === 'Pendente') ? 'black' : 'white';
             
-            const status = s ? s.status : 'POTENCIAL';
-            const corStatus = status === 'Ativo' ? '#25d366' : (status === 'Pendente' ? '#f1c40f' : '#ff4444');
-            const corTexto = status === 'Pendente' ? 'black' : 'white';
+            const servicoNome = sub ? (nomesServicos[sub.plano_id] || sub.plano_id) : '<span style="color:#666">Nenhum pedido</span>';
+            
+            const acoes = sub ? `
+                <div style="display:flex; gap:8px;">
+                    <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
+                        <option value="Pendente" ${status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                        <option value="Ativo" ${status === 'Ativo' ? 'selected' : ''}>Ativo</option>
+                        <option value="Cancelado" ${status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                    </select>
+                    <button class="btn-upload" onclick="abrirModalUpload('${perfil.id}')" title="Enviar Documento"><i class="fas fa-file-upload"></i></button>
+                </div>
+            ` : `<button class="btn-upload" onclick="abrirModalUpload('${perfil.id}')" style="background:#555">Vincular Doc</button>`;
 
-            tr.innerHTML = `
-                <td>
-                    <div class="client-info">
-                        <strong>${p.nome || 'Sem Nome'}</strong>
-                        <small>${p.email}</small>
-                        <small>${p.whatsapp || 'Sem WhatsApp'} | ${p.cpf_cnpj || 'Sem CPF'}</small>
-                    </div>
-                </td>
-                <td>${s ? (nomesServicos[s.plano_id] || s.plano_id) : '<span style="color:#888;">Sem pedido</span>'}</td>
-                <td>
-                    ${s ? `
-                        <select class="status-select" onchange="atualizarStatus('${s.id}', this.value)">
-                            <option value="Pendente" ${s.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                            <option value="Ativo" ${s.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
-                            <option value="Cancelado" ${s.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
-                        </select>
-                    ` : `<span class="status-badge" style="background:#888; color:white;">POTENCIAL</span>`}
-                </td>
-                <td>${s ? new Date(s.created_at).toLocaleDateString('pt-BR') : '-'}</td>
-                <td>
-                    <button class="btn-upload" onclick="abrirModal('${p.id}', '${p.nome}')"><i class="fas fa-upload"></i> Doc</button>
-                </td>
+            return `
+                <tr>
+                    <td>
+                        <div class="client-info">
+                            <strong>${perfil.nome || 'Sem Nome'}</strong>
+                            <small>${perfil.email}</small>
+                            <small>${perfil.whatsapp || 'Sem WhatsApp'}</small>
+                        </div>
+                    </td>
+                    <td>${servicoNome}</td>
+                    <td>${data}</td>
+                    <td><span class="status-badge" style="background:${cor}; color:${corTexto}">${status}</span></td>
+                    <td>${acoes}</td>
+                </tr>
             `;
-            tbody.appendChild(tr);
         }
 
         function limparFiltros() {
-            document.getElementById('filter-status').value = '';
-            document.getElementById('filter-servico').value = '';
-            document.getElementById('filter-data').value = '';
-            document.getElementById('filter-search').value = '';
+            document.getElementById('filter-status').value = "";
+            document.getElementById('filter-servico').value = "";
+            document.getElementById('filter-data').value = "";
+            document.getElementById('search-input').value = "";
             renderizarTabelaFiltrada();
         }
 
-        let idAssinaturaParaCancelar = null;
+        // Eventos de Filtro
+        document.getElementById('filter-status').addEventListener('change', renderizarTabelaFiltrada);
+        document.getElementById('filter-servico').addEventListener('change', renderizarTabelaFiltrada);
+        document.getElementById('filter-data').addEventListener('input', renderizarTabelaFiltrada);
+        document.getElementById('search-input').addEventListener('input', renderizarTabelaFiltrada);
 
-        async function atualizarStatus(subId, novoStatus) {
+        function abrirModalUpload(clienteId) {
+            clienteSelecionado = clienteId;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('upload-area').style.display = 'block';
+        }
+
+        function abrirModalNovoPedido() {
+            const container = document.getElementById('lista-servicos-admin');
+            container.innerHTML = Object.entries(nomesServicos).map(([id, nome]) => `
+                <div class="service-option">
+                    <input type="checkbox" id="check-${id}" value="${id}">
+                    <label for="check-${id}">${nome}</label>
+                </div>
+            `).join('');
+            
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('novo-pedido-area').style.display = 'block';
+        }
+
+        function fecharModal() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('upload-area').style.display = 'none';
+            document.getElementById('novo-pedido-area').style.display = 'none';
+            document.getElementById('cancelamento-motivo-area').style.display = 'none';
+            document.getElementById('faq-resposta-area').style.display = 'none';
+            clienteSelecionado = null;
+            idAssinaturaParaCancelar = null;
+            faqSelecionada = null;
+        }
+
+        async function confirmarUpload() {
+            const nome = document.getElementById('doc-nome').value;
+            const url = document.getElementById('doc-url').value;
+            if (!nome || !url) return alert("Preencha todos os campos!");
+
+            try {
+                const { error } = await supabaseClient.from('documentos').insert([
+                    { cliente_id: clienteSelecionado, nome_arquivo: nome, url_arquivo: url }
+                ]);
+                if (error) throw error;
+                alert("Documento enviado!");
+                fecharModal();
+            } catch (err) {
+                alert("Erro ao enviar documento.");
+            }
+        }
+
+        async function confirmarNovoPedido() {
+            const nome = document.getElementById('novo-nome').value;
+            const email = document.getElementById('novo-email').value;
+            const whatsapp = document.getElementById('novo-whatsapp').value;
+            const cpf = document.getElementById('novo-cpf').value;
+            
+            const checkboxes = document.querySelectorAll('#lista-servicos-admin input[type="checkbox"]:checked');
+            const servicosSelecionados = Array.from(checkboxes).map(cb => cb.value);
+
+            if (!nome || !email || servicosSelecionados.length === 0) {
+                return alert("Preencha Nome, E-mail e selecione ao menos um serviço!");
+            }
+
+            try {
+                // 1. Criar ou atualizar perfil (upsert baseado no email)
+                const { data: profile, error: pError } = await supabaseClient
+                    .from('profiles')
+                    .upsert({ 
+                        email: email, 
+                        nome: nome, 
+                        whatsapp: whatsapp, 
+                        cpf: cpf,
+                        role: 'cliente'
+                    }, { onConflict: 'email' })
+                    .select()
+                    .single();
+
+                if (pError) throw pError;
+
+                // 2. Criar assinaturas
+                const assinaturas = servicosSelecionados.map(id => ({
+                    cliente_id: profile.id,
+                    plano_id: id,
+                    status: 'Pendente'
+                }));
+
+                const { error: sError } = await supabaseClient.from('assinaturas').insert(assinaturas);
+                if (sError) throw sError;
+
+                alert("Pedido finalizado com sucesso!");
+                fecharModal();
+                carregarDadosAdmin();
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao criar pedido.");
+            }
+        }
+
+        async function atualizarStatus(id, novoStatus) {
             if (novoStatus === 'Cancelado') {
-                idAssinaturaParaCancelar = subId;
+                idAssinaturaParaCancelar = id;
                 document.getElementById('overlay').style.display = 'block';
                 document.getElementById('cancelamento-motivo-area').style.display = 'block';
                 return;
             }
 
             try {
-                const { error } = await supabaseClient.from('assinaturas').update({ status: novoStatus, motivo_cancelamento: null }).eq('id', subId);
+                const { error } = await supabaseClient.from('assinaturas').update({ status: novoStatus }).eq('id', id);
                 if (error) throw error;
                 
-                const index = dadosOriginais.assinaturas.findIndex(s => s.id === subId);
-                if (index !== -1) {
-                    dadosOriginais.assinaturas[index].status = novoStatus;
-                    dadosOriginais.assinaturas[index].motivo_cancelamento = null;
-                }
-                alert("Status atualizado!");
+                const index = dadosOriginais.assinaturas.findIndex(s => s.id === id);
+                if (index !== -1) dadosOriginais.assinaturas[index].status = novoStatus;
+                
                 renderizarTabelaFiltrada();
             } catch (err) {
                 alert("Erro ao atualizar.");
@@ -490,8 +683,6 @@
                 btn.disabled = true;
                 btn.innerText = "Cancelando...";
                 
-                console.log("Tentando cancelar assinatura:", idAssinaturaParaCancelar, "com motivo:", motivo);
-
                 const { data, error } = await supabaseClient
                     .from('assinaturas')
                     .update({ 
@@ -501,13 +692,8 @@
                     .eq('id', idAssinaturaParaCancelar)
                     .select();
 
-                if (error) {
-                    console.error("Erro detalhado do Supabase:", error);
-                    throw error;
-                }
+                if (error) throw error;
                 
-                console.log("Resposta do cancelamento:", data);
-
                 // Atualizar dados locais
                 const index = dadosOriginais.assinaturas.findIndex(s => s.id === idAssinaturaParaCancelar);
                 if (index !== -1) {
@@ -516,136 +702,23 @@
                 }
 
                 alert("Pedido cancelado com sucesso!");
-                fecharModalCancelAdmin();
+                fecharModal();
                 renderizarTabelaFiltrada();
             } catch (err) {
-                console.error("Erro capturado no catch:", err);
-                alert("Erro ao cancelar: " + (err.message || "Erro desconhecido. Verifique o console."));
+                alert("Erro ao cancelar: " + (err.message || "Erro desconhecido."));
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Confirmar Cancelamento";
             }
         }
 
-        function fecharModalCancelAdmin() {
-            fecharModal();
-            idAssinaturaParaCancelar = null;
-            renderizarTabelaFiltrada();
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
         }
 
-        function abrirModal(id, nome) {
-            clienteSelecionado = id;
-            document.getElementById('modal-title').innerText = "Upload para: " + nome;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('upload-area').style.display = 'block';
-        }
-
-        function fecharModal() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('upload-area').style.display = 'none';
-            document.getElementById('novo-pedido-area').style.display = 'none';
-            document.getElementById('cancelamento-motivo-area').style.display = 'none';
-        }
-
-        async function executarUpload() {
-            const fileInput = document.getElementById('file-input');
-            if (!fileInput.files[0]) return alert("Selecione um arquivo.");
-            
-            const file = fileInput.files[0];
-            const fileName = `${Date.now()}_${file.name}`;
-            const filePath = `documentos/${clienteSelecionado}/${fileName}`;
-
-            try {
-                const { data, error } = await supabaseClient.storage.from('docs_clientes').upload(filePath, file);
-                if (error) throw error;
-
-                const { data: { publicUrl } } = supabaseClient.storage.from('docs_clientes').getPublicUrl(filePath);
-                
-                await supabaseClient.from('documentos').insert({
-                    cliente_id: clienteSelecionado,
-                    nome_arquivo: file.name,
-                    url_arquivo: publicUrl
-                });
-
-                alert("Documento enviado!");
-                fecharModal();
-            } catch (err) {
-                alert("Erro no upload.");
-            }
-        }
-
-        function abrirModalNovoPedido() {
-            const container = document.getElementById('lista-servicos-selecao');
-            container.innerHTML = Object.entries(nomesServicos).map(([id, nome]) => `
-                <div class="service-option">
-                    <input type="checkbox" id="serv-${id}" value="${id}">
-                    <label for="serv-${id}">${nome}</label>
-                </div>
-            `).join('');
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('novo-pedido-area').style.display = 'block';
-        }
-
-        function fecharModalNovoPedido() { fecharModal(); }
-
-        async function finalizarPedidoAdmin() {
-            const nome = document.getElementById('novo-nome').value;
-            const email = document.getElementById('novo-email').value;
-            const whatsapp = document.getElementById('novo-whatsapp').value;
-            const cpf = document.getElementById('novo-cpf').value;
-            const selecionados = Array.from(document.querySelectorAll('#lista-servicos-selecao input:checked')).map(i => i.value);
-
-            if (!nome || !email || selecionados.length === 0) return alert("Preencha nome, email e selecione ao menos um serviço.");
-
-            const btn = document.getElementById('btn-finalizar-pedido');
-            try {
-                btn.disabled = true;
-                btn.innerText = "Processando...";
-
-                let { data: profile } = await supabaseClient.from('profiles').select('id').eq('email', email).maybeSingle();
-                let clienteId = profile?.id;
-
-                if (!clienteId) {
-                    const tempId = crypto.randomUUID();
-                    const { data: newProfile, error: pErr } = await supabaseClient.from('profiles').insert({
-                        id: tempId, nome, email, whatsapp, cpf_cnpj: cpf, role: 'cliente'
-                    }).select().single();
-                    if (pErr) throw pErr;
-                    clienteId = tempId;
-                } else {
-                    await supabaseClient.from('profiles').update({ nome, whatsapp, cpf_cnpj: cpf }).eq('id', clienteId);
-                }
-
-                const inserts = selecionados.map(s => ({ cliente_id: clienteId, plano_id: s, status: 'Pendente' }));
-                await supabaseClient.from('assinaturas').insert(inserts);
-
-                alert("Pedido finalizado com sucesso!");
-                fecharModal();
-                carregarDadosAdmin();
-            } catch (err) {
-                alert("Erro ao criar pedido.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Finalizar Pedido";
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const user = await checkUser();
-            if (user) {
-                const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
-                if (user.email !== EMAIL_ADMIN) {
-                    const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', user.id).single();
-                    if (profile?.role !== 'admin') window.location.href = '/servicos/area_do_cliente/dashboard.html';
-                }
-                carregarDadosAdmin();
-            }
-        });
-
-        document.getElementById('filter-status').addEventListener('change', renderizarTabelaFiltrada);
-        document.getElementById('filter-servico').addEventListener('change', renderizarTabelaFiltrada);
-        document.getElementById('filter-data').addEventListener('input', renderizarTabelaFiltrada);
-        document.getElementById('filter-search').addEventListener('input', renderizarTabelaFiltrada);
+        // Inicializar
+        carregarDadosAdmin();
     </script>
 </body>
 </html>

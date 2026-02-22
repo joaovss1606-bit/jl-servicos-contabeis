@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tira Dúvidas - JL Serviços Contábeis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../auth-header.js"></script>
+    <link rel="stylesheet" href="../faq-widget.css">
+    <style>
+        :root {
+            --gold: #bd9617;
+            --dark-blue: #0a192f;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a192f;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 25, 47, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(189, 150, 23, 0.2);
+        }
+
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); text-decoration: none; font-weight: 700; }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 5% 40px;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(189, 150, 23, 0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
+        .hero p { color: #ccc; max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+
+        /* FAQ Section */
+        .faq-container {
+            max-width: 900px;
+            margin: 40px auto 80px;
+            padding: 0 20px;
+        }
+
+        .faq-item {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .faq-item:hover { border-color: var(--gold); }
+
+        .faq-question {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #eee;
+            transition: 0.3s;
+        }
+
+        .faq-question:hover { color: var(--gold); }
+
+        .faq-question i {
+            color: var(--gold);
+            transition: 0.4s;
+            font-size: 1.2rem;
+        }
+
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px; /* Valor alto o suficiente */
+            padding: 0 30px 30px;
+        }
+
+        .faq-answer p {
+            color: #bbb;
+            font-size: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+        }
+
+        /* Ask Card */
+        .ask-card {
+            background: linear-gradient(135deg, rgba(189, 150, 23, 0.1) 0%, rgba(10, 25, 47, 0.5) 100%);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 60px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .ask-card h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--gold); margin-bottom: 15px; }
+        .ask-card p { color: #ccc; margin-bottom: 25px; }
+
+        .btn-ask {
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-ask:hover {
+            background: #d4af37;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(189, 150, 23, 0.3);
+        }
+
+        /* Loading */
+        .loading { text-align: center; padding: 40px; color: var(--gold); font-size: 1.2rem; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .faq-question { font-size: 1rem; padding: 20px; }
+            .ask-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="logo">JL SERVIÇOS CONTÁBEIS</a>
+        <a href="area_do_cliente/dashboard.html" style="color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--gold); padding: 8px 20px; border-radius: 20px; transition: 0.3s;">DASHBOARD</a>
+    </header>
+
+    <section class="hero">
+        <h1>Tira Dúvidas</h1>
+        <p>Encontre respostas rápidas para as perguntas mais frequentes sobre nossos serviços contábeis.</p>
+    </section>
+
+    <div class="faq-container">
+        <div id="faq-list">
+            <div class="loading"><i class="fas fa-spinner fa-spin"></i> Carregando perguntas...</div>
+        </div>
+
+        <div class="ask-card">
+            <h3>Não encontrou o que procura?</h3>
+            <p>Nossa equipe está pronta para ajudar com sua dúvida específica.</p>
+            <button class="btn-ask" onclick="openFaqModal()">Pergunte Aqui</button>
+        </div>
+    </div>
+
+    <script src="../faq-widget.js"></script>
+    <script>
+        // Perguntas Padrão (Caso o banco esteja vazio ou para garantir conteúdo inicial)
+        const perguntasPadrao = [
+            {
+                pergunta: "Como funciona a abertura de empresa MEI?",
+                resposta: "A abertura do MEI é um processo simplificado. Nós cuidamos de toda a formalização no Portal do Empreendedor, emissão do CNPJ e orientações sobre as obrigações mensais (DAS) e anuais (DASN)."
+            },
+            {
+                pergunta: "Quais documentos são necessários para o Imposto de Renda?",
+                resposta: "Os principais documentos são: informes de rendimentos bancários, comprovantes de despesas médicas e educação, documentos de bens (imóveis/veículos) e o CPF de dependentes."
+            },
+            {
+                pergunta: "O que é o Certificado Digital e por que preciso dele?",
+                resposta: "O Certificado Digital é a sua identidade eletrônica. Ele é essencial para assinar documentos digitalmente, emitir notas fiscais e acessar portais do governo como e-CAC e Receita Federal com segurança."
+            }
+        ];
+
+        async function carregarFAQ() {
+            const faqList = document.getElementById('faq-list');
+            try {
+                // Buscar do Supabase
+                const { data: faqs, error } = await supabaseClient
+                    .from('faq')
+                    .select('*')
+                    .eq('status', 'publicada')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                // Combinar padrão com as do banco
+                const todasPerguntas = [...perguntasPadrao, ...(faqs || [])];
+
+                faqList.innerHTML = todasPerguntas.map((item, index) => `
+                    <div class="faq-item" id="faq-${index}">
+                        <div class="faq-question" onclick="toggleFaq(${index})">
+                            <span>${item.pergunta}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>${item.resposta}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error('Erro ao carregar FAQ:', err);
+                // Mostrar apenas as padrão em caso de erro
+                faqList.innerHTML = perguntasPadrao.map((item, index) => `
+                    <div class="faq-item" id="faq-${index}">
+                        <div class="faq-question" onclick="toggleFaq(${index})">
+                            <span>${item.pergunta}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>${item.resposta}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleFaq(index) {
+            const items = document.querySelectorAll('.faq-item');
+            const currentItem = document.getElementById(`faq-${index}`);
+            
+            items.forEach(item => {
+                if (item !== currentItem) item.classList.remove('active');
+            });
+            
+            currentItem.classList.toggle('active');
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', carregarFAQ);
+    </script>
+</body>
+</html>

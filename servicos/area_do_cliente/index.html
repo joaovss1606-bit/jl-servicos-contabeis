@@ -173,15 +173,15 @@
             if (profile?.role === 'admin' || user.email === EMAIL_ADMIN) {
                 target = "/servicos/area_do_cliente/admin.html";
             } else {
-                // Verificar se há uma URL de retorno salva (ex: vindo do carrinho)
+                // 1. Prioridade: URL de retorno salva no localStorage (vinda do carrinho)
                 const returnTo = localStorage.getItem('returnTo');
                 if (returnTo) {
                     localStorage.removeItem('returnTo');
                     target = returnTo;
                 } else {
+                    // 2. Segunda prioridade: Parâmetros na URL (compra direta)
                     const urlParams = new URLSearchParams(window.location.search);
                     const servico = urlParams.get('servico');
-                    // Se há um serviço na URL (compra direta), redirecionar para compra
                     if (servico) {
                         target = `/servicos/compra/index.html?${urlParams.toString()}`;
                     }
