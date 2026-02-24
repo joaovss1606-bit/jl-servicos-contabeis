@@ -2,8 +2,17 @@
 (function() {
     // 1. Injetar HTML do Botão e Modal
     const faqHTML = `
-        <a href="/servicos/tira-duvidas.html" class="faq-float-btn" title="Tira Dúvidas">?</a>
+        <div class="faq-float-btn" title="Tira Dúvidas" onclick="toggleFaqMenu()">?</div>
         
+        <div id="faqMenu" class="faq-menu">
+            <div class="faq-menu-content">
+                <span class="faq-menu-close" onclick="closeFaqMenu()">&times;</span>
+                <h3>Central de Ajuda</h3>
+                <a href="/servicos/tira-duvidas.html" class="faq-menu-link"><i class="fas fa-question-circle"></i> Ver Perguntas Frequentes</a>
+                <button onclick="openFaqModal()" class="faq-menu-btn"><i class="fas fa-paper-plane"></i> Enviar uma Pergunta</button>
+            </div>
+        </div>
+
         <div id="faqModal" class="faq-modal">
             <div class="faq-modal-content">
                 <span class="faq-modal-close" onclick="closeFaqModal()">&times;</span>
@@ -19,8 +28,17 @@
     document.body.insertAdjacentHTML('beforeend', faqHTML);
 
     // 2. Funções de Controle
-    window.openFaqModal = function(e) {
-        if (e) e.preventDefault();
+    window.toggleFaqMenu = function() {
+        const menu = document.getElementById('faqMenu');
+        menu.classList.toggle('active');
+    };
+
+    window.closeFaqMenu = function() {
+        document.getElementById('faqMenu').classList.remove('active');
+    };
+
+    window.openFaqModal = function() {
+        closeFaqMenu();
         document.getElementById('faqModal').classList.add('active');
     };
 
@@ -80,9 +98,11 @@
         });
     }
 
-    // Fechar modal ao clicar fora
+    // Fechar ao clicar fora
     window.addEventListener('click', (e) => {
         const modal = document.getElementById('faqModal');
+        const menu = document.getElementById('faqMenu');
         if (e.target === modal) closeFaqModal();
+        if (e.target === menu) closeFaqMenu();
     });
 })();

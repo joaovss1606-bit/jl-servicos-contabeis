@@ -207,20 +207,22 @@ async function finalizarCarrinho() {
 
   const targetUrl = '/servicos/compra/index.html?carrinho=1';
   
+  // Salvar intenção de compra
+  localStorage.setItem('returnTo', targetUrl);
+
   const client = initSupabase();
   if (!client) {
-    localStorage.setItem('returnTo', targetUrl);
     window.location.href = '/servicos/area_do_cliente/index.html';
     return;
   }
 
   const { data: { session } } = await client.auth.getSession();
   if (!session) {
-    localStorage.setItem('returnTo', targetUrl);
     window.location.href = '/servicos/area_do_cliente/index.html';
     return;
   }
 
+  // Se já estiver logado, o returnTo será tratado pelo redirecionar() ou podemos ir direto
   window.location.href = targetUrl;
 }
 

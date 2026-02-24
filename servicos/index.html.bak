@@ -6,7 +6,6 @@
   <title>Catálogo de Serviços | J L Serviços Contábeis</title>
   
   <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="/faq-widget.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script type="module" src="/auth-header.js"></script>
@@ -122,85 +121,47 @@
     </h2>
     <div class="services-grid">
       <a href="/servicos/area_do_cliente/index.html?categoria=pessoa-fisica&servico=irpf" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Imposto de Renda (IRPF)</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">A partir de R$ 149,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Fazer Declaração</span>
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Imposto de Renda Pessoa Física (IRPF)</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 139,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Enviar Declaração</span>
       </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=pessoa-fisica&servico=regularizacao-cpf" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+      <a href="/servicos/area_do_cliente/index.html?categoria=pessoa-fisica&servico=cpf-regularizacao" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
         <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Regularização de CPF</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 69,99</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 59,99</span>
         <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Regularizar Agora</span>
-      </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=pessoa-fisica&servico=darf-emissao" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Emissão de DARF</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 37,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Gerar Guia</span>
       </a>
       <a href="/servicos/area_do_cliente/index.html?categoria=pessoa-fisica&servico=carne-leao" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
         <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Carnê-Leão</span>
         <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 129,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Contratar Agora</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Apuração Mensal</span>
       </a>
     </div>
   </section>
 
   <section style="margin-bottom: 60px;">
     <h2 style="font-family: 'Playfair Display', serif; color: #bd9617; font-size: 2rem; margin-bottom: 30px; border-left: 5px solid #bd9617; padding-left: 15px;">
-      Serviços Contábeis
+      Certidões
     </h2>
     <div class="services-grid">
-      <a href="/servicos/area_do_cliente/index.html?categoria=contabil&servico=consultoria" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Consultoria Contábil</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 199,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Agendar Agora</span>
+      <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=certidao-negativa" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certidão Negativa de Débitos</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 35,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Emitir Certidão</span>
       </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=contabil&servico=abertura-empresa" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Abertura de Empresa</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">Sob Consulta</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Falar com Especialista</span>
+        <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=certidao-fgts" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certidão de FGTS</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 35,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Emitir Certidão</span>
       </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=contabil&servico=alteracao-empresa" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Alteração Contratual</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">Sob Consulta</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Solicitar Orçamento</span>
+      <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=certidao-trabalhista" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certidão Trabalhista (CNDT)</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 35,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Emitir CNDT</span>
       </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=contabil&servico=encerramento-empresa" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Encerramento de Empresa</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">Sob Consulta</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Falar com Especialista</span>
-      </a>
-    </div>
-  </section>
-
-  <section style="margin-bottom: 60px;">
-    <h2 style="font-family: 'Playfair Display', serif; color: #bd9617; font-size: 2rem; margin-bottom: 30px; border-left: 5px solid #bd9617; padding-left: 15px;">
-      Certidões e Documentos
-    </h2>
-    <div class="services-grid">
-      <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=cnd-federal" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certidão Negativa Federal</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 45,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Solicitar Certidão</span>
-      </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=cnd-estadual" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certidão Negativa Estadual</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 45,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Solicitar Certidão</span>
-      </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=cnd-municipal" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certidão Negativa Municipal</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 45,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Solicitar Certidão</span>
-      </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=fgts" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certificado de Regularidade FGTS</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 45,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Solicitar CRF</span>
-      </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=trabalhista" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certidão Negativa Trabalhista</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 45,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Solicitar CNDT</span>
+      <a href="/servicos/area_do_cliente/index.html?categoria=certidoes&servico=certidao-previdenciaria" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certidão de Débitos Previdenciários</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 35,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Emitir Certidão</span>
       </a>
     </div>
   </section>
@@ -210,20 +171,48 @@
       Certificado Digital
     </h2>
     <div class="services-grid">
-      <a href="/servicos/area_do_cliente/index.html?categoria=certificado&servico=e-cpf" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">e-CPF (A1 - 1 Ano)</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 159,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Comprar Agora</span>
+      <a href="/servicos/area_do_cliente/index.html?categoria=certificado&servico=ecpf" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certificado Digital e-CPF</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 149,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Para Pessoa Física</span>
       </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=certificado&servico=e-cnpj" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">e-CNPJ (A1 - 1 Ano)</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 229,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Comprar Agora</span>
+      <a href="/servicos/area_do_cliente/index.html?categoria=certificado&servico=ecnpj" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Certificado Digital e-CNPJ</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">219,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Para Empresas</span>
       </a>
-      <a href="/servicos/area_do_cliente/index.html?categoria=certificado&servico=renovacao" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Renovação de Certificado</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">A partir de R$ 139,99</span>
-        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Renovar Agora</span>
+      <a href="/servicos/area_do_cliente/index.html?categoria=certificado&servico=renovacao-certificado" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Renovação de Certificado Digital</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">129,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Atualizar Validade</span>
+      </a>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 60px;">
+    <h2 style="font-family: 'Playfair Display', serif; color: #bd9617; font-size: 2rem; margin-bottom: 30px; border-left: 5px solid #bd9617; padding-left: 15px;">
+      Serviços Contábeis (Empresas)
+    </h2>
+    <div class="services-grid">
+      <a href="/servicos/area_do_cliente/index.html?categoria=empresas&servico=abertura-empresa" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Abertura de Empresa</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">299,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Abrir Novo CNPJ</span>
+      </a>
+      <a href="/servicos/area_do_cliente/index.html?categoria=empresas&servico=alteracao-contratual" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Alteração Contratual</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">249,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Mudança de Dados</span>
+      </a>
+      <a href="/servicos/area_do_cliente/index.html?categoria=empresas&servico=encerramento-empresa" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Encerramento de Empresa</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">399,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Fechar CNPJ</span>
+      </a>
+       <a href="/servicos/area_do_cliente/index.html?categoria=empresas&servico=consultoria-contabil" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Consultoria Contábil</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">199,99</span>
+        <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Marcar Consultoria</span>
       </a>
     </div>
   </section>
@@ -233,9 +222,9 @@
       Outros Serviços
     </h2>
     <div class="services-grid">
-      <a href="/servicos/area_do_cliente/index.html?categoria=outros&servico=planejamento-tributario" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Planejamento Tributário</span>
-        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 299,99</span>
+      <a href="/servicos/area_do_cliente/index.html?categoria=outros&servico=regularizacao-pendencias" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+        <span style="color: #fff; font-weight: 700; font-size: 1.1rem; display: block; font-family: 'Montserrat', sans-serif; margin-bottom: 10px;">Regularização de Pendências</span>
+        <span style="color:#bd9617; font-weight:800; font-size:1.2rem; display:block; margin-bottom:5px;">R$ 139,99</span>
         <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; font-family: 'Montserrat', sans-serif;">Pagar Agora</span>
       </a>
       <a href="/servicos/area_do_cliente/index.html?categoria=outros&servico=emissao-notas" class="service-card" style="text-decoration: none; background: #0e2a47; border: 1px solid #bd9617; padding: 30px 20px; border-radius: 12px; text-align: center; transition: 0.3s; display: block;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
@@ -253,6 +242,7 @@
       <h3>J L Serviços Contábeis</h3>
       <p>Soluções contábeis com transparência e foco em resultados.</p>
     </div>
+
     <div class="footer-col">
       <h4>Links Rápidos</h4>
       <ul>
@@ -262,6 +252,7 @@
         <li><a href="/lgpd/index.html">Política de Privacidade</a></li>
       </ul>
     </div>
+
     <div class="footer-col">
       <h4>Contato</h4>
       <a href="https://wa.me/5561920041427" target="_blank" class="btn-whatsapp-footer">
@@ -270,6 +261,7 @@
       <p class="footer-email">jlservicoscontabeis0@gmail.com</p>
     </div>
   </div>
+
   <div class="footer-bottom">
     <p>© 2026 J L Serviços Contábeis — Todos os direitos reservados</p>
   </div>
@@ -297,7 +289,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/servicos/area_do_cliente/cliente.js"></script>
 <script src="/servicos/carrinho.js"></script>
-<script src="/faq-widget.js"></script>
 
 <style>
   .carrinho-flutuante {
@@ -314,6 +305,7 @@
     z-index: 1000;
     backdrop-filter: blur(10px);
   }
+
   .carrinho-header {
     padding: 15px 20px;
     border-bottom: 1px solid rgba(189, 150, 23, 0.3);
@@ -321,9 +313,11 @@
     justify-content: space-between;
     align-items: center;
   }
+
   .carrinho-lista {
     padding: 10px 0;
   }
+
   .carrinho-item {
     padding: 12px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -332,21 +326,25 @@
     align-items: center;
     transition: 0.3s;
   }
+
   .carrinho-item:hover {
     background: rgba(189, 150, 23, 0.1);
   }
+
   .carrinho-item-info {
     display: flex;
     flex-direction: column;
     gap: 4px;
     flex-grow: 1;
   }
+
   .carrinho-footer {
     padding: 15px 20px;
     border-top: 1px solid rgba(189, 150, 23, 0.3);
     display: flex;
     gap: 10px;
   }
+
   .btn-finalizar-carrinho {
     flex-grow: 1;
     background: #bd9617;
@@ -359,9 +357,11 @@
     font-size: 0.85rem;
     transition: 0.3s;
   }
+
   .btn-finalizar-carrinho:hover {
     background: #a68414;
   }
+
   .btn-limpar-carrinho {
     background: rgba(255, 68, 68, 0.2);
     color: #ff4444;
@@ -373,9 +373,11 @@
     font-size: 0.85rem;
     transition: 0.3s;
   }
+
   .btn-limpar-carrinho:hover {
     background: rgba(255, 68, 68, 0.3);
   }
+
   @media (max-width: 768px) {
     .carrinho-flutuante {
       width: 280px;
@@ -384,5 +386,6 @@
     }
   }
 </style>
+
 </body>
 </html>

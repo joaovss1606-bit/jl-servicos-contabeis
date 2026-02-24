@@ -6,6 +6,7 @@
     <title>Gestão Administrativa | JL Serviços</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../faq-widget.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --gold: #bd9617; --dark-blue: #0a192f; --glass: rgba(255, 255, 255, 0.05); --success: #25d366; }
@@ -215,14 +216,10 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label>Data de Envio</label>
-                    <input type="date" id="filter-data" class="filter-input" style="background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--gold); padding: 10px; border-radius: 8px;">
+                    <label>Buscar Cliente</label>
+                    <input type="text" id="search-client" class="filter-input" placeholder="Nome, E-mail ou CPF...">
                 </div>
-                <div class="filter-group" style="grid-column: span 2;">
-                    <label>Buscar Cliente (Nome/Email/CPF)</label>
-                    <input type="text" id="search-input" class="filter-input" placeholder="Digite para buscar..." style="width: 100%;">
-                </div>
-                <button class="btn-clear" onclick="limparFiltros()">Limpar Filtros</button>
+                <button class="btn-clear" onclick="limparFiltros()">Limpar</button>
             </div>
 
             <table>
@@ -230,74 +227,56 @@
                     <tr>
                         <th>Cliente</th>
                         <th>Serviço</th>
-                        <th>Data Pedido</th>
                         <th>Status</th>
+                        <th>Data</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabela-clientes">
-                    <tr><td colspan="5" style="text-align:center; padding:40px; color:#666;">Carregando dados...</td></tr>
+                    <!-- Preenchido via JS -->
                 </tbody>
             </table>
         </div>
     </main>
 
-    <div class="overlay" id="overlay" onclick="fecharModal()"></div>
-
-    <!-- Modal Upload -->
-    <div id="upload-area">
-        <h2 style="margin-bottom: 20px;">Enviar Documento</h2>
-        <div class="form-group">
-            <label>Nome do Arquivo</label>
-            <input type="text" id="doc-nome" placeholder="Ex: Guia DAS Janeiro">
-        </div>
-        <div class="form-group">
-            <label>URL do Arquivo (Link S3/Supabase)</label>
-            <input type="text" id="doc-url" placeholder="https://...">
-        </div>
-        <button class="btn-upload" onclick="confirmarUpload()" style="width: 100%; padding: 15px;">Finalizar Envio</button>
-    </div>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="fecharModais()"></div>
 
     <!-- Modal Novo Pedido -->
     <div id="novo-pedido-area">
-        <h2 style="margin-bottom: 10px;">Novo Pedido</h2>
-        <p style="color: #888; font-size: 0.8rem; margin-bottom: 25px;">Insira os dados do cliente e selecione os serviços.</p>
-        
+        <h2 style="margin-bottom: 25px; font-size: 1.5rem;">Cadastrar Novo Pedido</h2>
         <div class="form-group">
-            <label>Nome Completo</label>
-            <input type="text" id="novo-nome" placeholder="Nome do cliente">
+            <label>Nome do Cliente</label>
+            <input type="text" id="novo-nome" placeholder="Nome completo">
         </div>
         <div class="form-group">
             <label>E-mail</label>
-            <input type="email" id="novo-email" placeholder="email@cliente.com">
+            <input type="email" id="novo-email" placeholder="email@exemplo.com">
         </div>
         <div class="form-group">
             <label>WhatsApp</label>
-            <input type="text" id="novo-whatsapp" placeholder="61999999999">
+            <input type="text" id="novo-whatsapp" placeholder="(00) 00000-0000">
         </div>
         <div class="form-group">
             <label>CPF ou CNPJ</label>
             <input type="text" id="novo-cpf" placeholder="000.000.000-00">
         </div>
-        
         <div class="form-group">
             <label>Selecione os Serviços</label>
             <div class="services-list-admin" id="lista-servicos-admin">
                 <!-- Preenchido via JS -->
             </div>
         </div>
-        
-        <button class="btn-upload" onclick="confirmarNovoPedido()" style="width: 100%; padding: 15px; background: #25d366;">Finalizar Pedido</button>
+        <button class="btn-upload" onclick="finalizarNovoPedido()" style="width: 100%; padding: 15px; background: #25d366;">Finalizar Pedido</button>
     </div>
 
     <!-- Modal Motivo Cancelamento -->
     <div id="cancelamento-motivo-area">
-        <h2 style="margin-bottom: 15px; color: #ff4444;">Motivo do Cancelamento</h2>
-        <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 20px;">Por favor, selecione o motivo do cancelamento para informar ao cliente.</p>
-        
+        <h2 style="margin-bottom: 15px; font-size: 1.5rem;">Motivo do Cancelamento</h2>
+        <p style="color: #888; font-size: 0.85rem; margin-bottom: 20px;">Por favor, indique o motivo do cancelamento para informar ao cliente.</p>
         <div class="form-group">
             <label>Selecione o Motivo</label>
-            <select id="cancel-motivo-select" style="width: 100%; padding: 12px;">
+            <select id="motivo-cancelamento-select" style="width: 100%;">
                 <option value="Serviço não prestado">Serviço não prestado</option>
                 <option value="Não foi feito o pagamento">Não foi feito o pagamento</option>
                 <option value="Documentação incompleta">Documentação incompleta</option>
@@ -305,420 +284,396 @@
                 <option value="Outros">Outros</option>
             </select>
         </div>
-        
-        <button id="btn-confirmar-cancel-admin" class="btn-upload" onclick="confirmarCancelamentoAdmin()" style="width: 100%; padding: 15px; background: #ff4444;">Confirmar Cancelamento</button>
+        <button class="btn-upload" onclick="confirmarCancelamentoAdmin()" style="width: 100%; padding: 15px; background: #ff4444;">Confirmar Cancelamento</button>
     </div>
 
     <!-- Modal Resposta FAQ -->
     <div id="faq-resposta-area">
-        <h2 style="margin-bottom: 15px;">Responder Dúvida</h2>
+        <h2 style="margin-bottom: 15px; font-size: 1.5rem;">Responder Pergunta</h2>
         <div class="form-group">
             <label>Pergunta do Cliente</label>
-            <p id="faq-pergunta-texto" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; font-size: 0.9rem; color: #eee;"></p>
+            <p id="faq-pergunta-texto" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; font-size: 0.9rem; border-left: 3px solid var(--gold);"></p>
         </div>
         <div class="form-group">
             <label>Sua Resposta</label>
-            <textarea id="faq-resposta-texto" rows="5" placeholder="Digite a resposta que será publicada no FAQ..."></textarea>
+            <textarea id="faq-resposta-texto" rows="5" placeholder="Digite aqui a resposta que será publicada no FAQ..."></textarea>
         </div>
         <button id="btn-publicar-faq" class="btn-upload" onclick="publicarRespostaFAQ()" style="width: 100%; padding: 15px; background: var(--gold);">Publicar Resposta</button>
     </div>
 
     <script src="../cliente.js"></script>
+    <script src="../../faq-widget.js"></script>
     <script>
         const nomesServicos = {
             'abertura-mei': 'Abertura de MEI',
-            'plano-mensal-mei': 'Plano Mensal MEI',
-            'regularizacao-mei': 'Regularização MEI',
-            'baixa-mei': 'Baixa de MEI',
-            'das-mei': 'Emissão de DAS',
-            'dasn-mei': 'Declaração Anual (DASN)',
-            'parcelamento-mei': 'Parcelamento MEI',
-            'alteracao-mei': 'Alteração de Dados MEI',
+            'regularizacao-mei': 'Regularização de MEI',
+            'baixa-mei': 'Encerramento de MEI',
+            'emissao-das': 'Emissão de DAS',
+            'dasn-anual': 'Declaração Anual (DASN-SIMEI)',
+            'parcelamento-mei': 'Parcelamento de Débitos',
+            'alteracao-mei': 'Alteração de Dados do MEI',
+            'mei-plano-basico': 'Plano MEI Básico',
+            'mei-plano-premium': 'Plano MEI Premium',
             'irpf': 'Imposto de Renda (IRPF)',
-            'cpf-regularizacao': 'Regularização de CPF',
+            'regularizacao-cpf': 'Regularização de CPF',
+            'darf-emissao': 'Emissão de DARF',
             'carne-leao': 'Carnê-Leão',
-            'consultoria-contabil': 'Consultoria Contábil',
+            'consultoria': 'Consultoria Contábil',
             'abertura-empresa': 'Abertura de Empresa',
-            'alteracao-empresa': 'Alteração de Empresa',
+            'alteracao-empresa': 'Alteração Contratual',
             'encerramento-empresa': 'Encerramento de Empresa',
             'cnd-federal': 'Certidão Negativa Federal',
             'cnd-estadual': 'Certidão Negativa Estadual',
             'cnd-municipal': 'Certidão Negativa Municipal',
-            'cnd-fgts': 'Certidão FGTS',
-            'cnd-trabalhista': 'Certidão Trabalhista',
-            'e-cpf': 'Certificado Digital e-CPF',
-            'e-cnpj': 'Certificado Digital e-CNPJ',
-            'renovacao-certificado': 'Renovação de Certificado',
-            'emissao-notas': 'Emissão de Notas Fiscais',
-            'planejamento-tributario': 'Planejamento Tributário'
+            'fgts': 'Certificado de Regularidade FGTS',
+            'trabalhista': 'Certidão Negativa Trabalhista',
+            'e-cpf': 'e-CPF (A1 - 1 Ano)',
+            'e-cnpj': 'e-CNPJ (A1 - 1 Ano)',
+            'renovacao': 'Renovação de Certificado',
+            'planejamento-tributario': 'Planejamento Tributário',
+            'emissao-notas': 'Emissão de Notas Fiscais'
         };
 
-        let dadosOriginais = { profiles: [], assinaturas: [], faqs: [] };
-        let clienteSelecionado = null;
-        let idAssinaturaParaCancelar = null;
-        let faqSelecionada = null;
+        let todosDados = [];
+        let faqPendentes = [];
 
         // Menu Hambúrguer
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
-        menuToggle.addEventListener('click', () => {
+        menuToggle.onclick = () => {
             menuToggle.classList.toggle('active');
             navMenu.classList.toggle('active');
-        });
+        };
 
         async function carregarDadosAdmin() {
+            const client = initSupabase();
+            const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
+
             try {
-                const [resProfiles, resAssinaturas, resFaqs] = await Promise.all([
-                    supabaseClient.from('profiles').select('*').order('created_at', { ascending: false }),
-                    supabaseClient.from('assinaturas').select('*').order('created_at', { ascending: false }),
-                    supabaseClient.from('faq').select('*').eq('status', 'pendente').order('created_at', { ascending: false })
-                ]);
+                // 1. Carregar Perfis (excluindo o admin)
+                const { data: profiles, error: pError } = await client
+                    .from('profiles')
+                    .select('*')
+                    .neq('email', EMAIL_ADMIN)
+                    .neq('role', 'admin');
 
-                // Filtrar para não mostrar o admin na lista de clientes
-                const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
-                dadosOriginais.profiles = (resProfiles.data || []).filter(p => p.email !== EMAIL_ADMIN && p.role !== 'admin');
-                dadosOriginais.assinaturas = resAssinaturas.data || [];
-                dadosOriginais.faqs = resFaqs.data || [];
+                if (pError) throw pError;
 
-                popularFiltroServicos();
-                renderizarTabelaFiltrada();
-                renderizarAlertasFAQ();
+                // 2. Carregar Assinaturas
+                const { data: assinaturas, error: aError } = await client
+                    .from('assinaturas')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (aError) throw aError;
+
+                // 3. Cruzar dados
+                todosDados = profiles.map(p => {
+                    const pedidos = assinaturas.filter(a => a.user_id === p.id || a.email === p.email);
+                    return { ...p, pedidos };
+                });
+
+                // Adicionar assinaturas sem perfil (vendas diretas sem cadastro completo)
+                assinaturas.forEach(a => {
+                    const jaExiste = todosDados.some(d => d.id === a.user_id || d.email === a.email);
+                    if (!jaExiste) {
+                        todosDados.push({
+                            id: a.user_id,
+                            nome: a.nome || 'Cliente Direto',
+                            email: a.email,
+                            whatsapp: a.whatsapp || '-',
+                            cpf: a.cpf || '-',
+                            pedidos: [a]
+                        });
+                    }
+                });
+
+                renderizarTabela(todosDados);
+                carregarFiltroServicos();
+                carregarFAQPendentes();
+
             } catch (err) {
                 console.error("Erro ao carregar dados:", err);
             }
         }
 
-        function renderizarAlertasFAQ() {
-            const container = document.getElementById('faq-alert-container');
-            container.innerHTML = '';
-            
-            if (dadosOriginais.faqs.length > 0) {
-                dadosOriginais.faqs.forEach(faq => {
-                    const div = document.createElement('div');
-                    div.className = 'faq-notification';
-                    div.innerHTML = `
-                        <div>
-                            <strong style="color: var(--gold); display: block;">Nova Pergunta de ${faq.cliente_nome || 'Cliente'}</strong>
-                            <span style="font-size: 0.85rem; color: #ccc;">"${faq.pergunta.substring(0, 60)}${faq.pergunta.length > 60 ? '...' : ''}"</span>
-                        </div>
-                        <button class="btn-upload" onclick="abrirModalRespostaFAQ('${faq.id}')">Responder</button>
-                    `;
-                    container.appendChild(div);
-                });
-            }
-        }
-
-        function abrirModalRespostaFAQ(id) {
-            faqSelecionada = dadosOriginais.faqs.find(f => f.id === id);
-            if (!faqSelecionada) return;
-            
-            document.getElementById('faq-pergunta-texto').innerText = faqSelecionada.pergunta;
-            document.getElementById('faq-resposta-texto').value = '';
-            
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('faq-resposta-area').style.display = 'block';
-        }
-
-        async function publicarRespostaFAQ() {
-            const resposta = document.getElementById('faq-resposta-texto').value;
-            if (!resposta) return alert("Digite uma resposta!");
-            
-            const btn = document.getElementById('btn-publicar-faq');
-            try {
-                btn.disabled = true;
-                btn.innerText = "Publicando...";
-                
-                const { error } = await supabaseClient
-                    .from('faq')
-                    .update({ 
-                        resposta: resposta, 
-                        status: 'publicada',
-                        respondida_em: new Date().toISOString()
-                    })
-                    .eq('id', faqSelecionada.id);
-
-                if (error) throw error;
-                
-                alert("Resposta publicada com sucesso!");
-                fecharModal();
-                carregarDadosAdmin();
-            } catch (err) {
-                alert("Erro ao publicar resposta.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Publicar Resposta";
-            }
-        }
-
-        function popularFiltroServicos() {
-            const select = document.getElementById('filter-servico');
-            select.innerHTML = '<option value="">Todos os Serviços</option>';
-            const servicosUnicos = [...new Set(dadosOriginais.assinaturas.map(s => s.plano_id))];
-            servicosUnicos.forEach(id => {
-                const option = document.createElement('option');
-                option.value = id;
-                option.textContent = nomesServicos[id] || id;
-                select.appendChild(option);
-            });
-        }
-
-        function renderizarTabelaFiltrada() {
+        function renderizarTabela(dados) {
+            const tbody = document.getElementById('tabela-clientes');
             const statusFiltro = document.getElementById('filter-status').value;
             const servicoFiltro = document.getElementById('filter-servico').value;
-            const dataFiltro = document.getElementById('filter-data').value;
-            const buscaFiltro = document.getElementById('search-input').value.toLowerCase();
+            const busca = document.getElementById('search-client').value.toLowerCase();
 
-            const tbody = document.getElementById('tabela-clientes');
-            tbody.innerHTML = '';
+            let html = '';
+            let totalExibido = 0;
 
-            let count = 0;
+            dados.forEach(cliente => {
+                // Filtrar pedidos do cliente
+                let pedidosFiltrados = cliente.pedidos.filter(p => {
+                    const matchStatus = !statusFiltro || p.status === statusFiltro;
+                    const matchServico = !servicoFiltro || p.servico === servicoFiltro;
+                    return matchStatus && matchServico;
+                });
 
-            dadosOriginais.profiles.forEach(perfil => {
-                const assinaturasDoCliente = dadosOriginais.assinaturas.filter(s => s.cliente_id === perfil.id);
-                
-                // Se não tem assinatura e o filtro de status é "POTENCIAL", ou se não tem filtro de status
-                if (assinaturasDoCliente.length === 0) {
-                    if (statusFiltro === "" || statusFiltro === "POTENCIAL") {
-                        if (perfil.nome?.toLowerCase().includes(buscaFiltro) || perfil.email?.toLowerCase().includes(buscaFiltro) || perfil.cpf?.includes(buscaFiltro)) {
-                            tbody.innerHTML += criarLinhaTabela(perfil, null);
-                            count++;
-                        }
+                // Se o filtro for POTENCIAL, mostrar apenas quem não tem pedidos
+                if (statusFiltro === 'POTENCIAL') {
+                    if (cliente.pedidos.length === 0) {
+                        pedidosFiltrados = [{ id: 'potencial', servico: 'Nenhum', status: 'POTENCIAL', created_at: cliente.created_at }];
+                    } else {
+                        pedidosFiltrados = [];
                     }
-                    return;
                 }
 
-                // Se tem assinaturas, filtrar cada uma
-                assinaturasDoCliente.forEach(sub => {
-                    const matchStatus = !statusFiltro || (statusFiltro !== "POTENCIAL" && sub.status === statusFiltro);
-                    const matchServico = !servicoFiltro || sub.plano_id === servicoFiltro;
-                    const matchData = !dataFiltro || sub.created_at.startsWith(dataFiltro);
-                    const matchBusca = perfil.nome?.toLowerCase().includes(buscaFiltro) || perfil.email?.toLowerCase().includes(buscaFiltro) || perfil.cpf?.includes(buscaFiltro);
+                // Filtro de busca (Nome, Email ou CPF)
+                const matchBusca = !busca || 
+                    cliente.nome.toLowerCase().includes(busca) || 
+                    cliente.email.toLowerCase().includes(busca) || 
+                    (cliente.cpf && cliente.cpf.includes(busca));
 
-                    if (matchStatus && matchServico && matchData && matchBusca) {
-                        tbody.innerHTML += criarLinhaTabela(perfil, sub);
-                        count++;
-                    }
-                });
+                if (pedidosFiltrados.length > 0 && matchBusca) {
+                    pedidosFiltrados.forEach(p => {
+                        totalExibido++;
+                        const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '-';
+                        const statusClass = p.status === 'Ativo' ? 'background:#25d366; color:white;' : 
+                                          p.status === 'Cancelado' ? 'background:#ff4444; color:white;' : 
+                                          'background:#bd9617; color:white;';
+
+                        html += `
+                            <tr>
+                                <td>
+                                    <div class="client-info">
+                                        <strong>${cliente.nome}</strong>
+                                        <small>${cliente.email}</small>
+                                        <small>${cliente.whatsapp || '-'}</small>
+                                    </div>
+                                </td>
+                                <td>${nomesServicos[p.servico] || p.servico}</td>
+                                <td>
+                                    ${p.id === 'potencial' ? '<span class="status-badge" style="background:#666; color:white;">Potencial</span>' : `
+                                        <select class="status-select" onchange="alterarStatus('${p.id}', this.value)">
+                                            <option value="Pendente" ${p.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                                            <option value="Ativo" ${p.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
+                                            <option value="Cancelado" ${p.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                                        </select>
+                                    `}
+                                </td>
+                                <td>${data}</td>
+                                <td>
+                                    ${p.id !== 'potencial' ? `<button class="btn-upload" onclick="abrirUpload('${p.id}', '${cliente.nome}')"><i class="fas fa-file-upload"></i> Enviar Doc</button>` : '-'}
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
             });
 
-            document.getElementById('counter-info').innerText = `${count} registros encontrados`;
+            tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center; padding:40px; color:#888;">Nenhum registro encontrado.</td></tr>';
+            document.getElementById('counter-info').innerText = `${totalExibido} registro(s) exibido(s)`;
         }
 
-        function criarLinhaTabela(perfil, sub) {
-            const data = sub ? new Date(sub.created_at).toLocaleDateString('pt-BR') : '---';
-            const status = sub ? sub.status : 'POTENCIAL';
-            const cor = status === 'Ativo' ? '#25d366' : (status === 'Pendente' ? '#f1c40f' : (status === 'Cancelado' ? '#ff4444' : '#888'));
-            const corTexto = (status === 'Pendente') ? 'black' : 'white';
+        function carregarFiltroServicos() {
+            const select = document.getElementById('filter-servico');
+            const servicosUnicos = [...new Set(todosDados.flatMap(c => c.pedidos.map(p => p.servico)))].filter(s => s && s !== 'Nenhum');
             
-            const servicoNome = sub ? (nomesServicos[sub.plano_id] || sub.plano_id) : '<span style="color:#666">Nenhum pedido</span>';
-            
-            const acoes = sub ? `
-                <div style="display:flex; gap:8px;">
-                    <select class="status-select" onchange="atualizarStatus('${sub.id}', this.value)">
-                        <option value="Pendente" ${status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                        <option value="Ativo" ${status === 'Ativo' ? 'selected' : ''}>Ativo</option>
-                        <option value="Cancelado" ${status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
-                    </select>
-                    <button class="btn-upload" onclick="abrirModalUpload('${perfil.id}')" title="Enviar Documento"><i class="fas fa-file-upload"></i></button>
-                </div>
-            ` : `<button class="btn-upload" onclick="abrirModalUpload('${perfil.id}')" style="background:#555">Vincular Doc</button>`;
-
-            return `
-                <tr>
-                    <td>
-                        <div class="client-info">
-                            <strong>${perfil.nome || 'Sem Nome'}</strong>
-                            <small>${perfil.email}</small>
-                            <small>${perfil.whatsapp || 'Sem WhatsApp'}</small>
-                        </div>
-                    </td>
-                    <td>${servicoNome}</td>
-                    <td>${data}</td>
-                    <td><span class="status-badge" style="background:${cor}; color:${corTexto}">${status}</span></td>
-                    <td>${acoes}</td>
-                </tr>
-            `;
+            let options = '<option value="">Todos os Serviços</option>';
+            servicosUnicos.sort().forEach(s => {
+                options += `<option value="${s}">${nomesServicos[s] || s}</option>`;
+            });
+            select.innerHTML = options;
         }
 
-        function limparFiltros() {
-            document.getElementById('filter-status').value = "";
-            document.getElementById('filter-servico').value = "";
-            document.getElementById('filter-data').value = "";
-            document.getElementById('search-input').value = "";
-            renderizarTabelaFiltrada();
-        }
-
-        // Eventos de Filtro
-        document.getElementById('filter-status').addEventListener('change', renderizarTabelaFiltrada);
-        document.getElementById('filter-servico').addEventListener('change', renderizarTabelaFiltrada);
-        document.getElementById('filter-data').addEventListener('input', renderizarTabelaFiltrada);
-        document.getElementById('search-input').addEventListener('input', renderizarTabelaFiltrada);
-
-        function abrirModalUpload(clienteId) {
-            clienteSelecionado = clienteId;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('upload-area').style.display = 'block';
-        }
-
-        function abrirModalNovoPedido() {
-            const container = document.getElementById('lista-servicos-admin');
-            container.innerHTML = Object.entries(nomesServicos).map(([id, nome]) => `
-                <div class="service-option">
-                    <input type="checkbox" id="check-${id}" value="${id}">
-                    <label for="check-${id}">${nome}</label>
-                </div>
-            `).join('');
-            
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('novo-pedido-area').style.display = 'block';
-        }
-
-        function fecharModal() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('upload-area').style.display = 'none';
-            document.getElementById('novo-pedido-area').style.display = 'none';
-            document.getElementById('cancelamento-motivo-area').style.display = 'none';
-            document.getElementById('faq-resposta-area').style.display = 'none';
-            clienteSelecionado = null;
-            idAssinaturaParaCancelar = null;
-            faqSelecionada = null;
-        }
-
-        async function confirmarUpload() {
-            const nome = document.getElementById('doc-nome').value;
-            const url = document.getElementById('doc-url').value;
-            if (!nome || !url) return alert("Preencha todos os campos!");
-
-            try {
-                const { error } = await supabaseClient.from('documentos').insert([
-                    { cliente_id: clienteSelecionado, nome_arquivo: nome, url_arquivo: url }
-                ]);
-                if (error) throw error;
-                alert("Documento enviado!");
-                fecharModal();
-            } catch (err) {
-                alert("Erro ao enviar documento.");
-            }
-        }
-
-        async function confirmarNovoPedido() {
-            const nome = document.getElementById('novo-nome').value;
-            const email = document.getElementById('novo-email').value;
-            const whatsapp = document.getElementById('novo-whatsapp').value;
-            const cpf = document.getElementById('novo-cpf').value;
-            
-            const checkboxes = document.querySelectorAll('#lista-servicos-admin input[type="checkbox"]:checked');
-            const servicosSelecionados = Array.from(checkboxes).map(cb => cb.value);
-
-            if (!nome || !email || servicosSelecionados.length === 0) {
-                return alert("Preencha Nome, E-mail e selecione ao menos um serviço!");
-            }
-
-            try {
-                // 1. Criar ou atualizar perfil (upsert baseado no email)
-                const { data: profile, error: pError } = await supabaseClient
-                    .from('profiles')
-                    .upsert({ 
-                        email: email, 
-                        nome: nome, 
-                        whatsapp: whatsapp, 
-                        cpf: cpf,
-                        role: 'cliente'
-                    }, { onConflict: 'email' })
-                    .select()
-                    .single();
-
-                if (pError) throw pError;
-
-                // 2. Criar assinaturas
-                const assinaturas = servicosSelecionados.map(id => ({
-                    cliente_id: profile.id,
-                    plano_id: id,
-                    status: 'Pendente'
-                }));
-
-                const { error: sError } = await supabaseClient.from('assinaturas').insert(assinaturas);
-                if (sError) throw sError;
-
-                alert("Pedido finalizado com sucesso!");
-                fecharModal();
-                carregarDadosAdmin();
-            } catch (err) {
-                console.error(err);
-                alert("Erro ao criar pedido.");
-            }
-        }
-
-        async function atualizarStatus(id, novoStatus) {
+        // Lógica de Cancelamento com Motivo
+        let cancelamentoPendente = null;
+        async function alterarStatus(id, novoStatus) {
             if (novoStatus === 'Cancelado') {
-                idAssinaturaParaCancelar = id;
+                cancelamentoPendente = id;
                 document.getElementById('overlay').style.display = 'block';
                 document.getElementById('cancelamento-motivo-area').style.display = 'block';
                 return;
             }
 
+            const client = initSupabase();
             try {
-                const { error } = await supabaseClient.from('assinaturas').update({ status: novoStatus }).eq('id', id);
+                const { error } = await client.from('assinaturas').update({ status: novoStatus }).eq('id', id);
                 if (error) throw error;
                 
-                const index = dadosOriginais.assinaturas.findIndex(s => s.id === id);
-                if (index !== -1) dadosOriginais.assinaturas[index].status = novoStatus;
-                
-                renderizarTabelaFiltrada();
+                // Atualizar localmente
+                todosDados.forEach(c => {
+                    c.pedidos.forEach(p => {
+                        if (p.id === id) p.status = novoStatus;
+                    });
+                });
+                renderizarTabela(todosDados);
             } catch (err) {
-                alert("Erro ao atualizar.");
+                alert("Erro ao atualizar status: " + err.message);
             }
         }
 
         async function confirmarCancelamentoAdmin() {
-            const motivo = document.getElementById('cancel-motivo-select').value;
-            const btn = document.getElementById('btn-confirmar-cancel-admin');
+            if (!cancelamentoPendente) return;
+            const motivo = document.getElementById('motivo-cancelamento-select').value;
+            const client = initSupabase();
             
-            if (!idAssinaturaParaCancelar) {
-                alert("Erro: Nenhuma assinatura selecionada.");
+            try {
+                const { error } = await client.from('assinaturas').update({ 
+                    status: 'Cancelado',
+                    motivo_cancelamento: motivo 
+                }).eq('id', cancelamentoPendente);
+                
+                if (error) throw error;
+                
+                // Atualizar localmente
+                todosDados.forEach(c => {
+                    c.pedidos.forEach(p => {
+                        if (p.id === cancelamentoPendente) {
+                            p.status = 'Cancelado';
+                            p.motivo_cancelamento = motivo;
+                        }
+                    });
+                });
+                
+                fecharModais();
+                renderizarTabela(todosDados);
+            } catch (err) {
+                alert("Erro ao cancelar: " + err.message);
+            }
+        }
+
+        // Novo Pedido
+        function abrirModalNovoPedido() {
+            const lista = document.getElementById('lista-servicos-admin');
+            let html = '';
+            
+            // Ordenar serviços por nome
+            const sortedKeys = Object.keys(nomesServicos).sort((a, b) => nomesServicos[a].localeCompare(nomesServicos[b]));
+            
+            sortedKeys.forEach(key => {
+                html += `
+                    <div class="service-option">
+                        <input type="checkbox" id="svc-${key}" value="${key}">
+                        <label for="svc-${key}">${nomesServicos[key]}</label>
+                    </div>
+                `;
+            });
+            lista.innerHTML = html;
+            
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('novo-pedido-area').style.display = 'block';
+        }
+
+        async function finalizarNovoPedido() {
+            const nome = document.getElementById('novo-nome').value.trim();
+            const email = document.getElementById('novo-email').value.trim();
+            const whatsapp = document.getElementById('novo-whatsapp').value.trim();
+            const cpf = document.getElementById('novo-cpf').value.trim();
+            
+            const selecionados = Array.from(document.querySelectorAll('#lista-servicos-admin input:checked')).map(cb => cb.value);
+            
+            if (!nome || !email || selecionados.length === 0) {
+                alert("Preencha Nome, E-mail e selecione ao menos um serviço.");
                 return;
             }
 
+            const client = initSupabase();
             try {
-                btn.disabled = true;
-                btn.innerText = "Cancelando...";
+                // 1. Garantir Perfil
+                await client.from('profiles').upsert({ nome, email, whatsapp, cpf, role: 'cliente' }, { onConflict: 'email' });
                 
-                const { data, error } = await supabaseClient
-                    .from('assinaturas')
-                    .update({ 
-                        status: 'Cancelado', 
-                        motivo_cancelamento: motivo 
-                    })
-                    .eq('id', idAssinaturaParaCancelar)
-                    .select();
-
+                // 2. Inserir Assinaturas
+                const novasAssinaturas = selecionados.map(servico => ({
+                    email, nome, whatsapp, cpf, servico, status: 'Pendente'
+                }));
+                
+                const { error } = await client.from('assinaturas').insert(novasAssinaturas);
                 if (error) throw error;
                 
-                // Atualizar dados locais
-                const index = dadosOriginais.assinaturas.findIndex(s => s.id === idAssinaturaParaCancelar);
-                if (index !== -1) {
-                    dadosOriginais.assinaturas[index].status = 'Cancelado';
-                    dadosOriginais.assinaturas[index].motivo_cancelamento = motivo;
-                }
-
-                alert("Pedido cancelado com sucesso!");
-                fecharModal();
-                renderizarTabelaFiltrada();
+                alert("Pedido(s) criado(s) com sucesso!");
+                fecharModais();
+                carregarDadosAdmin();
             } catch (err) {
-                alert("Erro ao cancelar: " + (err.message || "Erro desconhecido."));
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Confirmar Cancelamento";
+                alert("Erro ao criar pedido: " + err.message);
             }
         }
 
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            window.location.href = 'index.html';
+        // FAQ Management
+        async function carregarFAQPendentes() {
+            const client = initSupabase();
+            try {
+                const { data, error } = await client.from('faq').select('*').eq('status', 'pendente').order('created_at', { ascending: true });
+                if (error) throw error;
+                
+                faqPendentes = data;
+                renderizarAlertasFAQ();
+            } catch (err) { console.error(err); }
         }
 
-        // Inicializar
-        carregarDadosAdmin();
+        function renderizarAlertasFAQ() {
+            const container = document.getElementById('faq-alert-container');
+            if (faqPendentes.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = faqPendentes.map(faq => `
+                <div class="faq-notification">
+                    <div>
+                        <strong style="color: var(--gold);"><i class="fas fa-question-circle"></i> Nova Pergunta de ${faq.cliente_nome || 'Cliente'}</strong>
+                        <p style="font-size: 0.85rem; margin-top: 5px; opacity: 0.9;">"${faq.pergunta}"</p>
+                    </div>
+                    <button class="btn-upload" onclick="abrirRespostaFAQ('${faq.id}', '${faq.pergunta.replace(/'/g, "\\'")}')">Responder</button>
+                </div>
+            `).join('');
+        }
+
+        let faqSelecionada = null;
+        function abrirRespostaFAQ(id, pergunta) {
+            faqSelecionada = id;
+            document.getElementById('faq-pergunta-texto').innerText = pergunta;
+            document.getElementById('faq-resposta-texto').value = '';
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('faq-resposta-area').style.display = 'block';
+        }
+
+        async function publicarRespostaFAQ() {
+            const resposta = document.getElementById('faq-resposta-texto').value.trim();
+            if (!resposta) return alert("Digite uma resposta.");
+
+            const client = initSupabase();
+            try {
+                const { error } = await client.from('faq').update({
+                    resposta: resposta,
+                    status: 'publicada',
+                    respondida_em: new Date().toISOString()
+                }).eq('id', faqSelecionada);
+
+                if (error) throw error;
+                
+                alert("Resposta publicada com sucesso!");
+                fecharModais();
+                carregarFAQPendentes();
+            } catch (err) { alert(err.message); }
+        }
+
+        function fecharModais() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('novo-pedido-area').style.display = 'none';
+            document.getElementById('cancelamento-motivo-area').style.display = 'none';
+            document.getElementById('faq-resposta-area').style.display = 'none';
+            cancelamentoPendente = null;
+            faqSelecionada = null;
+        }
+
+        function limparFiltros() {
+            document.getElementById('filter-status').value = '';
+            document.getElementById('filter-servico').value = '';
+            document.getElementById('search-client').value = '';
+            renderizarTabela(todosDados);
+        }
+
+        document.getElementById('filter-status').onchange = () => renderizarTabela(todosDados);
+        document.getElementById('filter-servico').onchange = () => renderizarTabela(todosDados);
+        document.getElementById('search-client').oninput = () => renderizarTabela(todosDados);
+
+        document.addEventListener('DOMContentLoaded', carregarDadosAdmin);
     </script>
 </body>
 </html>
