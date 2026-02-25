@@ -1,21 +1,23 @@
-/* FAQ Widget Logic */
+/* FAQ Widget Logic - JL Serviços Contábeis */
+import { supabase } from './supabase.js';
+
 (function() {
-    // 1. Injetar HTML do Botão e Modal
+    // 1. Injetar HTML do Botão, Menu e Modal
     const faqHTML = `
-        <div class="faq-float-btn" title="Tira Dúvidas" onclick="toggleFaqMenu()">?</div>
+        <div class="faq-float-btn" id="faqFloatBtn" title="Tira Dúvidas">?</div>
         
         <div id="faqMenu" class="faq-menu">
             <div class="faq-menu-content">
-                <span class="faq-menu-close" onclick="closeFaqMenu()">&times;</span>
+                <span class="faq-menu-close" id="faqMenuClose">&times;</span>
                 <h3>Central de Ajuda</h3>
                 <a href="/servicos/tira-duvidas.html" class="faq-menu-link"><i class="fas fa-question-circle"></i> Ver Perguntas Frequentes</a>
-                <button onclick="openFaqModal()" class="faq-menu-btn"><i class="fas fa-paper-plane"></i> Enviar uma Pergunta</button>
+                <button id="faqOpenModalBtn" class="faq-menu-btn"><i class="fas fa-paper-plane"></i> Enviar uma Pergunta</button>
             </div>
         </div>
 
         <div id="faqModal" class="faq-modal">
             <div class="faq-modal-content">
-                <span class="faq-modal-close" onclick="closeFaqModal()">&times;</span>
+                <span class="faq-modal-close" id="faqModalClose">&times;</span>
                 <h2>Tira Dúvidas</h2>
                 <p>Não encontrou o que procura? Envie sua pergunta abaixo e responderemos em breve.</p>
                 <form id="faqForm" class="faq-form">
@@ -27,28 +29,28 @@
     `;
     document.body.insertAdjacentHTML('beforeend', faqHTML);
 
-    // 2. Funções de Controle
-    window.toggleFaqMenu = function() {
-        const menu = document.getElementById('faqMenu');
-        menu.classList.toggle('active');
-    };
-
-    window.closeFaqMenu = function() {
-        document.getElementById('faqMenu').classList.remove('active');
-    };
-
-    window.openFaqModal = function() {
-        closeFaqMenu();
-        document.getElementById('faqModal').classList.add('active');
-    };
-
-    window.closeFaqModal = function() {
-        document.getElementById('faqModal').classList.remove('active');
-        document.getElementById('faqForm').reset();
-    };
-
-    // 3. Lógica de Envio
+    // 2. Elementos
+    const floatBtn = document.getElementById('faqFloatBtn');
+    const menu = document.getElementById('faqMenu');
+    const menuClose = document.getElementById('faqMenuClose');
+    const modal = document.getElementById('faqModal');
+    const modalClose = document.getElementById('faqModalClose');
+    const openModalBtn = document.getElementById('faqOpenModalBtn');
     const faqForm = document.getElementById('faqForm');
+
+    // 3. Funções de Controle
+    const toggleMenu = () => menu.classList.toggle('active');
+    const closeMenu = () => menu.classList.remove('active');
+    const openModal = () => { closeMenu(); modal.classList.add('active'); };
+    const closeModal = () => { modal.classList.remove('active'); faqForm.reset(); };
+
+    // 4. Event Listeners
+    floatBtn.addEventListener('click', toggleMenu);
+    menuClose.addEventListener('click', closeMenu);
+    openModalBtn.addEventListener('click', openModal);
+    modalClose.addEventListener('click', closeModal);
+
+    // 5. Lógica de Envio
     if (faqForm) {
         faqForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -59,23 +61,19 @@
                 btn.disabled = true;
                 btn.innerText = 'Enviando...';
 
-                // Verificar se o Supabase está disponível
-                if (typeof supabaseClient === 'undefined') {
-                    throw new Error('Supabase não inicializado. Por favor, faça login primeiro.');
-                }
-
-                const { data: { user } } = await supabaseClient.auth.getUser();
-                if (!user) {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
                     alert('Você precisa estar logado para enviar uma pergunta.');
                     window.location.href = '/servicos/area_do_cliente/index.html';
                     return;
                 }
 
+                const user = session.user;
                 // Buscar nome do perfil
-                const { data: profile } = await supabaseClient.from('profiles').select('nome').eq('id', user.id).maybeSingle();
+                const { data: profile } = await supabase.from('profiles').select('nome').eq('id', user.id).maybeSingle();
                 const nomeCliente = profile?.nome || user.user_metadata?.nome || user.email.split('@')[0];
 
-                const { error } = await supabaseClient.from('faq').insert([
+                const { error } = await supabase.from('faq').insert([
                     { 
                         pergunta: pergunta, 
                         cliente_id: user.id,
@@ -87,7 +85,7 @@
                 if (error) throw error;
 
                 alert('Sua pergunta foi enviada com sucesso! Você será notificado assim que for respondida.');
-                closeFaqModal();
+                closeModal();
             } catch (err) {
                 console.error('Erro ao enviar FAQ:', err);
                 alert('Erro ao enviar pergunta: ' + (err.message || 'Tente novamente mais tarde.'));
@@ -100,9 +98,7 @@
 
     // Fechar ao clicar fora
     window.addEventListener('click', (e) => {
-        const modal = document.getElementById('faqModal');
-        const menu = document.getElementById('faqMenu');
-        if (e.target === modal) closeFaqModal();
-        if (e.target === menu) closeFaqMenu();
+        if (e.target === modal) closeModal();
+        if (e.target === menu) closeMenu();
     });
 })();
