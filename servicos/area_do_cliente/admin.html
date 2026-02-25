@@ -6,7 +6,6 @@
     <title>Gestão Administrativa | JL Serviços</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../../faq-widget.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --gold: #bd9617; --dark-blue: #0a192f; --glass: rgba(255, 255, 255, 0.05); --success: #25d366; }
@@ -161,6 +160,7 @@
             .filters-container { grid-template-columns: 1fr 1fr; }
         }
     </style>
+  <link rel="stylesheet" href="/faq-widget.css">
 </head>
 <body>
 
@@ -302,7 +302,6 @@
     </div>
 
     <script src="../cliente.js"></script>
-    <script type="module" src="/faq-widget.js"></script>
     <script>
         const nomesServicos = {
             'abertura-mei': 'Abertura de MEI',
@@ -675,5 +674,6 @@
 
         document.addEventListener('DOMContentLoaded', carregarDadosAdmin);
     </script>
+  <script type="module" src="/faq-widget.js"></script>
 </body>
 </html>

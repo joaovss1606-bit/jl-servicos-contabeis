@@ -1,5 +1,5 @@
 /* FAQ Widget Logic - JL Serviços Contábeis */
-import { supabase } from './supabase.js';
+import { supabase } from '/supabase.js';
 
 (function() {
     // 1. Injetar HTML do Botão, Menu e Modal
@@ -43,6 +43,9 @@ import { supabase } from './supabase.js';
     const closeMenu = () => menu.classList.remove('active');
     const openModal = () => { closeMenu(); modal.classList.add('active'); };
     const closeModal = () => { modal.classList.remove('active'); faqForm.reset(); };
+
+    // Exportar para o escopo global para ser usado por outros botões
+    window.openFaqModal = openModal;
 
     // 4. Event Listeners
     floatBtn.addEventListener('click', toggleMenu);
