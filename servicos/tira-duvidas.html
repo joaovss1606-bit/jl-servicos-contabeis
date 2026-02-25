@@ -42,6 +42,30 @@
 
         .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); text-decoration: none; font-weight: 700; }
 
+        /* Menu de Navegação */
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav-links a:hover { color: var(--gold); }
+        .btn-dashboard {
+            border: 1px solid var(--gold);
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: var(--gold) !important;
+        }
+        .btn-dashboard:hover { background: var(--gold); color: white !important; }
+
         /* Hero Section */
         .hero {
             padding: 80px 5% 40px;
@@ -149,6 +173,7 @@
         .loading { text-align: center; padding: 40px; color: var(--gold); font-size: 1.2rem; }
 
         @media (max-width: 768px) {
+            .nav-links { display: none; }
             .hero h1 { font-size: 2.2rem; }
             .faq-question { font-size: 1rem; padding: 20px; }
             .ask-card { padding: 30px 20px; }
@@ -158,7 +183,14 @@
 <body>
     <header>
         <a href="../index.html" class="logo">JL SERVIÇOS CONTÁBEIS</a>
-        <a href="area_do_cliente/dashboard.html" style="color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--gold); padding: 8px 20px; border-radius: 20px; transition: 0.3s;">DASHBOARD</a>
+        <nav class="nav-links">
+            <a href="../index.html">Início</a>
+            <a href="../servicos/index.html">Serviços</a>
+            <a href="../blog/index.html">Blog</a>
+            <a href="../sobre/index.html">Sobre</a>
+            <a href="../lgpd/index.html">LGPD</a>
+            <a href="area_do_cliente/dashboard.html" class="btn-dashboard">DASHBOARD</a>
+        </nav>
     </header>
 
     <section class="hero">
@@ -174,13 +206,14 @@
         <div class="ask-card">
             <h3>Não encontrou o que procura?</h3>
             <p>Nossa equipe está pronta para ajudar com sua dúvida específica.</p>
-            <button class="btn-ask" onclick="openFaqModal()">Pergunte Aqui</button>
+            <button class="btn-ask" id="btn-pergunte-aqui">Pergunte Aqui</button>
         </div>
     </div>
 
-    <script src="../faq-widget.js"></script>
-    <script>
-        // Perguntas Padrão (Caso o banco esteja vazio ou para garantir conteúdo inicial)
+    <script type="module">
+        import { supabase } from '../supabase.js';
+
+        // Perguntas Padrão
         const perguntasPadrao = [
             {
                 pergunta: "Como funciona a abertura de empresa MEI?",
@@ -199,8 +232,7 @@
         async function carregarFAQ() {
             const faqList = document.getElementById('faq-list');
             try {
-                // Buscar do Supabase
-                const { data: faqs, error } = await supabaseClient
+                const { data: faqs, error } = await supabase
                     .from('faq')
                     .select('*')
                     .eq('status', 'publicada')
@@ -208,12 +240,11 @@
 
                 if (error) throw error;
 
-                // Combinar padrão com as do banco
                 const todasPerguntas = [...perguntasPadrao, ...(faqs || [])];
 
                 faqList.innerHTML = todasPerguntas.map((item, index) => `
                     <div class="faq-item" id="faq-${index}">
-                        <div class="faq-question" onclick="toggleFaq(${index})">
+                        <div class="faq-question" onclick="window.toggleFaq(${index})">
                             <span>${item.pergunta}</span>
                             <i class="fas fa-chevron-down"></i>
                         </div>
@@ -225,10 +256,9 @@
 
             } catch (err) {
                 console.error('Erro ao carregar FAQ:', err);
-                // Mostrar apenas as padrão em caso de erro
                 faqList.innerHTML = perguntasPadrao.map((item, index) => `
                     <div class="faq-item" id="faq-${index}">
-                        <div class="faq-question" onclick="toggleFaq(${index})">
+                        <div class="faq-question" onclick="window.toggleFaq(${index})">
                             <span>${item.pergunta}</span>
                             <i class="fas fa-chevron-down"></i>
                         </div>
@@ -240,19 +270,25 @@
             }
         }
 
-        function toggleFaq(index) {
+        window.toggleFaq = function(index) {
             const items = document.querySelectorAll('.faq-item');
             const currentItem = document.getElementById(`faq-${index}`);
-            
-            items.forEach(item => {
-                if (item !== currentItem) item.classList.remove('active');
-            });
-            
+            items.forEach(item => { if (item !== currentItem) item.classList.remove('active'); });
             currentItem.classList.toggle('active');
-        }
+        };
 
-        // Inicializar
+        // Corrigir o botão "Pergunte Aqui"
+        document.getElementById('btn-pergunte-aqui').addEventListener('click', () => {
+            if (window.openFaqModal) {
+                window.openFaqModal();
+            } else {
+                // Fallback caso o widget ainda não tenha carregado
+                alert('O sistema de perguntas está carregando. Por favor, tente novamente em instantes.');
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', carregarFAQ);
     </script>
+    <script type="module" src="/faq-widget.js"></script>
 </body>
 </html>
