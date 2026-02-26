@@ -1,11 +1,18 @@
-/* FAQ Widget Styles */
+/* FAQ Widget Styles - JL Serviços Contábeis */
+:root {
+    --faq-gold: #bd9617;
+    --faq-dark: #0a192f;
+    --faq-glass: rgba(10, 25, 47, 0.95);
+}
+
+/* Botão Flutuante */
 .faq-float-btn {
     position: fixed;
     bottom: 30px;
     left: 30px;
     width: 60px;
     height: 60px;
-    background: #bd9617;
+    background: var(--faq-gold);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -14,80 +21,74 @@
     font-size: 30px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    z-index: 9999;
-    transition: 0.3s;
-    font-family: 'Montserrat', sans-serif;
-    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 999999; /* Z-index extremamente alto */
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .faq-float-btn:hover {
-    transform: scale(1.1);
-    background: #a68414;
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 15px 30px rgba(189, 150, 23, 0.4);
 }
 
-/* Menu Flutuante */
+/* Menu Rápido */
 .faq-menu {
     position: fixed;
     bottom: 100px;
     left: 30px;
     width: 280px;
-    background: #0a192f;
-    border: 2px solid #bd9617;
+    background: var(--faq-glass);
+    border: 1px solid var(--faq-gold);
     border-radius: 15px;
     padding: 20px;
     display: none;
-    flex-direction: column;
-    gap: 15px;
-    z-index: 9998;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 999998;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
 }
 
-.faq-menu.active {
-    display: flex;
-    animation: slideUp 0.3s ease-out;
+.faq-menu.active { 
+    display: block; 
+    animation: faqFadeIn 0.3s ease;
+}
+
+.faq-menu-content h3 {
+    color: var(--faq-gold);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.faq-menu-link, .faq-menu-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(189, 150, 23, 0.3);
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    text-align: left;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.faq-menu-link:hover, .faq-menu-btn:hover {
+    background: rgba(189, 150, 23, 0.1);
+    border-color: var(--faq-gold);
+    color: var(--faq-gold);
 }
 
 .faq-menu-close {
     position: absolute;
     top: 10px;
     right: 15px;
-    color: #bd9617;
+    color: #aaa;
+    cursor: pointer;
     font-size: 20px;
-    cursor: pointer;
-}
-
-.faq-menu h3 {
-    color: #bd9617;
-    font-family: 'Playfair Display', serif;
-    margin: 0 0 10px 0;
-    font-size: 1.2rem;
-}
-
-.faq-menu-link, .faq-menu-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: 0.3s;
-    border: 1px solid rgba(189, 150, 23, 0.3);
-    background: rgba(255,255,255,0.05);
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.faq-menu-link:hover, .faq-menu-btn:hover {
-    background: rgba(189, 150, 23, 0.1);
-    border-color: #bd9617;
-    color: #bd9617;
 }
 
 /* Modal de Pergunta */
@@ -97,85 +98,69 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    z-index: 9999999;
     backdrop-filter: blur(5px);
 }
 
-.faq-modal.active {
-    display: flex;
-}
+.faq-modal.active { display: flex; }
 
 .faq-modal-content {
-    background: #0a192f;
-    border: 2px solid #bd9617;
-    border-radius: 20px;
-    padding: 40px;
+    background: var(--faq-dark);
     width: 90%;
     max-width: 500px;
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid var(--faq-gold);
     position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    animation: faqSlideUp 0.4s ease;
 }
+
+.faq-modal-content h2 { color: var(--faq-gold); margin-bottom: 10px; font-family: 'Playfair Display', serif; }
+.faq-modal-content p { color: #ccc; margin-bottom: 20px; font-size: 0.9rem; }
+
+.faq-form textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    margin-bottom: 20px;
+    resize: none;
+    font-family: inherit;
+}
+
+.faq-form textarea:focus { border-color: var(--faq-gold); outline: none; }
+
+.faq-submit-btn {
+    width: 100%;
+    background: var(--faq-gold);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.faq-submit-btn:hover { background: #d4af37; }
 
 .faq-modal-close {
     position: absolute;
     top: 20px;
     right: 20px;
-    color: #bd9617;
-    font-size: 30px;
+    color: #aaa;
     cursor: pointer;
+    font-size: 24px;
 }
 
-.faq-modal h2 {
-    color: #bd9617;
-    font-family: 'Playfair Display', serif;
-    margin-bottom: 15px;
-}
-
-.faq-modal p {
-    color: #ccc;
-    font-size: 0.9rem;
-    margin-bottom: 25px;
-    line-height: 1.6;
-}
-
-.faq-form textarea {
-    width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(189, 150, 23, 0.3);
-    border-radius: 10px;
-    padding: 15px;
-    color: white;
-    font-family: inherit;
-    outline: none;
-    margin-bottom: 20px;
-    resize: none;
-}
-
-.faq-submit-btn {
-    width: 100%;
-    background: #bd9617;
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.faq-submit-btn:hover {
-    background: #a68414;
-    transform: translateY(-2px);
-}
-
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
+@keyframes faqFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes faqSlideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 768px) {
     .faq-float-btn { bottom: 20px; left: 20px; width: 50px; height: 50px; font-size: 24px; }

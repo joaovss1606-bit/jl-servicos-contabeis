@@ -1,5 +1,11 @@
 /* FAQ Widget Logic - JL Serviços Contábeis */
-import { supabase } from '/supabase.js';
+// Importação direta do Supabase para garantir funcionamento em qualquer nível de pasta
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const SUPABASE_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 (function() {
     // 1. Injetar HTML do Botão, Menu e Modal
@@ -27,81 +33,94 @@ import { supabase } from '/supabase.js';
             </div>
         </div>
     `;
-    document.body.insertAdjacentHTML('beforeend', faqHTML);
-
-    // 2. Elementos
-    const floatBtn = document.getElementById('faqFloatBtn');
-    const menu = document.getElementById('faqMenu');
-    const menuClose = document.getElementById('faqMenuClose');
-    const modal = document.getElementById('faqModal');
-    const modalClose = document.getElementById('faqModalClose');
-    const openModalBtn = document.getElementById('faqOpenModalBtn');
-    const faqForm = document.getElementById('faqForm');
-
-    // 3. Funções de Controle
-    const toggleMenu = () => menu.classList.toggle('active');
-    const closeMenu = () => menu.classList.remove('active');
-    const openModal = () => { closeMenu(); modal.classList.add('active'); };
-    const closeModal = () => { modal.classList.remove('active'); faqForm.reset(); };
-
-    // Exportar para o escopo global para ser usado por outros botões
-    window.openFaqModal = openModal;
-
-    // 4. Event Listeners
-    floatBtn.addEventListener('click', toggleMenu);
-    menuClose.addEventListener('click', closeMenu);
-    openModalBtn.addEventListener('click', openModal);
-    modalClose.addEventListener('click', closeModal);
-
-    // 5. Lógica de Envio
-    if (faqForm) {
-        faqForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('faqSubmitBtn');
-            const pergunta = document.getElementById('faqPergunta').value;
-
-            try {
-                btn.disabled = true;
-                btn.innerText = 'Enviando...';
-
-                const { data: { session } } = await supabase.auth.getSession();
-                if (!session) {
-                    alert('Você precisa estar logado para enviar uma pergunta.');
-                    window.location.href = '/servicos/area_do_cliente/index.html';
-                    return;
-                }
-
-                const user = session.user;
-                // Buscar nome do perfil
-                const { data: profile } = await supabase.from('profiles').select('nome').eq('id', user.id).maybeSingle();
-                const nomeCliente = profile?.nome || user.user_metadata?.nome || user.email.split('@')[0];
-
-                const { error } = await supabase.from('faq').insert([
-                    { 
-                        pergunta: pergunta, 
-                        cliente_id: user.id,
-                        cliente_nome: nomeCliente,
-                        status: 'pendente'
-                    }
-                ]);
-
-                if (error) throw error;
-
-                alert('Sua pergunta foi enviada com sucesso! Você será notificado assim que for respondida.');
-                closeModal();
-            } catch (err) {
-                console.error('Erro ao enviar FAQ:', err);
-                alert('Erro ao enviar pergunta: ' + (err.message || 'Tente novamente mais tarde.'));
-            } finally {
-                btn.disabled = false;
-                btn.innerText = 'Enviar Pergunta';
-            }
+    
+    // Garantir que o body existe antes de injetar
+    if (document.body) {
+        document.body.insertAdjacentHTML('beforeend', faqHTML);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.insertAdjacentHTML('beforeend', faqHTML);
         });
     }
 
-    // Fechar ao clicar fora
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-        if (e.target === menu) closeMenu();
-    });
+    // 2. Elementos e Funções
+    const initFaq = () => {
+        const floatBtn = document.getElementById('faqFloatBtn');
+        const menu = document.getElementById('faqMenu');
+        const menuClose = document.getElementById('faqMenuClose');
+        const modal = document.getElementById('faqModal');
+        const modalClose = document.getElementById('faqModalClose');
+        const openModalBtn = document.getElementById('faqOpenModalBtn');
+        const faqForm = document.getElementById('faqForm');
+
+        if (!floatBtn) return;
+
+        const toggleMenu = () => menu.classList.toggle('active');
+        const closeMenu = () => menu.classList.remove('active');
+        const openModal = () => { closeMenu(); modal.classList.add('active'); };
+        const closeModal = () => { modal.classList.remove('active'); faqForm.reset(); };
+
+        // Exportar para o escopo global
+        window.openFaqModal = openModal;
+
+        floatBtn.addEventListener('click', toggleMenu);
+        menuClose.addEventListener('click', closeMenu);
+        openModalBtn.addEventListener('click', openModal);
+        modalClose.addEventListener('click', closeModal);
+
+        if (faqForm) {
+            faqForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('faqSubmitBtn');
+                const pergunta = document.getElementById('faqPergunta').value;
+
+                try {
+                    btn.disabled = true;
+                    btn.innerText = 'Enviando...';
+
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (!session) {
+                        alert('Você precisa estar logado para enviar uma pergunta.');
+                        window.location.href = '/servicos/area_do_cliente/index.html';
+                        return;
+                    }
+
+                    const user = session.user;
+                    const { data: profile } = await supabase.from('profiles').select('nome').eq('id', user.id).maybeSingle();
+                    const nomeCliente = profile?.nome || user.user_metadata?.nome || user.email.split('@')[0];
+
+                    const { error } = await supabase.from('faq').insert([
+                        { 
+                            pergunta: pergunta, 
+                            cliente_id: user.id,
+                            cliente_nome: nomeCliente,
+                            status: 'pendente'
+                        }
+                    ]);
+
+                    if (error) throw error;
+
+                    alert('Sua pergunta foi enviada com sucesso! Você será notificado assim que for respondida.');
+                    closeModal();
+                } catch (err) {
+                    console.error('Erro ao enviar FAQ:', err);
+                    alert('Erro ao enviar pergunta: ' + (err.message || 'Tente novamente mais tarde.'));
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = 'Enviar Pergunta';
+                }
+            });
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+            if (e.target === menu) closeMenu();
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFaq);
+    } else {
+        initFaq();
+    }
 })();
