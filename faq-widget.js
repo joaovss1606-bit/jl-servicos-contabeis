@@ -35,17 +35,28 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         </div>
     `;
     
-    // Injetar CSS se não existir
-    if (!document.querySelector('link[href*="faq-widget.css"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = '/faq-widget.css';
-        document.head.appendChild(link);
-    }
+    // Injetar CSS se não existir (sempre usando caminho absoluto)
+    const injectCSS = () => {
+        if (!document.querySelector('link[href*="faq-widget.css"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/faq-widget.css';
+            document.head.appendChild(link);
+        }
+
+        // Injetar Font Awesome se não existir
+        if (!document.querySelector('link[href*="font-awesome"]')) {
+            const fa = document.createElement('link');
+            fa.rel = 'stylesheet';
+            fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+            document.head.appendChild(fa);
+        }
+    };
 
     // Garantir que o body existe antes de injetar
     const injectHTML = () => {
         if (!document.getElementById('faqFloatBtn')) {
+            injectCSS();
             document.body.insertAdjacentHTML('beforeend', faqHTML);
             initFaq();
         }
@@ -69,7 +80,10 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         if (!floatBtn) return;
 
-        const toggleMenu = () => menu.classList.toggle('active');
+        const toggleMenu = (e) => {
+            if (e) e.stopPropagation();
+            menu.classList.toggle('active');
+        };
         const closeMenu = () => menu.classList.remove('active');
         const openModal = () => { closeMenu(); modal.classList.add('active'); };
         const closeModal = () => { modal.classList.remove('active'); if(faqForm) faqForm.reset(); };
@@ -77,7 +91,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         // Exportar para o escopo global
         window.openFaqModal = openModal;
 
-        floatBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
+        floatBtn.addEventListener('click', toggleMenu);
         menuClose.addEventListener('click', closeMenu);
         openModalBtn.addEventListener('click', openModal);
         modalClose.addEventListener('click', closeModal);
