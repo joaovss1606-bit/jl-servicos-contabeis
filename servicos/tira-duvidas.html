@@ -213,9 +213,6 @@
         const SUPABASE_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
         
-        // Correção: usar a biblioteca global carregada via script tag
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         const perguntasPadrao = [
             {
                 pergunta: "Como funciona a abertura de empresa MEI?",
@@ -234,13 +231,17 @@
         async function carregarFAQ() {
             const faqList = document.getElementById('faq-list');
             try {
+                if (typeof supabase === 'undefined') {
+                    // Esperar um pouco para a biblioteca carregar
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+
+                const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 const { data: faqs, error } = await supabaseClient
                     .from('faq')
                     .select('*')
                     .eq('status', 'publicada')
                     .order('created_at', { ascending: false });
-
-                if (error) throw error;
 
                 const todasPerguntas = [...perguntasPadrao, ...(faqs || [])];
 
@@ -251,7 +252,7 @@
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="faq-answer">
-                            <p>${item.resposta}</p>
+                            <p>${item.resposta || 'Em breve traremos a resposta para esta dúvida.'}</p>
                         </div>
                     </div>
                 `).join('');
@@ -280,7 +281,10 @@
         };
 
         document.getElementById('btn-pergunte-aqui').addEventListener('click', () => {
-            if (window.openFaqModal) {
+            const btnFaq = document.getElementById('faqFloatBtn');
+            if (btnFaq) {
+                btnFaq.click();
+            } else if (window.openFaqModal) {
                 window.openFaqModal();
             } else {
                 alert('O sistema de perguntas está carregando. Por favor, tente novamente em instantes.');
