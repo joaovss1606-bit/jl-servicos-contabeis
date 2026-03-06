@@ -209,10 +209,12 @@
     </div>
 
     <script>
-        // Inicialização direta do Supabase sem depender de módulos externos
+        // Inicialização direta do Supabase
         const SUPABASE_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Correção: usar a biblioteca global carregada via script tag
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const perguntasPadrao = [
             {
@@ -232,7 +234,7 @@
         async function carregarFAQ() {
             const faqList = document.getElementById('faq-list');
             try {
-                const { data: faqs, error } = await supabase
+                const { data: faqs, error } = await supabaseClient
                     .from('faq')
                     .select('*')
                     .eq('status', 'publicada')
