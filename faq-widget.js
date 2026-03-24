@@ -1,5 +1,5 @@
 /* FAQ Widget Logic - JL Serviços Contábeis */
-import { supabase } from '/supabase.js';
+import { supabase } from './supabase.js';
 
 (function() {
     // 1. Injetar HTML do Botão, Menu e Modal
