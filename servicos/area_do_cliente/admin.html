@@ -158,6 +158,23 @@
         @media (max-width: 768px) {
             .main-content { padding: 30px 20px; }
             .filters-container { grid-template-columns: 1fr 1fr; }
+            #lista-noticias { grid-template-columns: 1fr !important; }
+            #nova-noticia-area { width: 95% !important; max-width: 95% !important; max-height: 95vh !important; }
+            .form-group input, .form-group textarea, .form-group select { font-size: 16px !important; }
+            .btn-upload { font-size: 0.9rem !important; padding: 12px 15px !important; }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content { padding: 20px 15px; }
+            h1 { font-size: 1.8rem !important; }
+            h3 { font-size: 1.2rem !important; }
+            #lista-noticias { grid-template-columns: 1fr !important; gap: 15px !important; }
+            #nova-noticia-area { width: 98% !important; max-width: 98% !important; padding: 20px !important; }
+            .form-group label { font-size: 0.75rem !important; }
+            .form-group input, .form-group textarea, .form-group select { padding: 10px !important; font-size: 16px !important; }
+            .btn-upload { padding: 12px 10px !important; font-size: 0.8rem !important; }
+            table { font-size: 0.75rem !important; }
+            td, th { padding: 8px 5px !important; }
         }
     </style>
   <link rel="stylesheet" href="/faq-widget.css">
@@ -305,7 +322,7 @@
     </div>
 
     <!-- Modal Nova Notícia -->
-    <div id="nova-noticia-area" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto;">
+    <div id="nova-noticia-area" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-sizing: border-box;">
         <h2 style="margin-bottom: 25px; font-size: 1.5rem; color: var(--gold);">Nova Notícia</h2>
         
         <div class="form-group">
@@ -337,9 +354,9 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             <small style="color: #888; display: block; margin-top: 5px;">Dica: Use [SUBTITLE] para marcar subtítulos que serão formatados automaticamente</small>
         </div>
         
-        <div style="display: flex; gap: 10px; margin-top: 25px;">
-            <button class="btn-upload" onclick="salvarNovaNoticia()" style="flex: 1; background: #25d366; padding: 15px;"><i class="fas fa-save"></i> Publicar Notícia</button>
-            <button class="btn-upload" onclick="fecharModais()" style="flex: 1; background: #666; padding: 15px;">Cancelar</button>
+        <div style="display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap;">
+            <button class="btn-upload" onclick="salvarNovaNoticia()" style="flex: 1; min-width: 120px; background: #25d366; padding: 15px;"><i class="fas fa-save"></i> Publicar</button>
+            <button class="btn-upload" onclick="fecharModais()" style="flex: 1; min-width: 120px; background: #666; padding: 15px;">Cancelar</button>
         </div>
     </div>
 
@@ -395,10 +412,27 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         // Menu Hambúrguer
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
-        menuToggle.onclick = () => {
+        menuToggle.onclick = (e) => {
+            e.stopPropagation();
             menuToggle.classList.toggle('active');
             navMenu.classList.toggle('active');
         };
+        
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+        
+        // Fechar menu ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
 
         async function carregarDadosAdmin() {
             const client = initSupabase();
@@ -741,6 +775,9 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         function mostrarSecao(secao) {
             document.getElementById('secao-clientes').style.display = secao === 'clientes' ? 'block' : 'none';
             document.getElementById('secao-blog').style.display = secao === 'blog' ? 'block' : 'none';
+            
+            menuToggle.classList.remove('active');
+            navMenu.classList.remove('active');
             
             if (secao === 'blog') {
                 carregarNoticias();
