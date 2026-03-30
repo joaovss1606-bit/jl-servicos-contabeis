@@ -9,6 +9,123 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="faq-widget.css">
+  <style>
+    .blog-home {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .blog-post-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(189, 150, 23, 0.2);
+      border-radius: 15px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .blog-post-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(189, 150, 23, 0.4);
+      transform: translateY(-5px);
+    }
+
+    .blog-post-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: rgba(189, 150, 23, 0.1);
+    }
+
+    .blog-post-content {
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .blog-post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .blog-post-title {
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin: 0;
+      flex: 1;
+    }
+
+    .blog-post-badge {
+      background: #25d366;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-left: 15px;
+    }
+
+    .blog-post-meta {
+      color: #888;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .blog-post-excerpt {
+      color: #ccc;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      flex-grow: 1;
+    }
+
+    .blog-post-link {
+      color: #bd9617;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      transition: 0.3s;
+    }
+
+    .blog-post-link:hover {
+      color: #d4af37;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .blog-post-card {
+        grid-template-columns: 1fr;
+      }
+
+      .blog-post-image {
+        height: 250px;
+      }
+
+      .blog-post-title {
+        font-size: 1.2rem;
+      }
+
+      .blog-post-header {
+        flex-direction: column;
+      }
+
+      .blog-post-badge {
+        margin-left: 0;
+        margin-top: 10px;
+        align-self: flex-start;
+      }
+    }
+  </style>
 </head>
 
 <body class="home-page">
@@ -57,53 +174,8 @@
     <div style="width: 80px; height: 3px; background: #bd9617; margin: 25px auto;"></div>
   </div>
 
-  <section class="blog-home">
-
-    <article class="blog-highlight">
-      <img src="Gemini_Generated_Image_dt1flzdt1flzdt1f.png" alt="Contabilidade Geral">
-      <div class="blog-content">
-        <h2>Conta PF vs PJ: Entenda</h2>
-        <p>Descubra por que separar as suas contas pessoais das da empresa é vital para o seu sucesso.</p>
-        <a href="blog/contabilidade/separar-conta-pf-pj.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
-      </div>
-    </article>
-
-    <article class="blog-highlight">
-      <img src="Gemini_Generated_Image_grde92grde92grde.png" alt="Legislação Contábil">
-      <div class="blog-content">
-        <h2>Mudanças para 2026</h2>
-        <p>Fique por dentro das novas regras tributárias e limites de faturamento para este ano.</p>
-        <a href="blog/legislacao/mudancas-contabeis-2026.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
-      </div>
-    </article>
-
-    <article class="blog-highlight">
-      <img src="Gemini_Generated_Image_ajs7bvajs7bvajs7.png" alt="Departamento Pessoal">
-      <div class="blog-content">
-        <h2>Contratar no MEI: Regras</h2>
-        <p>Saiba quanto custa e como registrar seu primeiro funcionário de forma legal e segura.</p>
-        <a href="blog/departamento-pessoal/contratar-funcionario-mei.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
-      </div>
-    </article>
-
-    <article class="blog-highlight">
-      <img src="ChatGPT Image 17 de fev. de 2026, 23_25_17.png" alt="Fiscal">
-      <div class="blog-content">
-        <h2>Guia DAS-MEI: Evite Multas</h2>
-        <p>Saiba como manter seu imposto mensal em dia e como regularizar atrasos.</p>
-        <a href="blog/fiscal/guia-das-mei.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
-      </div>
-    </article>
-
-    <article class="blog-highlight">
-      <img src="ChatGPT Image 17 de fev. de 2026, 23_27_57.png" alt="Contábil">
-      <div class="blog-content">
-        <h2>Documentos Mensais</h2>
-        <p>Confira o checklist completo do que você precisa enviar para manter sua empresa regular.</p>
-        <a href="blog/contabil/documentos-mensais-contador.html" style="color:#bd9617; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px;">Ler Artigo Completo →</a>
-      </div>
-    </article>
-
+  <section class="blog-home" id="noticias-container">
+    <div style="text-align: center; color: #888;">Carregando notícias...</div>
   </section>
 
 </main>
@@ -145,5 +217,78 @@
 <script type="module" src="./auth-header.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module" src="faq-widget.js"></script>
+
+<script type="module">
+  import { parsePostContent } from './blog-post-parser.js';
+
+  const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
+  
+  const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+  function isNovaNoticia(dataPost) {
+    const agora = new Date();
+    const dataPostDate = new Date(dataPost);
+    const diffDias = Math.floor((agora - dataPostDate) / (1000 * 60 * 60 * 24));
+    return diffDias <= 7;
+  }
+
+  async function carregarNoticias() {
+    try {
+      const { data: posts, error } = await supabaseClient
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (error) throw error;
+
+      const container = document.getElementById('noticias-container');
+
+      if (!posts || posts.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #888; grid-column: 1/-1;">Nenhuma notícia disponível no momento.</p>';
+        return;
+      }
+
+      container.innerHTML = posts.map(post => {
+        const isNova = isNovaNoticia(post.created_at);
+        const excerpt = post.content.substring(0, 150).replace(/\[SUBTITLE\]/g, '').trim() + '...';
+        const dataFormatada = new Date(post.created_at).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        });
+
+        return `
+          <a href="blog/posts.html?slug=${post.slug}" style="text-decoration: none; color: inherit;">
+            <div class="blog-post-card">
+              ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="blog-post-image">` : '<div class="blog-post-image" style="background: rgba(189, 150, 23, 0.2); display: flex; align-items: center; justify-content: center;"><i class="fas fa-newspaper" style="font-size: 3rem; color: rgba(189, 150, 23, 0.5);"></i></div>'}
+              <div class="blog-post-content">
+                <div>
+                  <div class="blog-post-header">
+                    <h3 class="blog-post-title">${post.title}</h3>
+                    ${isNova ? '<span class="blog-post-badge"><i class="fas fa-star"></i> Nova Notícia</span>' : ''}
+                  </div>
+                  <div class="blog-post-meta"><i class="fas fa-calendar"></i> ${dataFormatada}</div>
+                  <p class="blog-post-excerpt">${excerpt}</p>
+                </div>
+                <div>
+                  <a href="blog/posts.html?slug=${post.slug}" class="blog-post-link">Ler Artigo Completo →</a>
+                </div>
+              </div>
+            </div>
+          </a>
+        `;
+      }).join('');
+
+    } catch (err) {
+      console.error('Erro ao carregar notícias:', err);
+      document.getElementById('noticias-container').innerHTML = '<p style="text-align: center; color: #ff4444;">Erro ao carregar notícias.</p>';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', carregarNoticias);
+</script>
 </body>
 </html>
