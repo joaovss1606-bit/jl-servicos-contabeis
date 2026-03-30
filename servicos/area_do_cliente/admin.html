@@ -177,7 +177,8 @@
 
     <nav class="nav-menu" id="navMenu">
         <a href="../../index.html"><i class="fas fa-home"></i> Início</a>
-        <a href="#" class="active"><i class="fas fa-users"></i> Gerenciar Clientes</a>
+        <a href="#" class="active" onclick="mostrarSecao('clientes')"><i class="fas fa-users"></i> Gerenciar Clientes</a>
+        <a href="#" onclick="mostrarSecao('blog')"><i class="fas fa-newspaper"></i> Gerenciar Blog</a>
         <a onclick="logout()" class="logout-btn"><i class="fas fa-power-off"></i> Sair do Painel</a>
     </nav>
 
@@ -188,6 +189,8 @@
         <!-- Notificação de FAQ -->
         <div id="faq-alert-container"></div>
 
+        <!-- Seção de Clientes -->
+        <div id="secao-clientes">
         <div class="admin-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
                 <h3 style="margin: 0; font-family: 'Playfair Display'; font-size: 1.5rem;">Clientes e Assinaturas</h3>
@@ -237,6 +240,20 @@
                 </tbody>
             </table>
         </div>
+        </div>
+
+        <!-- Seção de Blog -->
+        <div id="secao-blog" style="display: none;">
+        <div class="admin-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                <h3 style="margin: 0; font-family: 'Playfair Display'; font-size: 1.5rem;">Gerenciar Notícias do Blog</h3>
+                <button class="btn-upload" onclick="abrirModalNovaNoticia()" style="background: #25d366; padding: 12px 20px;"><i class="fas fa-plus"></i> Nova Notícia</button>
+            </div>
+            <div id="lista-noticias" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+        </div>
     </main>
 
     <!-- Overlay -->
@@ -285,6 +302,45 @@
             </select>
         </div>
         <button class="btn-upload" onclick="confirmarCancelamentoAdmin()" style="width: 100%; padding: 15px; background: #ff4444;">Confirmar Cancelamento</button>
+    </div>
+
+    <!-- Modal Nova Notícia -->
+    <div id="nova-noticia-area" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto;">
+        <h2 style="margin-bottom: 25px; font-size: 1.5rem; color: var(--gold);">Nova Notícia</h2>
+        
+        <div class="form-group">
+            <label>Título da Notícia</label>
+            <input type="text" id="noticia-titulo" placeholder="Digite o título da notícia" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Categoria</label>
+            <select id="noticia-categoria" style="width: 100%;">
+                <option value="contabil">Contabil</option>
+                <option value="contabilidade">Contabilidade</option>
+                <option value="departamento-pessoal">Departamento Pessoal</option>
+                <option value="fiscal">Fiscal</option>
+                <option value="legislacao">Legislação</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Imagem da Notícia</label>
+            <input type="file" id="noticia-imagem" accept="image/*" style="color: white;">
+            <small style="color: #888; display: block; margin-top: 5px;">Formatos aceitos: JPG, PNG, GIF (máximo 5MB)</small>
+        </div>
+        
+        <div class="form-group">
+            <label>Conteúdo da Notícia</label>
+            <textarea id="noticia-conteudo" rows="8" placeholder="Digite o conteúdo da notícia. Use [SUBTITLE] para marcar subtítulos.
+Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
+            <small style="color: #888; display: block; margin-top: 5px;">Dica: Use [SUBTITLE] para marcar subtítulos que serão formatados automaticamente</small>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 25px;">
+            <button class="btn-upload" onclick="salvarNovaNoticia()" style="flex: 1; background: #25d366; padding: 15px;"><i class="fas fa-save"></i> Publicar Notícia</button>
+            <button class="btn-upload" onclick="fecharModais()" style="flex: 1; background: #666; padding: 15px;">Cancelar</button>
+        </div>
     </div>
 
     <!-- Modal Resposta FAQ -->
@@ -677,8 +733,136 @@
             document.getElementById('novo-pedido-area').style.display = 'none';
             document.getElementById('cancelamento-motivo-area').style.display = 'none';
             document.getElementById('faq-resposta-area').style.display = 'none';
+            document.getElementById('nova-noticia-area').style.display = 'none';
             cancelamentoPendente = null;
             faqSelecionada = null;
+        }
+
+        function mostrarSecao(secao) {
+            document.getElementById('secao-clientes').style.display = secao === 'clientes' ? 'block' : 'none';
+            document.getElementById('secao-blog').style.display = secao === 'blog' ? 'block' : 'none';
+            
+            if (secao === 'blog') {
+                carregarNoticias();
+            }
+        }
+
+        function abrirModalNovaNoticia() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('nova-noticia-area').style.display = 'block';
+            document.getElementById('noticia-titulo').value = '';
+            document.getElementById('noticia-categoria').value = 'contabil';
+            document.getElementById('noticia-imagem').value = '';
+            document.getElementById('noticia-conteudo').value = '';
+        }
+
+        async function salvarNovaNoticia() {
+            const titulo = document.getElementById('noticia-titulo').value.trim();
+            const categoria = document.getElementById('noticia-categoria').value;
+            const conteudo = document.getElementById('noticia-conteudo').value.trim();
+            const imagemFile = document.getElementById('noticia-imagem').files[0];
+            const btn = event.target;
+            
+            if (!titulo || !conteudo) {
+                alert('Preencha o titulo e o conteudo da noticia.');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerText = 'PUBLICANDO...';
+            
+            try {
+                const client = initSupabase();
+                let imagemUrl = null;
+                
+                if (imagemFile) {
+                    const fileName = `blog_${Date.now()}_${imagemFile.name}`;
+                    const { data: uploadData, error: uploadError } = await client.storage
+                        .from('blog-images')
+                        .upload(fileName, imagemFile);
+                    
+                    if (uploadError) throw uploadError;
+                    
+                    const { data: { publicUrl } } = client.storage
+                        .from('blog-images')
+                        .getPublicUrl(fileName);
+                    
+                    imagemUrl = publicUrl;
+                }
+                
+                const slug = titulo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                
+                const { error } = await client.from('blog_posts').insert({
+                    title: titulo,
+                    slug: slug,
+                    content: conteudo,
+                    image_url: imagemUrl,
+                    category: categoria,
+                    published: true
+                });
+                
+                if (error) throw error;
+                
+                alert('Noticia publicada com sucesso!');
+                fecharModais();
+                carregarNoticias();
+            } catch (err) {
+                console.error('Erro:', err);
+                alert('Erro ao publicar noticia: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'PUBLICAR NOTICIA';
+            }
+        }
+
+        async function carregarNoticias() {
+            try {
+                const client = initSupabase();
+                const { data: noticias, error } = await client
+                    .from('blog_posts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const container = document.getElementById('lista-noticias');
+                if (!noticias || noticias.length === 0) {
+                    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888;">Nenhuma noticia publicada ainda.</p>';
+                    return;
+                }
+                
+                container.innerHTML = noticias.map(noticia => `
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(189, 150, 23, 0.2); border-radius: 12px; overflow: hidden; transition: 0.3s;">
+                        ${noticia.image_url ? `<img src="${noticia.image_url}" alt="${noticia.title}" style="width: 100%; height: 200px; object-fit: cover;">` : ''}
+                        <div style="padding: 15px;">
+                            <h4 style="color: var(--gold); margin-bottom: 8px; font-size: 1rem;">${noticia.title}</h4>
+                            <p style="color: #888; font-size: 0.8rem; margin-bottom: 12px;">${new Date(noticia.created_at).toLocaleDateString('pt-BR')}</p>
+                            <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 15px; line-height: 1.4;">${noticia.content.substring(0, 100)}...</p>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-upload" onclick="deletarNoticia('${noticia.id}')" style="flex: 1; padding: 8px; font-size: 0.8rem; background: #ff4444;"><i class="fas fa-trash"></i> Deletar</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Erro ao carregar noticias:', err);
+            }
+        }
+
+        async function deletarNoticia(id) {
+            if (!confirm('Tem certeza que deseja deletar esta noticia?')) return;
+            
+            try {
+                const client = initSupabase();
+                const { error } = await client.from('blog_posts').delete().eq('id', id);
+                
+                if (error) throw error;
+                
+                alert('Noticia deletada com sucesso!');
+                carregarNoticias();
+            } catch (err) {
+                alert('Erro ao deletar noticia: ' + err.message);
+            }
         }
 
         function limparFiltros() {
