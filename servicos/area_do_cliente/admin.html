@@ -573,13 +573,22 @@
             }
 
             const client = initSupabase();
+            const btn = document.querySelector('#novo-pedido-area .btn-upload');
+            const originalText = btn.innerText;
+            
             try {
+                btn.disabled = true;
+                btn.innerText = "PROCESSANDO...";
+
                 // 1. Garantir Perfil
-                await client.from('profiles').upsert({ nome, email, whatsapp, cpf, role: 'cliente' }, { onConflict: 'email' });
+                const { data: profileData, error: profileError } = await client.from('profiles').upsert({ nome, email, whatsapp, cpf, role: 'cliente' }, { onConflict: 'email' }).select();
+                if (profileError) throw profileError;
                 
+                const userId = profileData && profileData[0] ? profileData[0].id : null;
+
                 // 2. Inserir Assinaturas
                 const novasAssinaturas = selecionados.map(servico => ({
-                    email, nome, whatsapp, cpf, servico, status: 'Pendente'
+                    email, nome, whatsapp, cpf, servico, status: 'Pendente', user_id: userId
                 }));
                 
                 const { error } = await client.from('assinaturas').insert(novasAssinaturas);
@@ -587,9 +596,20 @@
                 
                 alert("Pedido(s) criado(s) com sucesso!");
                 fecharModais();
-                carregarDadosAdmin();
+                
+                // Limpar formulário
+                document.getElementById('novo-nome').value = '';
+                document.getElementById('novo-email').value = '';
+                document.getElementById('novo-whatsapp').value = '';
+                document.getElementById('novo-cpf').value = '';
+                
+                await carregarDadosAdmin();
             } catch (err) {
-                alert("Erro ao criar pedido: " + err.message);
+                console.error("Erro detalhado:", err);
+                alert("Erro ao criar pedido: " + (err.message || "Erro desconhecido"));
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
             }
         }
 
