@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artigos | J L Serviços Contábeis</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/faq-widget.css">
+  <style>
+    .post-container {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(189, 150, 23, 0.2);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+    
+    .post-container h2 {
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+    
+    .post-container h3 {
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-top: 25px;
+      margin-bottom: 12px;
+    }
+    
+    .post-container p {
+      color: #ccc;
+      margin-bottom: 15px;
+    }
+    
+    .post-meta {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .post-image {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .loading {
+      text-align: center;
+      color: #888;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+  <div class="container header-content"> <h1 class="site-title-header">J L Serviços Contábeis</h1> <nav class="main-nav">
+      <ul class="menu">
+        <li class="menu-item"><a href="../index.html">Início</a></li>
+        <li class="menu-item"><a href="../servicos/index.html">Serviços</a></li>
+        <li class="menu-item"><a href="index.html">Blog</a></li>
+        <li class="menu-item"><a href="../sobre/index.html">Sobre</a></li>
+        <li class="menu-item"><a href="../lgpd/index.html">LGPD</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  <main class="container">
+    <nav style="margin: 20px 0; color: #ffffff99; font-size: 0.9rem;">
+      <a href="../index.html" style="color: #bd9617; text-decoration: none;">Início</a> / 
+      <a href="index.html" style="color: #bd9617; text-decoration: none;">Blog</a> /
+      <span id="breadcrumb-category">Artigos</span>
+    </nav>
+
+    <div style="text-align: center; margin-bottom: 50px;">
+      <h2 style="color: #bd9617; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px;" id="page-title">Artigos</h2>
+      <p style="color: #fff; opacity: 0.8;" id="page-description">Explore nossos artigos especializados</p>
+      <div style="width: 60px; height: 3px; background: #bd9617; margin: 20px auto;"></div>
+    </div>
+
+    <div id="posts-container" style="margin-bottom: 60px;">
+      <div class="loading">Carregando artigos...</div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-container container">
+    <div class="footer-col">
+      <h3>J L Serviços Contábeis</h3>
+      <p>Soluções contábeis com transparência, segurança e foco em resultados para MEI, Pessoa Física e Empresas.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Links Rápidos</h4>
+      <ul>
+        <li><a href="../index.html">Início</a></li>
+        <li><a href="../servicos/index.html">Serviços</a></li>
+        <li><a href="index.html">Blog</a></li>
+        <li><a href="../sobre/index.html">Sobre</a></li>
+        <li><a href="../lgpd/index.html">LGPD</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contato</h4>
+      <a href="https://wa.me/5561920041427" target="_blank" class="btn-whatsapp-footer">
+        Falar no WhatsApp
+      </a>
+      <p class="footer-email">jlservicoscontabeis0@gmail.com</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 J L Serviços Contábeis — Todos os direitos reservados</p>
+  </div>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { parsePostContent } from '../blog-post-parser.js';
+
+    const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
+    
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+    async function carregarPosts() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoria = urlParams.get('category');
+        const slug = urlParams.get('slug');
+
+        let query = supabaseClient
+          .from('blog_posts')
+          .select('*')
+          .eq('published', true)
+          .order('created_at', { ascending: false });
+
+        if (categoria) {
+          query = query.eq('category', categoria);
+        }
+
+        if (slug) {
+          query = query.eq('slug', slug);
+        }
+
+        const { data: posts, error } = await query;
+
+        if (error) throw error;
+
+        const container = document.getElementById('posts-container');
+
+        if (!posts || posts.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #888;">Nenhum artigo encontrado.</p>';
+          return;
+        }
+
+        // Atualizar títulos e breadcrumb
+        if (categoria) {
+          const categoriasMap = {
+            'contabil': 'Contábil',
+            'contabilidade': 'Contabilidade',
+            'departamento-pessoal': 'Departamento Pessoal',
+            'fiscal': 'Fiscal',
+            'legislacao': 'Legislação'
+          };
+          const nomeCategoria = categoriasMap[categoria] || categoria;
+          document.getElementById('page-title').textContent = nomeCategoria;
+          document.getElementById('page-description').textContent = `Explore nossos artigos sobre ${nomeCategoria.toLowerCase()}`;
+          document.getElementById('breadcrumb-category').textContent = nomeCategoria;
+        }
+
+        container.innerHTML = posts.map(post => `
+          <div class="post-container">
+            ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-image">` : ''}
+            <h2>${post.title}</h2>
+            <div class="post-meta">
+              <span><i class="fas fa-calendar"></i> ${new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
+              <span><i class="fas fa-folder"></i> ${categoriasMap[post.category] || post.category}</span>
+            </div>
+            <div style="color: #ccc;">
+              ${parsePostContent(post.content)}
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error('Erro ao carregar posts:', err);
+        document.getElementById('posts-container').innerHTML = '<p style="text-align: center; color: #ff4444;">Erro ao carregar artigos.</p>';
+      }
+    }
+
+    const categoriasMap = {
+      'contabil': 'Contábil',
+      'contabilidade': 'Contabilidade',
+      'departamento-pessoal': 'Departamento Pessoal',
+      'fiscal': 'Fiscal',
+      'legislacao': 'Legislação'
+    };
+
+    document.addEventListener('DOMContentLoaded', carregarPosts);
+  </script>
+  <script type="module" src="/faq-widget.js"></script>
+</body>
+</html>
