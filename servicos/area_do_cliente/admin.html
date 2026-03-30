@@ -194,8 +194,8 @@
 
     <nav class="nav-menu" id="navMenu">
         <a href="../../index.html"><i class="fas fa-home"></i> Início</a>
-        <a href="#" class="active" onclick="mostrarSecao('clientes')"><i class="fas fa-users"></i> Gerenciar Clientes</a>
-        <a href="#" onclick="mostrarSecao('blog')"><i class="fas fa-newspaper"></i> Gerenciar Blog</a>
+        <a href="#" class="active" id="link-clientes" onclick="mostrarSecao('clientes'); return false;"><i class="fas fa-users"></i> Gerenciar Clientes</a>
+        <a href="#" id="link-blog" onclick="mostrarSecao('blog'); return false;"><i class="fas fa-newspaper"></i> Gerenciar Blog</a>
         <a onclick="logout()" class="logout-btn"><i class="fas fa-power-off"></i> Sair do Painel</a>
     </nav>
 
@@ -775,6 +775,15 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         function mostrarSecao(secao) {
             document.getElementById('secao-clientes').style.display = secao === 'clientes' ? 'block' : 'none';
             document.getElementById('secao-blog').style.display = secao === 'blog' ? 'block' : 'none';
+            
+            document.getElementById('link-clientes').classList.remove('active');
+            document.getElementById('link-blog').classList.remove('active');
+            
+            if (secao === 'clientes') {
+                document.getElementById('link-clientes').classList.add('active');
+            } else if (secao === 'blog') {
+                document.getElementById('link-blog').classList.add('active');
+            }
             
             menuToggle.classList.remove('active');
             navMenu.classList.remove('active');
