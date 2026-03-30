@@ -321,9 +321,9 @@
         <button class="btn-upload" onclick="confirmarCancelamentoAdmin()" style="width: 100%; padding: 15px; background: #ff4444;">Confirmar Cancelamento</button>
     </div>
 
-    <!-- Modal Nova Notícia -->
+    <!-- Modal Nova/Editar Notícia -->
     <div id="nova-noticia-area" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-sizing: border-box;">
-        <h2 style="margin-bottom: 25px; font-size: 1.5rem; color: var(--gold);">Nova Notícia</h2>
+        <h2 id="modal-titulo" style="margin-bottom: 25px; font-size: 1.5rem; color: var(--gold);">Nova Notícia</h2>
         
         <div class="form-group">
             <label>Título da Notícia</label>
@@ -343,6 +343,10 @@
         
         <div class="form-group">
             <label>Imagem da Notícia</label>
+            <div id="imagem-preview" style="margin-bottom: 10px; display: none;">
+                <img id="preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 10px;">
+                <button type="button" class="btn-upload" onclick="removerImagemAtual()" style="width: 100%; background: #ff4444; padding: 8px;"><i class="fas fa-trash"></i> Remover Imagem</button>
+            </div>
             <input type="file" id="noticia-imagem" accept="image/*" style="color: white;">
             <small style="color: #888; display: block; margin-top: 5px;">Formatos aceitos: JPG, PNG, GIF (máximo 5MB)</small>
         </div>
@@ -355,7 +359,8 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         </div>
         
         <div style="display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap;">
-            <button class="btn-upload" onclick="salvarNovaNoticia()" style="flex: 1; min-width: 120px; background: #25d366; padding: 15px;"><i class="fas fa-save"></i> Publicar</button>
+            <button id="btn-salvar-noticia" class="btn-upload" onclick="salvarNovaNoticia()" style="flex: 1; min-width: 120px; background: #25d366; padding: 15px;"><i class="fas fa-save"></i> Publicar</button>
+            <button id="btn-deletar-noticia" class="btn-upload" onclick="deletarNoticiaAtual()" style="flex: 1; min-width: 120px; background: #ff4444; padding: 15px; display: none;"><i class="fas fa-trash"></i> Deletar</button>
             <button class="btn-upload" onclick="fecharModais()" style="flex: 1; min-width: 120px; background: #666; padding: 15px;">Cancelar</button>
         </div>
     </div>
@@ -768,9 +773,10 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             document.getElementById('cancelamento-motivo-area').style.display = 'none';
             document.getElementById('faq-resposta-area').style.display = 'none';
             document.getElementById('nova-noticia-area').style.display = 'none';
-            cancelamentoPendente = null;
-            faqSelecionada = null;
-        }
+        let cancelamentoPendente = null;
+        let faqSelecionada = null;
+        let noticiaEmEdicao = null;
+        let imagemAtualRemovida = false;
 
         function mostrarSecao(secao) {
             document.getElementById('secao-clientes').style.display = secao === 'clientes' ? 'block' : 'none';
@@ -794,12 +800,18 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         }
 
         function abrirModalNovaNoticia() {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('nova-noticia-area').style.display = 'block';
+            noticiaEmEdicao = null;
+            imagemAtualRemovida = false;
+            document.getElementById('modal-titulo').textContent = 'Nova Notícia';
             document.getElementById('noticia-titulo').value = '';
             document.getElementById('noticia-categoria').value = 'contabil';
             document.getElementById('noticia-imagem').value = '';
             document.getElementById('noticia-conteudo').value = '';
+            document.getElementById('imagem-preview').style.display = 'none';
+            document.getElementById('btn-deletar-noticia').style.display = 'none';
+            document.getElementById('btn-salvar-noticia').innerHTML = '<i class="fas fa-save"></i> Publicar';
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('nova-noticia-area').style.display = 'block';
         }
 
         async function salvarNovaNoticia() {
@@ -807,7 +819,7 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             const categoria = document.getElementById('noticia-categoria').value;
             const conteudo = document.getElementById('noticia-conteudo').value.trim();
             const imagemFile = document.getElementById('noticia-imagem').files[0];
-            const btn = event.target;
+            const btn = document.getElementById('btn-salvar-noticia');
             
             if (!titulo || !conteudo) {
                 alert('Preencha o titulo e o conteudo da noticia.');
@@ -815,49 +827,91 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             }
             
             btn.disabled = true;
-            btn.innerText = 'PUBLICANDO...';
+            btn.innerText = 'SALVANDO...';
             
             try {
                 const client = initSupabase();
                 let imagemUrl = null;
                 
-                if (imagemFile) {
-                    const fileName = `blog_${Date.now()}_${imagemFile.name}`;
-                    const { data: uploadData, error: uploadError } = await client.storage
-                        .from('blog-images')
-                        .upload(fileName, imagemFile);
+                if (noticiaEmEdicao) {
+                    imagemUrl = imagemAtualRemovida ? null : (noticiaEmEdicao.image_url || null);
                     
-                    if (uploadError) throw uploadError;
+                    if (imagemFile) {
+                        if (noticiaEmEdicao.image_url) {
+                            const fileName = noticiaEmEdicao.image_url.split('/').pop();
+                            await client.storage.from('blog-images').remove([fileName]);
+                        }
+                        
+                        const fileName = `blog_${Date.now()}_${imagemFile.name}`;
+                        const { data: uploadData, error: uploadError } = await client.storage
+                            .from('blog-images')
+                            .upload(fileName, imagemFile);
+                        
+                        if (uploadError) throw uploadError;
+                        
+                        const { data: { publicUrl } } = client.storage
+                            .from('blog-images')
+                            .getPublicUrl(fileName);
+                        
+                        imagemUrl = publicUrl;
+                    }
                     
-                    const { data: { publicUrl } } = client.storage
-                        .from('blog-images')
-                        .getPublicUrl(fileName);
+                    const { error } = await client.from('blog_posts')
+                        .update({
+                            title: titulo,
+                            content: conteudo,
+                            image_url: imagemUrl,
+                            category: categoria
+                        })
+                        .eq('id', noticiaEmEdicao.id);
                     
-                    imagemUrl = publicUrl;
+                    if (error) throw error;
+                    
+                    alert('Noticia atualizada com sucesso!');
+                } else {
+                    if (imagemFile) {
+                        const fileName = `blog_${Date.now()}_${imagemFile.name}`;
+                        const { data: uploadData, error: uploadError } = await client.storage
+                            .from('blog-images')
+                            .upload(fileName, imagemFile);
+                        
+                        if (uploadError) throw uploadError;
+                        
+                        const { data: { publicUrl } } = client.storage
+                            .from('blog-images')
+                            .getPublicUrl(fileName);
+                        
+                        imagemUrl = publicUrl;
+                    }
+                    
+                    const slug = titulo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                    
+                    const { error } = await client.from('blog_posts').insert({
+                        title: titulo,
+                        slug: slug,
+                        content: conteudo,
+                        image_url: imagemUrl,
+                        category: categoria,
+                        published: true
+                    });
+                    
+                    if (error) throw error;
+                    
+                    alert('Noticia publicada com sucesso!');
                 }
                 
-                const slug = titulo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                
-                const { error } = await client.from('blog_posts').insert({
-                    title: titulo,
-                    slug: slug,
-                    content: conteudo,
-                    image_url: imagemUrl,
-                    category: categoria,
-                    published: true
-                });
-                
-                if (error) throw error;
-                
-                alert('Noticia publicada com sucesso!');
                 fecharModais();
                 carregarNoticias();
             } catch (err) {
                 console.error('Erro:', err);
-                alert('Erro ao publicar noticia: ' + err.message);
+                alert('Erro ao salvar noticia: ' + err.message);
             } finally {
                 btn.disabled = false;
-                btn.innerText = 'PUBLICAR NOTICIA';
+                if (noticiaEmEdicao) {
+                    btn.innerHTML = '<i class="fas fa-save"></i> Salvar Alteracoes';
+                } else {
+                    btn.innerHTML = '<i class="fas fa-save"></i> Publicar';
+                }
             }
         }
 
@@ -885,6 +939,7 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
                             <p style="color: #888; font-size: 0.8rem; margin-bottom: 12px;">${new Date(noticia.created_at).toLocaleDateString('pt-BR')}</p>
                             <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 15px; line-height: 1.4;">${noticia.content.substring(0, 100)}...</p>
                             <div style="display: flex; gap: 8px;">
+                                <button class="btn-upload" onclick="editarNoticia('${noticia.id}')" style="flex: 1; padding: 8px; font-size: 0.8rem; background: #bd9617;"><i class="fas fa-edit"></i> Editar</button>
                                 <button class="btn-upload" onclick="deletarNoticia('${noticia.id}')" style="flex: 1; padding: 8px; font-size: 0.8rem; background: #ff4444;"><i class="fas fa-trash"></i> Deletar</button>
                             </div>
                         </div>
@@ -892,6 +947,71 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
                 `).join('');
             } catch (err) {
                 console.error('Erro ao carregar noticias:', err);
+            }
+        }
+
+        async function editarNoticia(id) {
+            try {
+                const client = initSupabase();
+                const { data: noticia, error } = await client
+                    .from('blog_posts')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) throw error;
+                
+                noticiaEmEdicao = noticia;
+                imagemAtualRemovida = false;
+                
+                document.getElementById('modal-titulo').textContent = 'Editar Notícia';
+                document.getElementById('noticia-titulo').value = noticia.title;
+                document.getElementById('noticia-categoria').value = noticia.category || 'contabil';
+                document.getElementById('noticia-conteudo').value = noticia.content;
+                document.getElementById('noticia-imagem').value = '';
+                
+                if (noticia.image_url) {
+                    document.getElementById('imagem-preview').style.display = 'block';
+                    document.getElementById('preview-img').src = noticia.image_url;
+                } else {
+                    document.getElementById('imagem-preview').style.display = 'none';
+                }
+                
+                document.getElementById('btn-deletar-noticia').style.display = 'inline-block';
+                document.getElementById('btn-salvar-noticia').innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
+                
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('nova-noticia-area').style.display = 'block';
+            } catch (err) {
+                alert('Erro ao carregar notícia: ' + err.message);
+            }
+        }
+
+        function removerImagemAtual() {
+            imagemAtualRemovida = true;
+            document.getElementById('imagem-preview').style.display = 'none';
+        }
+
+        async function deletarNoticiaAtual() {
+            if (!confirm('Tem certeza que deseja deletar esta notícia?')) return;
+            
+            try {
+                const client = initSupabase();
+                
+                if (noticiaEmEdicao.image_url) {
+                    const fileName = noticiaEmEdicao.image_url.split('/').pop();
+                    await client.storage.from('blog-images').remove([fileName]);
+                }
+                
+                const { error } = await client.from('blog_posts').delete().eq('id', noticiaEmEdicao.id);
+                
+                if (error) throw error;
+                
+                alert('Notícia deletada com sucesso!');
+                fecharModais();
+                carregarNoticias();
+            } catch (err) {
+                alert('Erro ao deletar notícia: ' + err.message);
             }
         }
 
