@@ -441,42 +441,6 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         let todosDados = [];
         let faqPendentes = [];
 
-        // Menu Hambúrguer
-        function toggleMenu() {
-            const menuToggle = document.getElementById('menuToggle');
-            const navMenu = document.getElementById('navMenu');
-            if (menuToggle && navMenu) {
-                menuToggle.classList.toggle('active');
-                navMenu.classList.toggle('active');
-            }
-        }
-        
-        const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.getElementById('navMenu');
-        
-        if (menuToggle) {
-            menuToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleMenu();
-            });
-        }
-        
-        // Fechar menu ao clicar em um link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (menuToggle) menuToggle.classList.remove('active');
-                if (navMenu) navMenu.classList.remove('active');
-            });
-        });
-        
-        // Fechar menu ao clicar fora
-        document.addEventListener('click', (e) => {
-            if (navMenu && menuToggle && !navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-                menuToggle.classList.remove('active');
-                navMenu.classList.remove('active');
-            }
-        });
-
         let adminProfile = null;
 
         async function carregarDadosAdmin() {
@@ -1178,7 +1142,38 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             }
         }
 
-        document.addEventListener('DOMContentLoaded', carregarDadosAdmin);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar menu hambúrguer
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    menuToggle.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+                
+                // Fechar menu ao clicar em um link
+                document.querySelectorAll('.nav-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menuToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+                
+                // Fechar menu ao clicar fora
+                document.addEventListener('click', (e) => {
+                    if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                        menuToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Carregar dados do admin
+            carregarDadosAdmin();
+        });
     </script>
   <script type="module" src="/faq-widget.js"></script>
 </body>
