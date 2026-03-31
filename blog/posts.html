@@ -168,47 +168,54 @@
         }
 
         // Atualizar títulos e breadcrumb
+        const categoriasMap = {
+          'contabil': 'Contábil',
+          'contabilidade': 'Contabilidade',
+          'departamento-pessoal': 'Departamento Pessoal',
+          'fiscal': 'Fiscal',
+          'legislacao': 'Legislação',
+          'mei': 'MEI',
+          'irpf': 'IRPF'
+        };
+
         if (categoria) {
-          const categoriasMap = {
-            'contabil': 'Contábil',
-            'contabilidade': 'Contabilidade',
-            'departamento-pessoal': 'Departamento Pessoal',
-            'fiscal': 'Fiscal',
-            'legislacao': 'Legislação'
-          };
           const nomeCategoria = categoriasMap[categoria] || categoria;
           document.getElementById('page-title').textContent = nomeCategoria;
           document.getElementById('page-description').textContent = `Explore nossos artigos sobre ${nomeCategoria.toLowerCase()}`;
           document.getElementById('breadcrumb-category').textContent = nomeCategoria;
+        } else if (slug) {
+          // Se é um artigo único
+          const post = posts[0];
+          if (post) {
+            document.getElementById('page-title').textContent = post.title;
+            document.getElementById('page-description').textContent = 'Artigo completo';
+            document.getElementById('breadcrumb-category').textContent = post.title;
+          }
         }
 
-        container.innerHTML = posts.map(post => `
-          <div class="post-container">
-            ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-image">` : ''}
-            <h2>${post.title}</h2>
-            <div class="post-meta">
-              <span><i class="fas fa-calendar"></i> ${new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
-              <span><i class="fas fa-folder"></i> ${categoriasMap[post.category] || post.category}</span>
+        container.innerHTML = posts.map(post => {
+          const nomeCategoria = categoriasMap[post.category] || post.category;
+          const conteudoParsado = typeof parsePostContent === 'function' ? parsePostContent(post.content) : post.content;
+          return `
+            <div class="post-container">
+              ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-image">` : ''}
+              <h2>${post.title}</h2>
+              <div class="post-meta">
+                <span><i class="fas fa-calendar"></i> ${new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
+                <span><i class="fas fa-folder"></i> ${nomeCategoria}</span>
+              </div>
+              <div style="color: #ccc;">
+                ${conteudoParsado}
+              </div>
             </div>
-            <div style="color: #ccc;">
-              ${parsePostContent(post.content)}
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
       } catch (err) {
         console.error('Erro ao carregar posts:', err);
         document.getElementById('posts-container').innerHTML = '<p style="text-align: center; color: #ff4444;">Erro ao carregar artigos.</p>';
       }
     }
-
-    const categoriasMap = {
-      'contabil': 'Contábil',
-      'contabilidade': 'Contabilidade',
-      'departamento-pessoal': 'Departamento Pessoal',
-      'fiscal': 'Fiscal',
-      'legislacao': 'Legislação'
-    };
 
     document.addEventListener('DOMContentLoaded', carregarPosts);
   </script>
