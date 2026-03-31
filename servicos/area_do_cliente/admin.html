@@ -196,8 +196,32 @@
         <a href="../../index.html"><i class="fas fa-home"></i> Início</a>
         <a href="#" class="active" id="link-clientes" onclick="mostrarSecao('clientes'); return false;"><i class="fas fa-users"></i> Gerenciar Clientes</a>
         <a href="#" id="link-blog" onclick="mostrarSecao('blog'); return false;"><i class="fas fa-newspaper"></i> Gerenciar Blog</a>
+        <a href="#" id="link-perfil" onclick="abrirModalPerfil(); return false;"><i class="fas fa-user-circle"></i> Meu Perfil</a>
         <a onclick="logout()" class="logout-btn"><i class="fas fa-power-off"></i> Sair do Painel</a>
     </nav>
+
+    <!-- Modal de Perfil -->
+    <div id="perfil-area" class="admin-card" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 400px;">
+        <h3 style="color: var(--gold); margin-bottom: 20px; font-family: 'Playfair Display';">Editar Perfil</h3>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div id="perfil-foto-container" style="width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--gold); margin: 0 auto 15px; overflow: hidden; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;">
+                <img id="perfil-foto-preview" src="" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                <i id="perfil-foto-placeholder" class="fas fa-user" style="font-size: 3rem; color: rgba(189, 150, 23, 0.3);"></i>
+            </div>
+            <button class="btn-upload" onclick="document.getElementById('perfil-foto-input').click()" style="font-size: 0.75rem; padding: 8px 12px;">
+                <i class="fas fa-camera"></i> Alterar Foto
+            </button>
+            <input type="file" id="perfil-foto-input" accept="image/*" style="display: none;" onchange="previewFotoPerfil(this)">
+        </div>
+        <div class="form-group">
+            <label>Nome de Exibição</label>
+            <input type="text" id="perfil-nome-input" placeholder="Seu nome">
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 25px;">
+            <button class="btn-upload" id="btn-salvar-perfil" onclick="salvarPerfil()" style="flex: 1;">Salvar</button>
+            <button class="btn-clear" onclick="fecharModais()" style="flex: 1;">Cancelar</button>
+        </div>
+    </div>
 
     <main class="main-content">
         <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Painel Administrativo</h1>
@@ -439,11 +463,33 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             }
         });
 
+        let adminProfile = null;
+
         async function carregarDadosAdmin() {
             const client = initSupabase();
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
 
             try {
+                // 0. Carregar Perfil do Admin
+                const { data: adminData, error: adminError } = await client
+                    .from('profiles')
+                    .select('*')
+                    .eq('email', EMAIL_ADMIN)
+                    .single();
+                
+                if (!adminError && adminData) {
+                    adminProfile = adminData;
+                    document.getElementById('admin-name').innerText = adminData.nome || 'JL Serviços Contábeis Online';
+                    
+                    if (adminData.avatar_url) {
+                        const img = document.getElementById('perfil-foto-preview');
+                        const placeholder = document.getElementById('perfil-foto-placeholder');
+                        img.src = adminData.avatar_url;
+                        img.style.display = 'block';
+                        placeholder.style.display = 'none';
+                    }
+                }
+
                 // 1. Carregar Perfis (excluindo o admin)
                 const { data: profiles, error: pError } = await client
                     .from('profiles')
@@ -763,19 +809,15 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
                 
                 alert("Resposta publicada com sucesso!");
                 fecharModais();
-                carregarFAQPendentes();
-            } catch (err) { alert(err.message); }
-        }
-
-        function fecharModais() {
+                carregarFAQPendentes        function fecharModais() {
             document.getElementById('overlay').style.display = 'none';
+            document.getElementById('upload-area').style.display = 'none';
             document.getElementById('novo-pedido-area').style.display = 'none';
             document.getElementById('cancelamento-motivo-area').style.display = 'none';
             document.getElementById('faq-resposta-area').style.display = 'none';
             document.getElementById('nova-noticia-area').style.display = 'none';
-        }
-
-        let cancelamentoPendente = null;
+            document.getElementById('perfil-area').style.display = 'none';
+        }let cancelamentoPendente = null;
         let faqSelecionada = null;
         let noticiaEmEdicao = null;
         let imagemAtualRemovida = false;
@@ -1043,6 +1085,84 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         document.getElementById('filter-status').onchange = () => renderizarTabela(todosDados);
         document.getElementById('filter-servico').onchange = () => renderizarTabela(todosDados);
         document.getElementById('search-client').oninput = () => renderizarTabela(todosDados);
+
+        function abrirModalPerfil() {
+            if (!adminProfile) return;
+            
+            document.getElementById('perfil-nome-input').value = adminProfile.nome || '';
+            
+            if (adminProfile.avatar_url) {
+                document.getElementById('perfil-foto-preview').src = adminProfile.avatar_url;
+                document.getElementById('perfil-foto-preview').style.display = 'block';
+                document.getElementById('perfil-foto-placeholder').style.display = 'none';
+            } else {
+                document.getElementById('perfil-foto-preview').style.display = 'none';
+                document.getElementById('perfil-foto-placeholder').style.display = 'block';
+            }
+            
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('perfil-area').style.display = 'block';
+        }
+
+        function previewFotoPerfil(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('perfil-foto-preview').src = e.target.result;
+                    document.getElementById('perfil-foto-preview').style.display = 'block';
+                    document.getElementById('perfil-foto-placeholder').style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function salvarPerfil() {
+            const nome = document.getElementById('perfil-nome-input').value.trim();
+            const fotoFile = document.getElementById('perfil-foto-input').files[0];
+            const btn = document.getElementById('btn-salvar-perfil');
+            
+            if (!nome) {
+                alert('O nome não pode estar vazio.');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerText = 'SALVANDO...';
+            
+            try {
+                const client = initSupabase();
+                let avatarUrl = adminProfile.avatar_url;
+                
+                if (fotoFile) {
+                    const fileName = `avatar_${adminProfile.id}_${Date.now()}`;
+                    const { data: uploadData, error: uploadError } = await client.storage
+                        .from('avatars')
+                        .upload(fileName, fotoFile);
+                    
+                    if (uploadError) throw uploadError;
+                    
+                    const { data: { publicUrl } } = client.storage
+                        .from('avatars')
+                        .getPublicUrl(fileName);
+                    
+                    avatarUrl = publicUrl;
+                }
+                
+                const { error } = await client.from('profiles')
+                    .update({ nome: nome, avatar_url: avatarUrl })
+                    .eq('id', adminProfile.id);
+                
+                if (error) throw error;
+                
+                alert('Perfil atualizado com sucesso!');
+                location.reload();
+            } catch (err) {
+                alert('Erro ao salvar perfil: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Salvar';
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', carregarDadosAdmin);
     </script>
