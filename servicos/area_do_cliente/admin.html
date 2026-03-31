@@ -1142,20 +1142,16 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Inicializar menu hambúrguer
+        // Inicializar menu hambúrguer IMEDIATAMENTE
+        (function() {
             const menuToggle = document.getElementById('menuToggle');
             const navMenu = document.getElementById('navMenu');
             
-            console.log('[MENU DEBUG] Inicializando menu. menuToggle:', !!menuToggle, 'navMenu:', !!navMenu);
-            
             if (menuToggle && navMenu) {
                 menuToggle.addEventListener('click', (e) => {
-                    console.log('[MENU DEBUG] Clique no menu detectado');
                     e.stopPropagation();
                     menuToggle.classList.toggle('active');
                     navMenu.classList.toggle('active');
-                    console.log('[MENU DEBUG] Classes atualizadas. navMenu:', navMenu.className);
                 });
                 
                 // Fechar menu ao clicar em um link
@@ -1174,10 +1170,14 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
                     }
                 });
             }
-            
-            // Carregar dados do admin
+        })();
+        
+        // Carregar dados do admin quando o DOM estiver pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', carregarDadosAdmin);
+        } else {
             carregarDadosAdmin();
-        });
+        }
     </script>
 </body>
 </html>
