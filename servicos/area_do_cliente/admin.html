@@ -1147,11 +1147,15 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             const menuToggle = document.getElementById('menuToggle');
             const navMenu = document.getElementById('navMenu');
             
+            console.log('[MENU DEBUG] Inicializando menu. menuToggle:', !!menuToggle, 'navMenu:', !!navMenu);
+            
             if (menuToggle && navMenu) {
                 menuToggle.addEventListener('click', (e) => {
+                    console.log('[MENU DEBUG] Clique no menu detectado');
                     e.stopPropagation();
                     menuToggle.classList.toggle('active');
                     navMenu.classList.toggle('active');
+                    console.log('[MENU DEBUG] Classes atualizadas. navMenu:', navMenu.className);
                 });
                 
                 // Fechar menu ao clicar em um link
