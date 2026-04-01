@@ -77,6 +77,7 @@
             padding: 12px 15px;
             border-radius: 10px;
             transition: 0.3s;
+            cursor: pointer;
         }
         .nav-menu a:hover { background: rgba(189, 150, 23, 0.1); color: var(--gold); }
         .nav-menu a.active { background: rgba(189, 150, 23, 0.2); color: var(--gold); }
@@ -92,95 +93,47 @@
         th { text-align: left; color: var(--gold); border-bottom: 1px solid rgba(189, 150, 23, 0.3); padding: 15px 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
         td { padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
         
-        /* Estilo unificado para Selects */
-        select, .status-select, .filter-input { 
+        select, input, textarea { 
             background: #0a192f !important; 
             color: var(--gold) !important; 
             border: 1px solid var(--gold) !important; 
             padding: 8px; 
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        
+        .btn-upload, .btn-clear { 
+            background: var(--gold); 
+            color: var(--dark-blue); 
+            border: none; 
+            padding: 10px 20px; 
             border-radius: 8px; 
-            font-size: 0.85rem; 
-            outline: none;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: 0.3s;
         }
-        select option {
-            background: #0a192f;
-            color: var(--gold);
-        }
-
-        .btn-upload { background: var(--gold); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: 0.3s; }
-        .btn-upload:hover { background: #a68414; transform: translateY(-2px); }
+        .btn-upload:hover { opacity: 0.8; }
+        .btn-clear { background: #555; color: white; }
         
-        /* Modais */
-        #upload-area, #novo-pedido-area, #cancelamento-motivo-area, #faq-resposta-area { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .filters-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .filter-group { flex: 1; min-width: 200px; }
+        .filter-group label { display: block; margin-bottom: 8px; color: var(--gold); font-weight: 600; font-size: 0.85rem; }
+        
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1999; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .modal.active { display: block; }
+        .modal-overlay.active { display: block; }
+        
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 0.8rem; color: var(--gold); margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group textarea { width: 100%; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(189, 150, 23, 0.3); padding: 12px; border-radius: 8px; outline: none; transition: 0.3s; font-family: inherit; }
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--gold); font-weight: 600; }
         
-        .services-list-admin { border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.2); }
-        .service-option { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .service-option:last-child { border-bottom: none; }
-        .service-option input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--gold); }
-        .service-option label { margin-bottom: 0; cursor: pointer; flex-grow: 1; font-size: 0.85rem; color: #ccc; }
-        
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; backdrop-filter: blur(5px); }
-        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
-        
-        .client-info { display: flex; flex-direction: column; gap: 4px; }
-        .client-info strong { font-size: 0.95rem; color: #fff; }
-        .client-info small { color: #888; font-size: 0.75rem; }
-        
-        /* Filtros */
-        .filters-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .filter-group { display: flex; flex-direction: column; gap: 8px; }
-        .filter-group label { font-size: 0.7rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .btn-clear { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; align-self: flex-end; font-size: 0.85rem; font-weight: 600; }
-        .btn-clear:hover { background: rgba(255,255,255,0.2); }
-
-        /* FAQ Notification */
-        .faq-notification {
-            background: rgba(189, 150, 23, 0.1);
-            border: 1px solid var(--gold);
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(189, 150, 23, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(189, 150, 23, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(189, 150, 23, 0); }
-        }
-
         @media (max-width: 768px) {
-            .main-content { padding: 30px 20px; }
-            .filters-container { grid-template-columns: 1fr 1fr; }
-            #lista-noticias { grid-template-columns: 1fr !important; }
-            #nova-noticia-area { width: 95% !important; max-width: 95% !important; max-height: 95vh !important; }
-            .form-group input, .form-group textarea, .form-group select { font-size: 16px !important; }
-            .btn-upload { font-size: 0.9rem !important; padding: 12px 15px !important; }
-        }
-        
-        @media (max-width: 480px) {
             .main-content { padding: 20px 15px; }
-            h1 { font-size: 1.8rem !important; }
-            h3 { font-size: 1.2rem !important; }
-            #lista-noticias { grid-template-columns: 1fr !important; gap: 15px !important; }
-            #nova-noticia-area { width: 98% !important; max-width: 98% !important; padding: 20px !important; }
-            .form-group label { font-size: 0.75rem !important; }
-            .form-group input, .form-group textarea, .form-group select { padding: 10px !important; font-size: 16px !important; }
-            .btn-upload { padding: 12px 10px !important; font-size: 0.8rem !important; }
-            table { font-size: 0.75rem !important; }
-            td, th { padding: 8px 5px !important; }
+            .filters-container { flex-direction: column; }
+            table { font-size: 0.8rem; }
+            td, th { padding: 10px 8px; }
         }
     </style>
-  <link rel="stylesheet" href="/faq-widget.css">
 </head>
 <body>
 
@@ -197,14 +150,16 @@
 
     <nav class="nav-menu" id="navMenu">
         <a href="../../index.html"><i class="fas fa-home"></i> Início</a>
-        <a href="#" class="active" id="link-clientes" onclick="mostrarSecao('clientes'); return false;"><i class="fas fa-users"></i> Gerenciar Clientes</a>
-        <a href="#" id="link-blog" onclick="mostrarSecao('blog'); return false;"><i class="fas fa-newspaper"></i> Gerenciar Blog</a>
-        <a href="#" id="link-perfil" onclick="abrirModalPerfil(); return false;"><i class="fas fa-user-circle"></i> Meu Perfil</a>
+        <a id="link-clientes" onclick="mostrarSecao('clientes'); return false;"><i class="fas fa-users"></i> Gerenciar Clientes</a>
+        <a id="link-blog" onclick="mostrarSecao('blog'); return false;"><i class="fas fa-newspaper"></i> Gerenciar Blog</a>
+        <a id="link-perfil" onclick="abrirModalPerfil(); return false;"><i class="fas fa-user-circle"></i> Meu Perfil</a>
         <a onclick="logout()" class="logout-btn"><i class="fas fa-power-off"></i> Sair do Painel</a>
     </nav>
 
+    <div class="modal-overlay" id="modalOverlay"></div>
+
     <!-- Modal de Perfil -->
-    <div id="perfil-area" class="admin-card" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 400px;">
+    <div id="perfilModal" class="modal">
         <h3 style="color: var(--gold); margin-bottom: 20px; font-family: 'Playfair Display';">Editar Perfil</h3>
         <div style="text-align: center; margin-bottom: 20px;">
             <div id="perfil-foto-container" style="width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--gold); margin: 0 auto 15px; overflow: hidden; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;">
@@ -226,198 +181,113 @@
         </div>
     </div>
 
+    <!-- Modal de Novo Pedido -->
+    <div id="novoPedidoModal" class="modal">
+        <h3 style="color: var(--gold); margin-bottom: 20px; font-family: 'Playfair Display';">Novo Pedido</h3>
+        <form onsubmit="salvarNovoPedido(event)">
+            <div class="form-group">
+                <label>Nome do Cliente</label>
+                <input type="text" id="novo-pedido-nome" required>
+            </div>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="novo-pedido-email" required>
+            </div>
+            <div class="form-group">
+                <label>WhatsApp</label>
+                <input type="text" id="novo-pedido-whatsapp">
+            </div>
+            <div class="form-group">
+                <label>CPF</label>
+                <input type="text" id="novo-pedido-cpf">
+            </div>
+            <div class="form-group">
+                <label>Serviço</label>
+                <select id="novo-pedido-servico" required>
+                    <option value="">Selecione um serviço</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button type="submit" class="btn-upload" style="flex: 1;">Criar Pedido</button>
+                <button type="button" class="btn-clear" onclick="fecharModais()" style="flex: 1;">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
     <main class="main-content">
         <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Painel Administrativo</h1>
         <p style="color: #888; margin-bottom: 40px;">Olá, <span id="admin-name" style="color: var(--gold); font-weight: 600;">JL Serviços Contábeis Online</span>. Gerencie seus clientes e pedidos.</p>
 
-        <!-- Notificação de FAQ -->
-        <div id="faq-alert-container"></div>
-
         <!-- Seção de Clientes -->
         <div id="secao-clientes">
-        <div class="admin-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
-                <h3 style="margin: 0; font-family: 'Playfair Display'; font-size: 1.5rem;">Clientes e Assinaturas</h3>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div id="counter-info" style="font-size: 0.85rem; color: #888; font-weight: 600;"></div>
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                    <h3 style="margin: 0; font-family: 'Playfair Display'; font-size: 1.5rem;">Clientes e Assinaturas</h3>
                     <button class="btn-upload" onclick="abrirModalNovoPedido()" style="background: #25d366; padding: 12px 20px;"><i class="fas fa-plus"></i> Novo Pedido</button>
                 </div>
-            </div>
 
-            <!-- Filtros -->
-            <div class="filters-container">
-                <div class="filter-group">
-                    <label>Status</label>
-                    <select id="filter-status" class="filter-input">
-                        <option value="">Todos os Status</option>
-                        <option value="Pendente">Pendente</option>
-                        <option value="Ativo">Ativo</option>
-                        <option value="Cancelado">Cancelado</option>
-                        <option value="POTENCIAL">Potencial (Sem Pedido)</option>
-                    </select>
+                <!-- Filtros -->
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select id="filter-status" onchange="filtrarDados()">
+                            <option value="">Todos os Status</option>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Ativo">Ativo</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Serviço</label>
+                        <select id="filter-servico" onchange="filtrarDados()">
+                            <option value="">Todos os Serviços</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" style="flex: 2;">
+                        <label>Buscar Cliente</label>
+                        <input type="text" id="search-client" placeholder="Nome, E-mail ou CPF..." onkeyup="filtrarDados()">
+                    </div>
+                    <div class="filter-group" style="flex: 0; display: flex; align-items: flex-end;">
+                        <button class="btn-clear" onclick="limparFiltros()" style="width: 100%;">Limpar</button>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label>Serviço</label>
-                    <select id="filter-servico" class="filter-input">
-                        <option value="">Todos os Serviços</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Buscar Cliente</label>
-                    <input type="text" id="search-client" class="filter-input" placeholder="Nome, E-mail ou CPF...">
-                </div>
-                <button class="btn-clear" onclick="limparFiltros()">Limpar</button>
-            </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Serviço</th>
-                        <th>Status</th>
-                        <th>Data</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tabela-clientes">
-                    <!-- Preenchido via JS -->
-                </tbody>
-            </table>
-        </div>
+                <div id="counter-info" style="font-size: 0.85rem; color: #888; margin-bottom: 15px; font-weight: 600;"></div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Serviço</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-clientes">
+                        <tr><td colspan="5" style="text-align:center; padding:40px; color:#888;">Carregando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Seção de Blog -->
         <div id="secao-blog" style="display: none;">
-        <div class="admin-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
-                <h3 style="margin: 0; font-family: 'Playfair Display'; font-size: 1.5rem;">Gerenciar Notícias do Blog</h3>
-                <button class="btn-upload" onclick="abrirModalNovaNoticia()" style="background: #25d366; padding: 12px 20px;"><i class="fas fa-plus"></i> Nova Notícia</button>
+            <div class="admin-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <h3 style="margin: 0; font-family: 'Playfair Display'; font-size: 1.5rem;">Gerenciar Notícias</h3>
+                    <button class="btn-upload" onclick="abrirModalNovaNoticia()" style="background: #25d366; padding: 12px 20px;"><i class="fas fa-plus"></i> Nova Notícia</button>
+                </div>
+                <div id="blog-list" style="display: grid; gap: 20px;"></div>
             </div>
-            <div id="lista-noticias" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-                <!-- Preenchido via JS -->
-            </div>
-        </div>
         </div>
     </main>
 
-    <!-- Overlay -->
-    <div class="overlay" id="overlay" onclick="fecharModais()"></div>
-
-    <!-- Modal Novo Pedido -->
-    <div id="novo-pedido-area">
-        <h2 style="margin-bottom: 25px; font-size: 1.5rem;">Cadastrar Novo Pedido</h2>
-        <div class="form-group">
-            <label>Nome do Cliente</label>
-            <input type="text" id="novo-nome" placeholder="Nome completo">
-        </div>
-        <div class="form-group">
-            <label>E-mail</label>
-            <input type="email" id="novo-email" placeholder="email@exemplo.com">
-        </div>
-        <div class="form-group">
-            <label>WhatsApp</label>
-            <input type="text" id="novo-whatsapp" placeholder="(00) 00000-0000">
-        </div>
-        <div class="form-group">
-            <label>CPF ou CNPJ</label>
-            <input type="text" id="novo-cpf" placeholder="000.000.000-00">
-        </div>
-        <div class="form-group">
-            <label>Selecione os Serviços</label>
-            <div class="services-list-admin" id="lista-servicos-admin">
-                <!-- Preenchido via JS -->
-            </div>
-        </div>
-        <button class="btn-upload" onclick="finalizarNovoPedido()" style="width: 100%; padding: 15px; background: #25d366;">Finalizar Pedido</button>
-    </div>
-
-    <!-- Modal Motivo Cancelamento -->
-    <div id="cancelamento-motivo-area">
-        <h2 style="margin-bottom: 15px; font-size: 1.5rem;">Motivo do Cancelamento</h2>
-        <p style="color: #888; font-size: 0.85rem; margin-bottom: 20px;">Por favor, indique o motivo do cancelamento para informar ao cliente.</p>
-        <div class="form-group">
-            <label>Selecione o Motivo</label>
-            <select id="motivo-cancelamento-select" style="width: 100%;">
-                <option value="Serviço não prestado">Serviço não prestado</option>
-                <option value="Não foi feito o pagamento">Não foi feito o pagamento</option>
-                <option value="Documentação incompleta">Documentação incompleta</option>
-                <option value="Pedido duplicado">Pedido duplicado</option>
-                <option value="Outros">Outros</option>
-            </select>
-        </div>
-        <button class="btn-upload" onclick="confirmarCancelamentoAdmin()" style="width: 100%; padding: 15px; background: #ff4444;">Confirmar Cancelamento</button>
-    </div>
-
-    <!-- Modal Nova/Editar Notícia -->
-    <div id="nova-noticia-area" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-sizing: border-box;">
-        <h2 id="modal-titulo" style="margin-bottom: 25px; font-size: 1.5rem; color: var(--gold);">Nova Notícia</h2>
-        
-        <div class="form-group">
-            <label>Título da Notícia</label>
-            <input type="text" id="noticia-titulo" placeholder="Digite o título da notícia" required>
-        </div>
-        
-        <div class="form-group">
-            <label>Categoria</label>
-            <select id="noticia-categoria" style="width: 100%;">
-                <option value="contabil">Contabil</option>
-                <option value="contabilidade">Contabilidade</option>
-                <option value="departamento-pessoal">Departamento Pessoal</option>
-                <option value="fiscal">Fiscal</option>
-                <option value="legislacao">Legislação</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label>Imagem da Notícia</label>
-            <div id="imagem-preview" style="margin-bottom: 10px; display: none;">
-                <img id="preview-img" src="" alt="Preview" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 10px;">
-                <button type="button" class="btn-upload" onclick="removerImagemAtual()" style="width: 100%; background: #ff4444; padding: 8px;"><i class="fas fa-trash"></i> Remover Imagem</button>
-            </div>
-            <input type="file" id="noticia-imagem" accept="image/*" style="color: white;">
-            <small style="color: #888; display: block; margin-top: 5px;">Formatos aceitos: JPG, PNG, GIF (máximo 5MB)</small>
-        </div>
-        
-        <div class="form-group">
-            <label>Conteúdo da Notícia</label>
-            <textarea id="noticia-conteudo" rows="8" placeholder="Digite o conteúdo da notícia. Use [SUBTITLE] para marcar subtítulos.
-Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
-            <small style="color: #888; display: block; margin-top: 5px;">Dica: Use [SUBTITLE] para marcar subtítulos que serão formatados automaticamente</small>
-        </div>
-        
-        <div style="display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap;">
-            <button id="btn-salvar-noticia" class="btn-upload" onclick="salvarNovaNoticia()" style="flex: 1; min-width: 120px; background: #25d366; padding: 15px;"><i class="fas fa-save"></i> Publicar</button>
-            <button id="btn-deletar-noticia" class="btn-upload" onclick="deletarNoticiaAtual()" style="flex: 1; min-width: 120px; background: #ff4444; padding: 15px; display: none;"><i class="fas fa-trash"></i> Deletar</button>
-            <button class="btn-upload" onclick="fecharModais()" style="flex: 1; min-width: 120px; background: #666; padding: 15px;">Cancelar</button>
-        </div>
-    </div>
-
-    <!-- Modal Resposta FAQ -->
-    <div id="faq-resposta-area">
-        <h2 style="margin-bottom: 15px; font-size: 1.5rem;">Responder Pergunta</h2>
-        <div class="form-group">
-            <label>Pergunta do Cliente</label>
-            <p id="faq-pergunta-texto" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; font-size: 0.9rem; border-left: 3px solid var(--gold);"></p>
-        </div>
-        <div class="form-group">
-            <label>Sua Resposta</label>
-            <textarea id="faq-resposta-texto" rows="5" placeholder="Digite aqui a resposta que será publicada no FAQ..."></textarea>
-        </div>
-        <button id="btn-publicar-faq" class="btn-upload" onclick="publicarRespostaFAQ()" style="width: 100%; padding: 15px; background: var(--gold);">Publicar Resposta</button>
-    </div>
-
-    <script src="../cliente.js"></script>
     <script>
         const nomesServicos = {
-            'abertura-mei': 'Abertura de MEI',
-            'regularizacao-mei': 'Regularização de MEI',
-            'baixa-mei': 'Encerramento de MEI',
-            'emissao-das': 'Emissão de DAS',
-            'dasn-anual': 'Declaração Anual (DASN-SIMEI)',
-            'parcelamento-mei': 'Parcelamento de Débitos',
-            'alteracao-mei': 'Alteração de Dados do MEI',
-            'mei-plano-basico': 'Plano MEI Básico',
-            'mei-plano-premium': 'Plano MEI Premium',
+            'mei': 'MEI',
+            'pj': 'PJ',
+            'mei-para-pj': 'Transformação MEI para PJ',
             'irpf': 'Imposto de Renda (IRPF)',
             'regularizacao-cpf': 'Regularização de CPF',
             'darf-emissao': 'Emissão de DARF',
@@ -439,60 +309,94 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         };
 
         let todosDados = [];
-        let faqPendentes = [];
-
         let adminProfile = null;
+        let fotoFile = null;
+
+        function initSupabase() {
+            const SUPABASE_URL = "https://qdgsmnfhpbkbovptwwjp.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk3NzI2NzksImV4cCI6MjAyNTM0ODY3OX0.LqIUYLvhsN8n3xJIEzHHJKQhPVwFl9xvuXvIKU1Ixzw";
+            return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        // MENU HAMBÚRGUER
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            const modalOverlay = document.getElementById('modalOverlay');
+
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    menuToggle.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+
+                // Fechar menu ao clicar em um link
+                navMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', function() {
+                        menuToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+
+                // Fechar menu ao clicar fora
+                document.addEventListener('click', function(e) {
+                    if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                        menuToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    }
+                });
+            }
+
+            // Modal overlay
+            modalOverlay.addEventListener('click', fecharModais);
+
+            // Carregar dados
+            carregarDadosAdmin();
+        });
 
         async function carregarDadosAdmin() {
             const client = initSupabase();
             const EMAIL_ADMIN = "jlservicoscontabeis0@gmail.com";
 
             try {
-                // 0. Carregar Perfil do Admin
-                const { data: adminData, error: adminError } = await client
+                // Carregar perfil do admin
+                const { data: adminData } = await client
                     .from('profiles')
                     .select('*')
                     .eq('email', EMAIL_ADMIN)
                     .single();
                 
-                if (!adminError && adminData) {
+                if (adminData) {
                     adminProfile = adminData;
                     document.getElementById('admin-name').innerText = adminData.nome || 'JL Serviços Contábeis Online';
-                    
                     if (adminData.avatar_url) {
-                        const img = document.getElementById('perfil-foto-preview');
-                        const placeholder = document.getElementById('perfil-foto-placeholder');
-                        img.src = adminData.avatar_url;
-                        img.style.display = 'block';
-                        placeholder.style.display = 'none';
+                        document.getElementById('perfil-foto-preview').src = adminData.avatar_url;
+                        document.getElementById('perfil-foto-preview').style.display = 'block';
+                        document.getElementById('perfil-foto-placeholder').style.display = 'none';
                     }
                 }
 
-                // 1. Carregar Perfis (excluindo o admin)
-                const { data: profiles, error: pError } = await client
+                // Carregar clientes
+                const { data: profiles } = await client
                     .from('profiles')
                     .select('*')
-                    .neq('email', EMAIL_ADMIN)
-                    .neq('role', 'admin');
+                    .neq('email', EMAIL_ADMIN);
 
-                if (pError) throw pError;
-
-                // 2. Carregar Assinaturas
-                const { data: assinaturas, error: aError } = await client
+                // Carregar assinaturas
+                const { data: assinaturas } = await client
                     .from('assinaturas')
                     .select('*')
                     .order('created_at', { ascending: false });
 
-                if (aError) throw aError;
-
-                // 3. Cruzar dados
-                todosDados = profiles.map(p => {
-                    const pedidos = assinaturas.filter(a => a.user_id === p.id || a.email === p.email);
+                // Cruzar dados
+                todosDados = (profiles || []).map(p => {
+                    const pedidos = (assinaturas || []).filter(a => a.user_id === p.id || a.email === p.email);
                     return { ...p, pedidos };
                 });
 
-                // Adicionar assinaturas sem perfil (vendas diretas sem cadastro completo)
-                assinaturas.forEach(a => {
+                // Adicionar assinaturas sem perfil
+                (assinaturas || []).forEach(a => {
                     const jaExiste = todosDados.some(d => d.id === a.user_id || d.email === a.email);
                     if (!jaExiste) {
                         todosDados.push({
@@ -508,7 +412,7 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
 
                 renderizarTabela(todosDados);
                 carregarFiltroServicos();
-                carregarFAQPendentes();
+                preencherSelectServicos();
 
             } catch (err) {
                 console.error("Erro ao carregar dados:", err);
@@ -519,69 +423,40 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             const tbody = document.getElementById('tabela-clientes');
             const statusFiltro = document.getElementById('filter-status').value;
             const servicoFiltro = document.getElementById('filter-servico').value;
-            const busca = document.getElementById('search-client').value.toLowerCase();
+            const buscaFiltro = document.getElementById('search-client').value.toLowerCase();
 
             let html = '';
             let totalExibido = 0;
 
             dados.forEach(cliente => {
-                // Filtrar pedidos do cliente
-                let pedidosFiltrados = cliente.pedidos.filter(p => {
-                    const matchStatus = !statusFiltro || p.status === statusFiltro;
-                    const matchServico = !servicoFiltro || p.servico === servicoFiltro;
-                    return matchStatus && matchServico;
-                });
+                cliente.pedidos.forEach(pedido => {
+                    const statusMatch = !statusFiltro || pedido.status === statusFiltro;
+                    const servicoMatch = !servicoFiltro || pedido.servico === servicoFiltro;
+                    const buscaMatch = !buscaFiltro || 
+                        cliente.nome.toLowerCase().includes(buscaFiltro) ||
+                        cliente.email.toLowerCase().includes(buscaFiltro) ||
+                        (cliente.cpf && cliente.cpf.includes(buscaFiltro));
 
-                // Se o filtro for POTENCIAL, mostrar apenas quem não tem pedidos
-                if (statusFiltro === 'POTENCIAL') {
-                    if (cliente.pedidos.length === 0) {
-                        pedidosFiltrados = [{ id: 'potencial', servico: 'Nenhum', status: 'POTENCIAL', created_at: cliente.created_at }];
-                    } else {
-                        pedidosFiltrados = [];
-                    }
-                }
-
-                // Filtro de busca (Nome, Email ou CPF)
-                const matchBusca = !busca || 
-                    cliente.nome.toLowerCase().includes(busca) || 
-                    cliente.email.toLowerCase().includes(busca) || 
-                    (cliente.cpf && cliente.cpf.includes(busca));
-
-                if (pedidosFiltrados.length > 0 && matchBusca) {
-                    pedidosFiltrados.forEach(p => {
+                    if (statusMatch && servicoMatch && buscaMatch) {
                         totalExibido++;
-                        const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '-';
-                        const statusClass = p.status === 'Ativo' ? 'background:#25d366; color:white;' : 
-                                          p.status === 'Cancelado' ? 'background:#ff4444; color:white;' : 
-                                          'background:#bd9617; color:white;';
-
+                        const data = new Date(pedido.created_at).toLocaleDateString('pt-BR');
                         html += `
                             <tr>
+                                <td>${cliente.nome}</td>
+                                <td>${nomesServicos[pedido.servico] || pedido.servico}</td>
                                 <td>
-                                    <div class="client-info">
-                                        <strong>${cliente.nome}</strong>
-                                        <small>${cliente.email}</small>
-                                        <small>${cliente.whatsapp || '-'}</small>
-                                    </div>
-                                </td>
-                                <td>${nomesServicos[p.servico] || p.servico}</td>
-                                <td>
-                                    ${p.id === 'potencial' ? '<span class="status-badge" style="background:#666; color:white;">Potencial</span>' : `
-                                        <select class="status-select" onchange="alterarStatus('${p.id}', this.value)">
-                                            <option value="Pendente" ${p.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
-                                            <option value="Ativo" ${p.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
-                                            <option value="Cancelado" ${p.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
-                                        </select>
-                                    `}
+                                    <select onchange="alterarStatus('${pedido.id}', this.value)">
+                                        <option value="Pendente" ${pedido.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                                        <option value="Ativo" ${pedido.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
+                                        <option value="Cancelado" ${pedido.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                                    </select>
                                 </td>
                                 <td>${data}</td>
-                                <td>
-                                    ${p.id !== 'potencial' ? `<button class="btn-upload" onclick="abrirUpload('${p.id}', '${cliente.nome}')"><i class="fas fa-file-upload"></i> Enviar Doc</button>` : '-'}
-                                </td>
+                                <td><button class="btn-upload" onclick="abrirUpload('${pedido.id}', '${cliente.nome}')" style="padding: 8px 12px; font-size: 0.8rem;"><i class="fas fa-file-upload"></i> Enviar Doc</button></td>
                             </tr>
                         `;
-                    });
-                }
+                    }
+                });
             });
 
             tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center; padding:40px; color:#888;">Nenhum registro encontrado.</td></tr>';
@@ -590,7 +465,7 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
 
         function carregarFiltroServicos() {
             const select = document.getElementById('filter-servico');
-            const servicosUnicos = [...new Set(todosDados.flatMap(c => c.pedidos.map(p => p.servico)))].filter(s => s && s !== 'Nenhum');
+            const servicosUnicos = [...new Set(todosDados.flatMap(c => c.pedidos.map(p => p.servico)))].filter(s => s);
             
             let options = '<option value="">Todos os Serviços</option>';
             servicosUnicos.sort().forEach(s => {
@@ -599,458 +474,17 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             select.innerHTML = options;
         }
 
-        // Lógica de Cancelamento com Motivo
-        let cancelamentoPendente = null;
-        async function alterarStatus(id, novoStatus) {
-            if (novoStatus === 'Cancelado') {
-                cancelamentoPendente = id;
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('cancelamento-motivo-area').style.display = 'block';
-                return;
-            }
-
-            const client = initSupabase();
-            try {
-                const { error } = await client.from('assinaturas').update({ status: novoStatus }).eq('id', id);
-                if (error) throw error;
-                
-                // Atualizar localmente
-                todosDados.forEach(c => {
-                    c.pedidos.forEach(p => {
-                        if (p.id === id) p.status = novoStatus;
-                    });
-                });
-                renderizarTabela(todosDados);
-            } catch (err) {
-                alert("Erro ao atualizar status: " + err.message);
-            }
-        }
-
-        async function confirmarCancelamentoAdmin() {
-            if (!cancelamentoPendente) return;
-            const motivo = document.getElementById('motivo-cancelamento-select').value;
-            const client = initSupabase();
-            
-            try {
-                const { error } = await client.from('assinaturas').update({ 
-                    status: 'Cancelado',
-                    motivo_cancelamento: motivo 
-                }).eq('id', cancelamentoPendente);
-                
-                if (error) throw error;
-                
-                // Atualizar localmente
-                todosDados.forEach(c => {
-                    c.pedidos.forEach(p => {
-                        if (p.id === cancelamentoPendente) {
-                            p.status = 'Cancelado';
-                            p.motivo_cancelamento = motivo;
-                        }
-                    });
-                });
-                
-                fecharModais();
-                renderizarTabela(todosDados);
-            } catch (err) {
-                alert("Erro ao cancelar: " + err.message);
-            }
-        }
-
-        // Novo Pedido
-        function abrirModalNovoPedido() {
-            const lista = document.getElementById('lista-servicos-admin');
-            let html = '';
-            
-            // Ordenar serviços por nome
-            const sortedKeys = Object.keys(nomesServicos).sort((a, b) => nomesServicos[a].localeCompare(nomesServicos[b]));
-            
-            sortedKeys.forEach(key => {
-                html += `
-                    <div class="service-option">
-                        <input type="checkbox" id="svc-${key}" value="${key}">
-                        <label for="svc-${key}">${nomesServicos[key]}</label>
-                    </div>
-                `;
+        function preencherSelectServicos() {
+            const select = document.getElementById('novo-pedido-servico');
+            let options = '<option value="">Selecione um serviço</option>';
+            Object.entries(nomesServicos).forEach(([key, value]) => {
+                options += `<option value="${key}">${value}</option>`;
             });
-            lista.innerHTML = html;
-            
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('novo-pedido-area').style.display = 'block';
+            select.innerHTML = options;
         }
 
-        async function finalizarNovoPedido() {
-            const nome = document.getElementById('novo-nome').value.trim();
-            const email = document.getElementById('novo-email').value.trim();
-            const whatsapp = document.getElementById('novo-whatsapp').value.trim();
-            const cpf = document.getElementById('novo-cpf').value.trim();
-            
-            const selecionados = Array.from(document.querySelectorAll('#lista-servicos-admin input:checked')).map(cb => cb.value);
-            
-            if (!nome || !email || selecionados.length === 0) {
-                alert("Preencha Nome, E-mail e selecione ao menos um serviço.");
-                return;
-            }
-
-            const client = initSupabase();
-            const btn = document.querySelector('#novo-pedido-area .btn-upload');
-            const originalText = btn.innerText;
-            
-            try {
-                btn.disabled = true;
-                btn.innerText = "PROCESSANDO...";
-
-                // 1. Garantir Perfil
-                const { data: profileData, error: profileError } = await client.from('profiles').upsert({ nome, email, whatsapp, cpf, role: 'cliente' }, { onConflict: 'email' }).select();
-                if (profileError) throw profileError;
-                
-                const userId = profileData && profileData[0] ? profileData[0].id : null;
-
-                // 2. Inserir Assinaturas
-                const novasAssinaturas = selecionados.map(servico => ({
-                    email, nome, whatsapp, cpf, servico, status: 'Pendente', user_id: userId
-                }));
-                
-                const { error } = await client.from('assinaturas').insert(novasAssinaturas);
-                if (error) throw error;
-                
-                alert("Pedido(s) criado(s) com sucesso!");
-                fecharModais();
-                
-                // Limpar formulário
-                document.getElementById('novo-nome').value = '';
-                document.getElementById('novo-email').value = '';
-                document.getElementById('novo-whatsapp').value = '';
-                document.getElementById('novo-cpf').value = '';
-                
-                await carregarDadosAdmin();
-            } catch (err) {
-                console.error("Erro detalhado:", err);
-                alert("Erro ao criar pedido: " + (err.message || "Erro desconhecido"));
-            } finally {
-                btn.disabled = false;
-                btn.innerText = originalText;
-            }
-        }
-
-        // FAQ Management
-        async function carregarFAQPendentes() {
-            const client = initSupabase();
-            try {
-                const { data, error } = await client.from('faq').select('*').eq('status', 'pendente').order('created_at', { ascending: true });
-                if (error) throw error;
-                
-                faqPendentes = data;
-                renderizarAlertasFAQ();
-            } catch (err) { console.error(err); }
-        }
-
-        function renderizarAlertasFAQ() {
-            const container = document.getElementById('faq-alert-container');
-            if (faqPendentes.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-
-            container.innerHTML = faqPendentes.map(faq => `
-                <div class="faq-notification">
-                    <div>
-                        <strong style="color: var(--gold);"><i class="fas fa-question-circle"></i> Nova Pergunta de ${faq.cliente_nome || 'Cliente'}</strong>
-                        <p style="font-size: 0.85rem; margin-top: 5px; opacity: 0.9;">"${faq.pergunta}"</p>
-                    </div>
-                    <button class="btn-upload" onclick="abrirRespostaFAQ('${faq.id}', '${faq.pergunta.replace(/'/g, "\\'")}')">Responder</button>
-                </div>
-            `).join('');
-        }
-
-        let faqSelecionada = null;
-        function abrirRespostaFAQ(id, pergunta) {
-            faqSelecionada = id;
-            document.getElementById('faq-pergunta-texto').innerText = pergunta;
-            document.getElementById('faq-resposta-texto').value = '';
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('faq-resposta-area').style.display = 'block';
-        }
-
-        async function publicarRespostaFAQ() {
-            const resposta = document.getElementById('faq-resposta-texto').value.trim();
-            if (!resposta) return alert("Digite uma resposta.");
-
-            const client = initSupabase();
-            try {
-                const { error } = await client.from('faq').update({
-                    resposta: resposta,
-                    status: 'publicada',
-                    respondida_em: new Date().toISOString()
-                }).eq('id', faqSelecionada);
-
-                if (error) throw error;
-                
-                alert("Resposta publicada com sucesso!");
-                fecharModais();
-                carregarFAQPendentes        function fecharModais() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('upload-area').style.display = 'none';
-            document.getElementById('novo-pedido-area').style.display = 'none';
-            document.getElementById('cancelamento-motivo-area').style.display = 'none';
-            document.getElementById('faq-resposta-area').style.display = 'none';
-            document.getElementById('nova-noticia-area').style.display = 'none';
-            document.getElementById('perfil-area').style.display = 'none';
-        }let cancelamentoPendente = null;
-        let faqSelecionada = null;
-        let noticiaEmEdicao = null;
-        let imagemAtualRemovida = false;
-
-        function mostrarSecao(secao) {
-            document.getElementById('secao-clientes').style.display = secao === 'clientes' ? 'block' : 'none';
-            document.getElementById('secao-blog').style.display = secao === 'blog' ? 'block' : 'none';
-            
-            document.getElementById('link-clientes').classList.remove('active');
-            document.getElementById('link-blog').classList.remove('active');
-            
-            if (secao === 'clientes') {
-                document.getElementById('link-clientes').classList.add('active');
-            } else if (secao === 'blog') {
-                document.getElementById('link-blog').classList.add('active');
-            }
-            
-            menuToggle.classList.remove('active');
-            navMenu.classList.remove('active');
-            
-            if (secao === 'blog') {
-                carregarNoticias();
-            }
-        }
-
-        function abrirModalNovaNoticia() {
-            noticiaEmEdicao = null;
-            imagemAtualRemovida = false;
-            document.getElementById('modal-titulo').textContent = 'Nova Notícia';
-            document.getElementById('noticia-titulo').value = '';
-            document.getElementById('noticia-categoria').value = 'contabil';
-            document.getElementById('noticia-imagem').value = '';
-            document.getElementById('noticia-conteudo').value = '';
-            document.getElementById('imagem-preview').style.display = 'none';
-            document.getElementById('btn-deletar-noticia').style.display = 'none';
-            document.getElementById('btn-salvar-noticia').innerHTML = '<i class="fas fa-save"></i> Publicar';
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('nova-noticia-area').style.display = 'block';
-        }
-
-        async function salvarNovaNoticia() {
-            const titulo = document.getElementById('noticia-titulo').value.trim();
-            const categoria = document.getElementById('noticia-categoria').value;
-            const conteudo = document.getElementById('noticia-conteudo').value.trim();
-            const imagemFile = document.getElementById('noticia-imagem').files[0];
-            const btn = document.getElementById('btn-salvar-noticia');
-            
-            if (!titulo || !conteudo) {
-                alert('Preencha o titulo e o conteudo da noticia.');
-                return;
-            }
-            
-            btn.disabled = true;
-            btn.innerText = 'SALVANDO...';
-            
-            try {
-                const client = initSupabase();
-                let imagemUrl = null;
-                
-                if (noticiaEmEdicao) {
-                    imagemUrl = imagemAtualRemovida ? null : (noticiaEmEdicao.image_url || null);
-                    
-                    if (imagemFile) {
-                        if (noticiaEmEdicao.image_url) {
-                            const fileName = noticiaEmEdicao.image_url.split('/').pop();
-                            await client.storage.from('blog-images').remove([fileName]);
-                        }
-                        
-                        const fileName = `blog_${Date.now()}_${imagemFile.name}`;
-                        const { data: uploadData, error: uploadError } = await client.storage
-                            .from('blog-images')
-                            .upload(fileName, imagemFile);
-                        
-                        if (uploadError) throw uploadError;
-                        
-                        const { data: { publicUrl } } = client.storage
-                            .from('blog-images')
-                            .getPublicUrl(fileName);
-                        
-                        imagemUrl = publicUrl;
-                    }
-                    
-                    const { error } = await client.from('blog_posts')
-                        .update({
-                            title: titulo,
-                            content: conteudo,
-                            image_url: imagemUrl,
-                            category: categoria
-                        })
-                        .eq('id', noticiaEmEdicao.id);
-                    
-                    if (error) throw error;
-                    
-                    alert('Noticia atualizada com sucesso!');
-                } else {
-                    if (imagemFile) {
-                        const fileName = `blog_${Date.now()}_${imagemFile.name}`;
-                        const { data: uploadData, error: uploadError } = await client.storage
-                            .from('blog-images')
-                            .upload(fileName, imagemFile);
-                        
-                        if (uploadError) throw uploadError;
-                        
-                        const { data: { publicUrl } } = client.storage
-                            .from('blog-images')
-                            .getPublicUrl(fileName);
-                        
-                        imagemUrl = publicUrl;
-                    }
-                    
-                    const slug = titulo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-                    
-                    const { error } = await client.from('blog_posts').insert({
-                        title: titulo,
-                        slug: slug,
-                        content: conteudo,
-                        image_url: imagemUrl,
-                        category: categoria,
-                        published: true
-                    });
-                    
-                    if (error) throw error;
-                    
-                    alert('Noticia publicada com sucesso!');
-                }
-                
-                fecharModais();
-                carregarNoticias();
-            } catch (err) {
-                console.error('Erro:', err);
-                alert('Erro ao salvar noticia: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                if (noticiaEmEdicao) {
-                    btn.innerHTML = '<i class="fas fa-save"></i> Salvar Alteracoes';
-                } else {
-                    btn.innerHTML = '<i class="fas fa-save"></i> Publicar';
-                }
-            }
-        }
-
-        async function carregarNoticias() {
-            try {
-                const client = initSupabase();
-                const { data: noticias, error } = await client
-                    .from('blog_posts')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) throw error;
-                
-                const container = document.getElementById('lista-noticias');
-                if (!noticias || noticias.length === 0) {
-                    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888;">Nenhuma noticia publicada ainda.</p>';
-                    return;
-                }
-                
-                container.innerHTML = noticias.map(noticia => `
-                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(189, 150, 23, 0.2); border-radius: 12px; overflow: hidden; transition: 0.3s;">
-                        ${noticia.image_url ? `<img src="${noticia.image_url}" alt="${noticia.title}" style="width: 100%; height: 200px; object-fit: cover;">` : ''}
-                        <div style="padding: 15px;">
-                            <h4 style="color: var(--gold); margin-bottom: 8px; font-size: 1rem;">${noticia.title}</h4>
-                            <p style="color: #888; font-size: 0.8rem; margin-bottom: 12px;">${new Date(noticia.created_at).toLocaleDateString('pt-BR')}</p>
-                            <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 15px; line-height: 1.4;">${noticia.content.substring(0, 100)}...</p>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn-upload" onclick="editarNoticia('${noticia.id}')" style="flex: 1; padding: 8px; font-size: 0.8rem; background: #bd9617;"><i class="fas fa-edit"></i> Editar</button>
-                                <button class="btn-upload" onclick="deletarNoticia('${noticia.id}')" style="flex: 1; padding: 8px; font-size: 0.8rem; background: #ff4444;"><i class="fas fa-trash"></i> Deletar</button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.error('Erro ao carregar noticias:', err);
-            }
-        }
-
-        async function editarNoticia(id) {
-            try {
-                const client = initSupabase();
-                const { data: noticia, error } = await client
-                    .from('blog_posts')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-                
-                if (error) throw error;
-                
-                noticiaEmEdicao = noticia;
-                imagemAtualRemovida = false;
-                
-                document.getElementById('modal-titulo').textContent = 'Editar Notícia';
-                document.getElementById('noticia-titulo').value = noticia.title;
-                document.getElementById('noticia-categoria').value = noticia.category || 'contabil';
-                document.getElementById('noticia-conteudo').value = noticia.content;
-                document.getElementById('noticia-imagem').value = '';
-                
-                if (noticia.image_url) {
-                    document.getElementById('imagem-preview').style.display = 'block';
-                    document.getElementById('preview-img').src = noticia.image_url;
-                } else {
-                    document.getElementById('imagem-preview').style.display = 'none';
-                }
-                
-                document.getElementById('btn-deletar-noticia').style.display = 'inline-block';
-                document.getElementById('btn-salvar-noticia').innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
-                
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('nova-noticia-area').style.display = 'block';
-            } catch (err) {
-                alert('Erro ao carregar notícia: ' + err.message);
-            }
-        }
-
-        function removerImagemAtual() {
-            imagemAtualRemovida = true;
-            document.getElementById('imagem-preview').style.display = 'none';
-        }
-
-        async function deletarNoticiaAtual() {
-            if (!confirm('Tem certeza que deseja deletar esta notícia?')) return;
-            
-            try {
-                const client = initSupabase();
-                
-                if (noticiaEmEdicao.image_url) {
-                    const fileName = noticiaEmEdicao.image_url.split('/').pop();
-                    await client.storage.from('blog-images').remove([fileName]);
-                }
-                
-                const { error } = await client.from('blog_posts').delete().eq('id', noticiaEmEdicao.id);
-                
-                if (error) throw error;
-                
-                alert('Notícia deletada com sucesso!');
-                fecharModais();
-                carregarNoticias();
-            } catch (err) {
-                alert('Erro ao deletar notícia: ' + err.message);
-            }
-        }
-
-        async function deletarNoticia(id) {
-            if (!confirm('Tem certeza que deseja deletar esta noticia?')) return;
-            
-            try {
-                const client = initSupabase();
-                const { error } = await client.from('blog_posts').delete().eq('id', id);
-                
-                if (error) throw error;
-                
-                alert('Noticia deletada com sucesso!');
-                carregarNoticias();
-            } catch (err) {
-                alert('Erro ao deletar noticia: ' + err.message);
-            }
+        function filtrarDados() {
+            renderizarTabela(todosDados);
         }
 
         function limparFiltros() {
@@ -1060,30 +494,72 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
             renderizarTabela(todosDados);
         }
 
-        document.getElementById('filter-status').onchange = () => renderizarTabela(todosDados);
-        document.getElementById('filter-servico').onchange = () => renderizarTabela(todosDados);
-        document.getElementById('search-client').oninput = () => renderizarTabela(todosDados);
+        async function alterarStatus(id, novoStatus) {
+            const client = initSupabase();
+            try {
+                await client.from('assinaturas').update({ status: novoStatus }).eq('id', id);
+                todosDados.forEach(c => {
+                    c.pedidos.forEach(p => {
+                        if (p.id === id) p.status = novoStatus;
+                    });
+                });
+                renderizarTabela(todosDados);
+            } catch (err) {
+                console.error("Erro ao alterar status:", err);
+                alert('Erro ao alterar status');
+            }
+        }
+
+        function abrirModalNovoPedido() {
+            document.getElementById('novoPedidoModal').classList.add('active');
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        async function salvarNovoPedido(e) {
+            e.preventDefault();
+            const client = initSupabase();
+            
+            const nome = document.getElementById('novo-pedido-nome').value;
+            const email = document.getElementById('novo-pedido-email').value;
+            const whatsapp = document.getElementById('novo-pedido-whatsapp').value;
+            const cpf = document.getElementById('novo-pedido-cpf').value;
+            const servico = document.getElementById('novo-pedido-servico').value;
+
+            if (!nome || !email || !servico) {
+                alert('Preencha todos os campos obrigatórios');
+                return;
+            }
+
+            try {
+                const { error } = await client.from('assinaturas').insert([{
+                    nome, email, whatsapp, cpf, servico,
+                    status: 'Pendente',
+                    created_at: new Date().toISOString()
+                }]);
+
+                if (error) throw error;
+
+                alert('Pedido criado com sucesso!');
+                fecharModais();
+                document.getElementById('novoPedidoModal').querySelector('form').reset();
+                carregarDadosAdmin();
+            } catch (err) {
+                console.error("Erro ao criar pedido:", err);
+                alert('Erro ao criar pedido: ' + err.message);
+            }
+        }
 
         function abrirModalPerfil() {
-            if (!adminProfile) return;
-            
-            document.getElementById('perfil-nome-input').value = adminProfile.nome || '';
-            
-            if (adminProfile.avatar_url) {
-                document.getElementById('perfil-foto-preview').src = adminProfile.avatar_url;
-                document.getElementById('perfil-foto-preview').style.display = 'block';
-                document.getElementById('perfil-foto-placeholder').style.display = 'none';
-            } else {
-                document.getElementById('perfil-foto-preview').style.display = 'none';
-                document.getElementById('perfil-foto-placeholder').style.display = 'block';
+            document.getElementById('perfilModal').classList.add('active');
+            document.getElementById('modalOverlay').classList.add('active');
+            if (adminProfile) {
+                document.getElementById('perfil-nome-input').value = adminProfile.nome || '';
             }
-            
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('perfil-area').style.display = 'block';
         }
 
         function previewFotoPerfil(input) {
             if (input.files && input.files[0]) {
+                fotoFile = input.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('perfil-foto-preview').src = e.target.result;
@@ -1095,88 +571,84 @@ Exemplo: [SUBTITLE]Seu subtítulo aqui"></textarea>
         }
 
         async function salvarPerfil() {
-            const nome = document.getElementById('perfil-nome-input').value.trim();
-            const fotoFile = document.getElementById('perfil-foto-input').files[0];
+            const client = initSupabase();
+            const nome = document.getElementById('perfil-nome-input').value;
             const btn = document.getElementById('btn-salvar-perfil');
-            
+
             if (!nome) {
-                alert('O nome não pode estar vazio.');
+                alert('Digite um nome');
                 return;
             }
-            
+
             btn.disabled = true;
             btn.innerText = 'SALVANDO...';
-            
+
             try {
-                const client = initSupabase();
                 let avatarUrl = adminProfile.avatar_url;
-                
+
                 if (fotoFile) {
                     const fileName = `avatar_${adminProfile.id}_${Date.now()}`;
-                    const { data: uploadData, error: uploadError } = await client.storage
+                    const { error: uploadError } = await client.storage
                         .from('avatars')
                         .upload(fileName, fotoFile);
                     
                     if (uploadError) throw uploadError;
-                    
+
                     const { data: { publicUrl } } = client.storage
                         .from('avatars')
                         .getPublicUrl(fileName);
                     
                     avatarUrl = publicUrl;
                 }
-                
+
                 const { error } = await client.from('profiles')
-                    .update({ nome: nome, avatar_url: avatarUrl })
+                    .update({ nome, avatar_url: avatarUrl })
                     .eq('id', adminProfile.id);
-                
+
                 if (error) throw error;
-                
+
+                adminProfile.nome = nome;
+                adminProfile.avatar_url = avatarUrl;
+                document.getElementById('admin-name').innerText = nome;
+
                 alert('Perfil atualizado com sucesso!');
-                location.reload();
+                fecharModais();
+                fotoFile = null;
             } catch (err) {
-                alert('Erro ao salvar perfil: ' + err.message);
+                console.error("Erro ao salvar perfil:", err);
+                alert('Erro ao salvar: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerText = 'Salvar';
             }
         }
 
-        // Inicializar menu hambúrguer IMEDIATAMENTE
-        (function() {
-            const menuToggle = document.getElementById('menuToggle');
-            const navMenu = document.getElementById('navMenu');
-            
-            if (menuToggle && navMenu) {
-                menuToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    menuToggle.classList.toggle('active');
-                    navMenu.classList.toggle('active');
-                });
-                
-                // Fechar menu ao clicar em um link
-                document.querySelectorAll('.nav-menu a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        menuToggle.classList.remove('active');
-                        navMenu.classList.remove('active');
-                    });
-                });
-                
-                // Fechar menu ao clicar fora
-                document.addEventListener('click', (e) => {
-                    if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-                        menuToggle.classList.remove('active');
-                        navMenu.classList.remove('active');
-                    }
-                });
-            }
-        })();
-        
-        // Carregar dados do admin quando o DOM estiver pronto
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', carregarDadosAdmin);
-        } else {
-            carregarDadosAdmin();
+        function mostrarSecao(secao) {
+            document.getElementById('secao-clientes').style.display = secao === 'clientes' ? 'block' : 'none';
+            document.getElementById('secao-blog').style.display = secao === 'blog' ? 'block' : 'none';
+
+            document.getElementById('link-clientes').classList.toggle('active', secao === 'clientes');
+            document.getElementById('link-blog').classList.toggle('active', secao === 'blog');
+        }
+
+        function abrirModalNovaNoticia() {
+            alert('Funcionalidade de blog em desenvolvimento');
+        }
+
+        function fecharModais() {
+            document.getElementById('perfilModal').classList.remove('active');
+            document.getElementById('novoPedidoModal').classList.remove('active');
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function abrirUpload(pedidoId, clienteNome) {
+            alert('Funcionalidade de upload em desenvolvimento');
+        }
+
+        async function logout() {
+            const client = initSupabase();
+            await client.auth.signOut();
+            window.location.href = 'index.html';
         }
     </script>
 </body>
