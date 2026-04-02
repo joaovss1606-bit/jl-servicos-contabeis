@@ -195,7 +195,7 @@
 
         container.innerHTML = posts.map(post => {
           const nomeCategoria = categoriasMap[post.category] || post.category;
-          const conteudoParsado = typeof parsePostContent === 'function' ? parsePostContent(post.content) : post.content;
+          const conteudoParsado = parsePostContent(post.content);
           return `
             <div class="post-container">
               ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="post-image">` : ''}
@@ -217,7 +217,7 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', carregarPosts);
+    carregarPosts();
   </script>
   <script type="module" src="/faq-widget.js"></script>
 </body>
