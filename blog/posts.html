@@ -128,8 +128,46 @@
 </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module">
-    import { parsePostContent } from '../blog-post-parser.js';
+  <script>
+    function parsePostContent(content) {
+      if (!content) return '';
+      const parts = content.split(/\[SUBTITLE\]/);
+      let html = '';
+      
+      parts.forEach((part, index) => {
+        if (index === 0) {
+          if (part.trim()) {
+            html += `<p style="line-height: 1.6; margin-bottom: 15px; color: #ccc;">${formatarTexto(part.trim())}</p>`;
+          }
+        } else {
+          const linhas = part.trim().split('\n');
+          if (linhas.length > 0) {
+            const subtitulo = linhas[0].trim();
+            html += `<h3 style="color: var(--gold); font-size: 1.2rem; margin-top: 25px; margin-bottom: 12px; font-family: 'Playfair Display', serif;">${subtitulo}</h3>`;
+            if (linhas.length > 1) {
+              const conteudoSubsecao = linhas.slice(1).join('\n').trim();
+              if (conteudoSubsecao) {
+                html += `<p style="line-height: 1.6; margin-bottom: 15px; color: #ccc;">${formatarTexto(conteudoSubsecao)}</p>`;
+              }
+            }
+          }
+        }
+      });
+      return html;
+    }
+
+    function formatarTexto(texto) {
+      texto = texto
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+      texto = texto.replace(/\n/g, '<br>');
+      texto = texto.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #d4af37;">$1</strong>');
+      texto = texto.replace(/\*(.*?)\*/g, '<em style="color: #bd9617;">$1</em>');
+      return texto;
+    }
 
     const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
@@ -167,7 +205,6 @@
           return;
         }
 
-        // Atualizar títulos e breadcrumb
         const categoriasMap = {
           'contabil': 'Contábil',
           'contabilidade': 'Contabilidade',
@@ -184,7 +221,6 @@
           document.getElementById('page-description').textContent = `Explore nossos artigos sobre ${nomeCategoria.toLowerCase()}`;
           document.getElementById('breadcrumb-category').textContent = nomeCategoria;
         } else if (slug) {
-          // Se é um artigo único
           const post = posts[0];
           if (post) {
             document.getElementById('page-title').textContent = post.title;
@@ -217,8 +253,8 @@
       }
     }
 
-    carregarPosts();
+    document.addEventListener('DOMContentLoaded', carregarPosts);
   </script>
-  <script type="module" src="/faq-widget.js"></script>
+  <script src="/faq-widget.js"></script>
 </body>
 </html>
