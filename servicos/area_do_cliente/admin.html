@@ -281,6 +281,49 @@
                 <div id="blog-list" style="display: grid; gap: 20px;"></div>
             </div>
         </div>
+
+        <!-- Modal de Nova Notícia -->
+        <div id="modalNovaNoticia" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
+            <div style="background: #0a192f; border: 1px solid rgba(189,150,23,0.3); border-radius: 15px; padding: 30px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="color: var(--gold); margin: 0; font-family: 'Playfair Display';">Nova Notícia</h3>
+                    <button onclick="fecharModalNovaNoticia()" style="background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="color: var(--gold); display: block; margin-bottom: 5px; font-weight: 600;">Título</label>
+                    <input type="text" id="tituloNovaNoticia" placeholder="Digite o título da notícia" style="width: 100%; padding: 10px; background: #0a192f; border: 1px solid var(--gold); color: white; border-radius: 5px;">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="color: var(--gold); display: block; margin-bottom: 5px; font-weight: 600;">Categoria</label>
+                    <select id="categoriaNovaNoticia" style="width: 100%; padding: 10px; background: #0a192f; border: 1px solid var(--gold); color: white; border-radius: 5px;">
+                        <option value="contabilidade">Contabilidade</option>
+                        <option value="fiscal">Fiscal</option>
+                        <option value="mei">MEI</option>
+                        <option value="irpf">IRPF</option>
+                        <option value="departamento-pessoal">Departamento Pessoal</option>
+                        <option value="legislacao">Legislação</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="color: var(--gold); display: block; margin-bottom: 5px; font-weight: 600;">Imagem</label>
+                    <input type="file" id="imagemNovaNoticia" accept="image/*" onchange="previewImagemNoticia(this.files[0])" style="width: 100%; padding: 10px; background: #0a192f; border: 1px solid var(--gold); color: white; border-radius: 5px;">
+                    <div id="imagemPreview" style="margin-top: 10px;"></div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="color: var(--gold); display: block; margin-bottom: 5px; font-weight: 600;">Conteúdo</label>
+                    <textarea id="conteudoNovaNoticia" placeholder="Digite o conteúdo da notícia. Use [SUBTITLE]Seu subtítulo aqui para adicionar subtítulos." style="width: 100%; padding: 10px; background: #0a192f; border: 1px solid var(--gold); color: white; border-radius: 5px; min-height: 150px; font-family: monospace;"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button onclick="fecharModalNovaNoticia()" style="background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Cancelar</button>
+                    <button id="btnSalvarNoticia" onclick="salvarNovaNoticia()" style="background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 600;">+ Publicar Notícia</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -413,6 +456,7 @@
                 renderizarTabela(todosDados);
                 carregarFiltroServicos();
                 preencherSelectServicos();
+                carregarNoticias();
 
             } catch (err) {
                 console.error("Erro ao carregar dados:", err);
@@ -631,8 +675,195 @@
             document.getElementById('link-blog').classList.toggle('active', secao === 'blog');
         }
 
-        function abrirModalNovaNoticia() {
-            alert('Funcionalidade de blog em desenvolvimento');
+        async function abrirModalNovaNoticia() {
+            noticiaEmEdicao = null;
+            document.getElementById('modalNovaNoticia').style.display = 'flex';
+            document.getElementById('tituloNovaNoticia').value = '';
+            document.getElementById('categoriaNovaNoticia').value = 'contabilidade';
+            document.getElementById('conteudoNovaNoticia').value = '';
+            document.getElementById('imagemNovaNoticia').value = '';
+            document.getElementById('imagemPreview').innerHTML = '';
+            document.getElementById('btnSalvarNoticia').textContent = '+ Publicar Notícia';
+        }
+
+        let noticiaEmEdicao = null;
+
+        async function salvarNovaNoticia() {
+            const titulo = document.getElementById('tituloNovaNoticia').value.trim();
+            const categoria = document.getElementById('categoriaNovaNoticia').value;
+            const conteudo = document.getElementById('conteudoNovaNoticia').value.trim();
+            const imagemFile = document.getElementById('imagemNovaNoticia').files[0];
+
+            if (!titulo || !conteudo) {
+                alert('Preencha título e conteúdo');
+                return;
+            }
+
+            const client = initSupabase();
+            let imageUrl = null;
+
+            try {
+                // Upload da imagem se fornecida
+                if (imagemFile) {
+                    const fileName = `noticia-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${imagemFile.name.split('.').pop()}`;
+                    const { data: uploadData, error: uploadError } = await client.storage
+                        .from('blog_images')
+                        .upload(fileName, imagemFile);
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: publicUrl } = client.storage
+                        .from('blog_images')
+                        .getPublicUrl(fileName);
+                    imageUrl = publicUrl.publicUrl;
+                }
+
+                // Gerar slug a partir do título
+                const slug = titulo
+                    .toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^\w\s-]/g, '')
+                    .trim()
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-');
+
+                if (noticiaEmEdicao) {
+                    // Editar notícia existente
+                    const { error } = await client
+                        .from('blog_posts')
+                        .update({
+                            title: titulo,
+                            category: categoria,
+                            content: conteudo,
+                            image_url: imageUrl || noticiaEmEdicao.image_url,
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('id', noticiaEmEdicao.id);
+
+                    if (error) throw error;
+                } else {
+                    // Criar nova notícia
+                    const { error } = await client
+                        .from('blog_posts')
+                        .insert([{
+                            title: titulo,
+                            slug: slug,
+                            category: categoria,
+                            content: conteudo,
+                            image_url: imageUrl,
+                            published: true,
+                            created_at: new Date().toISOString()
+                        }]);
+
+                    if (error) throw error;
+                }
+
+                alert(noticiaEmEdicao ? 'Notícia atualizada com sucesso!' : 'Notícia publicada com sucesso!');
+                fecharModalNovaNoticia();
+                carregarNoticias();
+            } catch (err) {
+                console.error('Erro ao salvar notícia:', err);
+                alert('Erro ao salvar notícia: ' + err.message);
+            }
+        }
+
+        function fecharModalNovaNoticia() {
+            document.getElementById('modalNovaNoticia').style.display = 'none';
+            noticiaEmEdicao = null;
+        }
+
+        async function carregarNoticias() {
+            const client = initSupabase();
+            try {
+                const { data: noticias, error } = await client
+                    .from('blog_posts')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const blogList = document.getElementById('blog-list');
+                if (!noticias || noticias.length === 0) {
+                    blogList.innerHTML = '<p style="color: #888; text-align: center; padding: 40px;">Nenhuma notícia publicada ainda.</p>';
+                    return;
+                }
+
+                blogList.innerHTML = noticias.map(noticia => `
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(189,150,23,0.2); border-radius: 10px; padding: 15px; display: flex; gap: 15px;">
+                        ${noticia.image_url ? `<img src="${noticia.image_url}" alt="${noticia.title}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">` : ''}
+                        <div style="flex: 1;">
+                            <h4 style="color: var(--gold); margin-bottom: 5px;">${noticia.title}</h4>
+                            <p style="font-size: 0.85rem; color: #888; margin-bottom: 10px;">${noticia.category} • ${new Date(noticia.created_at).toLocaleDateString('pt-BR')}</p>
+                            <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 10px;">${noticia.content.substring(0, 100)}...</p>
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="editarNoticia('${noticia.id}')" style="background: var(--gold); color: #000; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">Editar</button>
+                                <button onclick="deletarNoticia('${noticia.id}')" style="background: #ff4444; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 0.85rem;">Deletar</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Erro ao carregar notícias:', err);
+            }
+        }
+
+        async function editarNoticia(id) {
+            const client = initSupabase();
+            try {
+                const { data: noticia, error } = await client
+                    .from('blog_posts')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+
+                noticiaEmEdicao = noticia;
+                document.getElementById('tituloNovaNoticia').value = noticia.title;
+                document.getElementById('categoriaNovaNoticia').value = noticia.category;
+                document.getElementById('conteudoNovaNoticia').value = noticia.content;
+                document.getElementById('btnSalvarNoticia').textContent = 'Salvar Alterações';
+                
+                if (noticia.image_url) {
+                    document.getElementById('imagemPreview').innerHTML = `<img src="${noticia.image_url}" style="max-width: 200px; max-height: 200px; border-radius: 8px;">`;
+                }
+
+                document.getElementById('modalNovaNoticia').style.display = 'flex';
+            } catch (err) {
+                console.error('Erro ao carregar notícia:', err);
+                alert('Erro ao carregar notícia');
+            }
+        }
+
+        async function deletarNoticia(id) {
+            if (!confirm('Tem certeza que deseja deletar esta notícia?')) return;
+
+            const client = initSupabase();
+            try {
+                const { error } = await client
+                    .from('blog_posts')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert('Notícia deletada com sucesso!');
+                carregarNoticias();
+            } catch (err) {
+                console.error('Erro ao deletar notícia:', err);
+                alert('Erro ao deletar notícia');
+            }
+        }
+
+        function previewImagemNoticia(file) {
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagemPreview').innerHTML = `<img src="${e.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 8px;">`;
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         function fecharModais() {
