@@ -117,7 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailOk = emailRegex.test(email);
     const whatsappOk = whatsapp.length === 11;
     const cpfOk = cpf.length === 11;
-    document.getElementById("btnEnviar").disabled = !(nomeOk && emailOk && whatsappOk && cpfOk);
+    const todosOk = nomeOk && emailOk && whatsappOk && cpfOk;
+    document.getElementById("btnEnviar").disabled = !todosOk;
+    document.getElementById("btnAdicionarMais").disabled = !todosOk;
   }
 
   form.querySelectorAll('input, textarea').forEach(el => {

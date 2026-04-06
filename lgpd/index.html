@@ -57,17 +57,22 @@
 <body>
 
   <header class="site-header">
-  <div class="container header-content">
+  <div class="container header-content" style="display: flex; justify-content: space-between; align-items: center;">
     <h1 class="site-title-header">J L Serviços Contábeis</h1>
     
-    <nav class="main-nav">
-      <ul class="menu">
-        <li class="menu-item"><a href="../index.html">Início</a></li>
-        <li class="menu-item"><a href="../servicos/index.html">Serviços</a></li>
-        <li class="menu-item"><a href="../blog/index.html">Blog</a></li>
-        <li class="menu-item"><a href="../sobre/index.html">Sobre</a></li>
-      </ul>
-    </nav>
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <nav class="main-nav">
+        <ul class="menu">
+          <li class="menu-item"><a href="../index.html">Início</a></li>
+          <li class="menu-item"><a href="../servicos/index.html">Serviços</a></li>
+          <li class="menu-item"><a href="../blog/index.html">Blog</a></li>
+          <li class="menu-item"><a href="../sobre/index.html">Sobre</a></li>
+        </ul>
+      </nav>
+      <a href="../servicos/area_do_cliente/index.html" class="btn-area-cliente" style="display: flex; align-items: center; gap: 8px; background: #bd9617; color: #0b1c2d; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 600; white-space: nowrap; transition: 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        <i class="fas fa-user-circle"></i> Login
+      </a>
+    </div>
   </div>
 </header>
 
@@ -75,7 +80,7 @@
     
     <section class="sobre-conteudo">
       <nav class="breadcrumb">
-        <a href="/jl-servicos-contabeis/">Início</a> <span>/</span> <strong>Política de Privacidade</strong>
+        <a href="../index.html" style="color: #bd9617; text-decoration: none; font-weight: 600;">Início</a> <span style="margin: 0 8px;">›</span> <strong style="color: #ffffff;">Política de Privacidade</strong>
       </nav>
 
       <h1 class="titulo-sessao" style="color:#bd9617; font-family:'Playfair Display', serif; margin-bottom:30px; font-size: 2.5rem;">Política de Privacidade</h1>

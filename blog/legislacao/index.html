@@ -6,42 +6,246 @@
   <title>Notícias de Legislação | J L Serviços Contábeis</title>
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/faq-widget.css">
+  <style>
+    .blog-home {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 25px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .blog-post-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(189, 150, 23, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      align-items: stretch;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      min-height: 240px;
+    }
+
+    .blog-post-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(189, 150, 23, 0.5);
+      box-shadow: 0 12px 35px rgba(189, 150, 23, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .blog-post-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: rgba(189, 150, 23, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .blog-post-content {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .blog-post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 12px;
+    }
+
+    .blog-post-title {
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin: 0;
+      line-height: 1.3;
+      word-wrap: break-word;
+      flex: 1;
+    }
+
+    .blog-post-badge {
+      background: #25d366;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .blog-post-meta {
+      color: #999;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .blog-post-excerpt {
+      color: #bbb;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .blog-post-link {
+      color: #bd9617;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      align-self: flex-start;
+    }
+
+    .blog-post-link:hover {
+      color: #d4af37;
+      text-decoration: underline;
+      margin-left: 5px;
+    }
+
+    @media (max-width: 1024px) {
+      .blog-post-card {
+        grid-template-columns: 300px 1fr;
+      }
+
+      .blog-post-title {
+        font-size: 1.3rem;
+      }
+
+      .blog-post-content {
+        padding: 25px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .blog-post-card {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .blog-post-image {
+        height: 220px;
+      }
+
+      .blog-post-content {
+        padding: 22px;
+      }
+
+      .blog-post-title {
+        font-size: 1.2rem;
+      }
+
+      .blog-post-header {
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .blog-post-badge {
+        margin-left: auto;
+      }
+
+      .blog-post-excerpt {
+        font-size: 0.9rem;
+        -webkit-line-clamp: 2;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .blog-home {
+        gap: 18px;
+        padding: 0 12px;
+      }
+
+      .blog-post-content {
+        padding: 16px;
+      }
+
+      .blog-post-title {
+        font-size: 1.05rem;
+      }
+
+      .blog-post-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .blog-post-badge {
+        margin-left: 0;
+        margin-top: 8px;
+      }
+
+      .blog-post-excerpt {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        -webkit-line-clamp: 2;
+      }
+
+      .blog-post-meta {
+        font-size: 0.8rem;
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
-  <div class="container header-content"> <h1 class="site-title-header">J L Serviços Contábeis</h1> <nav class="main-nav">
-      <ul class="menu">
-        <li class="menu-item"><a href="../../index.html">Início</a></li>
-        <li class="menu-item"><a href="../../servicos/index.html">Serviços</a></li>
-        <li class="menu-item"><a href="../index.html">Blog</a></li>
-        <li class="menu-item"><a href="../../sobre/index.html">Sobre</a></li>
-        <li class="menu-item"><a href="../../lgpd/index.html">LGPD</a></li>
-      </ul>
-    </nav>
+  <div class="container header-content" style="display: flex; justify-content: space-between; align-items: center;">
+    <h1 class="site-title-header">J L Serviços Contábeis</h1>
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <nav class="main-nav">
+        <ul class="menu">
+          <li class="menu-item"><a href="../../index.html">Início</a></li>
+          <li class="menu-item"><a href="../../servicos/index.html">Serviços</a></li>
+          <li class="menu-item"><a href="../index.html">Blog</a></li>
+          <li class="menu-item"><a href="../../sobre/index.html">Sobre</a></li>
+          <li class="menu-item"><a href="../../lgpd/index.html">LGPD</a></li>
+        </ul>
+      </nav>
+      <a href="../../servicos/area_do_cliente/index.html" class="btn-area-cliente" style="display: flex; align-items: center; gap: 8px; background: #bd9617; color: #0b1c2d; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 600; white-space: nowrap; transition: 0.3s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        <i class="fas fa-user-circle"></i> Login
+      </a>
+    </div>
   </div>
 </header>
 
   <main class="container">
-    <nav style="margin: 20px 0; color: #ffffff99; font-size: 0.9rem;">
-      <a href="../../index.html" style="color: #bd9617; text-decoration: none;">Início</a> / 
-      <a href="../index.html" style="color: #bd9617; text-decoration: none;">Blog</a> / 
-      <span>Legislação</span>
+    <nav class="breadcrumb container" style="margin-top: 20px; color: rgba(255,255,255,0.6); font-size: 0.9rem;">
+      <a href="../../index.html" style="color: #bd9617; text-decoration: none; font-weight: 600;">Início</a> <span style="margin: 0 8px;">›</span> <a href="../index.html" style="color: #bd9617; text-decoration: none; font-weight: 600;">Blog</a> <span style="margin: 0 8px;">›</span> <strong style="color: #ffffff;">Legislação</strong>
     </nav>
 
-    <div style="margin-bottom: 40px;">
-      <h2 style="color: #bd9617; font-size: 2rem; border-bottom: 2px solid #bd9617; display: inline-block; padding-bottom: 10px;">Legislação Atualizada</h2>
-      <p style="color: #fff; opacity: 0.8; margin-top: 15px;">As principais mudanças nas leis contábeis e reformas para o seu negócio.</p>
+    <div style="text-align: center; margin: 60px 0 40px;">
+      <h2 class="site-title-header" style="font-size: 2.8rem !important; margin-bottom: 10px;">
+        Legislação Atualizada
+      </h2>
+      <p style="color: #ffffff; opacity: 0.8; font-size: 1.1rem; font-family: 'Montserrat', sans-serif;">
+        As principais mudanças nas leis contábeis e reformas para o seu negócio
+      </p>
+      <div style="width: 80px; height: 3px; background: #bd9617; margin: 25px auto;"></div>
     </div>
 
-    <section style="display: flex; flex-direction: column; gap: 20px;">
-      <article style="background: rgba(255,255,255,0.03); border-radius: 10px; padding: 30px; border: 1px solid rgba(189,150,23,0.1);">
-        <h3 style="color: #bd9617; font-size: 1.5rem; margin-bottom: 15px;">Mudanças para MEI e Pequenas Empresas em 2026</h3>
-        <p style="color: #ffffffcc; margin-bottom: 20px;">Fique por dentro das novas regras tributárias e limites de faturamento deste ano.</p>
-        <a href="mudancas-contabeis-2026.html" style="color: #bd9617; font-weight: bold; text-decoration: none; border-bottom: 1px solid #bd9617;">Ler Notícia Completa →</a>
-      </article>
+    <section class="blog-home" id="noticias-container">
+      <div style="text-align: center; color: #888;">Carregando notícias...</div>
     </section>
+
   </main>
 
   <footer class="site-footer">
@@ -55,7 +259,7 @@
       <h4>Links Rápidos</h4>
       <ul>
         <li><a href="../../index.html">Início</a></li>
-        <li><a href="../../index.html#servicos">Serviços</a></li>
+        <li><a href="../../servicos/index.html">Serviços</a></li>
         <li><a href="../../sobre/index.html">Quem Somos</a></li>
         <li><a href="../../lgpd/index.html">Política de Privacidade</a></li>
       </ul>
@@ -64,9 +268,11 @@
     <div class="footer-col">
       <h4>Contato</h4>
       <a href="https://wa.me/5561920041427" target="_blank" class="btn-whatsapp-footer">
-        Falar no WhatsApp
+        <i class="fab fa-whatsapp" style="margin-right: 10px;"></i> WhatsApp
       </a>
-      <p class="footer-email">jlservicoscontabeis0@gmail.com</p>
+      <div class="footer-email">
+        <i class="far fa-envelope" style="margin-right: 8px;"></i> jlservicoscontabeis0@gmail.com
+      </div>
     </div>
   </div>
 
@@ -74,6 +280,81 @@
     <p>© 2026 J L Serviços Contábeis — Todos os direitos reservados</p>
   </div>
 </footer>
-  <script type="module" src="/faq-widget.js"></script>
+
+<script type="module" src="/faq-widget.js"></script>
+
+<script type="module">
+  import { parsePostContent } from '../../blog-post-parser.js';
+
+  const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
+  
+  const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+  function isNovaNoticia(dataPost) {
+    const agora = new Date();
+    const dataPostDate = new Date(dataPost);
+    const diffDias = Math.floor((agora - dataPostDate) / (1000 * 60 * 60 * 24));
+    return diffDias <= 7;
+  }
+
+  async function carregarNoticias() {
+    try {
+      const { data: posts, error } = await supabaseClient
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .eq('category', 'legislacao')
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+
+      const container = document.getElementById('noticias-container');
+
+      if (!posts || posts.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #888; grid-column: 1/-1;">Nenhuma notícia disponível no momento.</p>';
+        return;
+      }
+
+      container.innerHTML = posts.map(post => {
+        const isNova = isNovaNoticia(post.created_at);
+        const excerpt = post.content.substring(0, 150).replace(/\[SUBTITLE\]/g, '').trim() + '...';
+        const dataFormatada = new Date(post.created_at).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric'
+        });
+
+        return `
+          <a href="../posts.html?slug=${post.slug}" style="text-decoration: none; color: inherit;">
+            <div class="blog-post-card">
+              ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" class="blog-post-image">` : '<div class="blog-post-image" style="background: rgba(189, 150, 23, 0.2); display: flex; align-items: center; justify-content: center;"><i class="fas fa-newspaper" style="font-size: 3rem; color: rgba(189, 150, 23, 0.5);"></i></div>'}
+              <div class="blog-post-content">
+                <div>
+                  <div class="blog-post-header">
+                    <h3 class="blog-post-title">${post.title}</h3>
+                    ${isNova ? '<span class="blog-post-badge"><i class="fas fa-star"></i> Nova Notícia</span>' : ''}
+                  </div>
+                  <div class="blog-post-meta"><i class="fas fa-calendar"></i> ${dataFormatada}</div>
+                  <p class="blog-post-excerpt">${excerpt}</p>
+                </div>
+                <div>
+                  <a href="../posts.html?slug=${post.slug}" class="blog-post-link">Ler Artigo Completo →</a>
+                </div>
+              </div>
+            </div>
+          </a>
+        `;
+      }).join('');
+
+    } catch (err) {
+      console.error('Erro ao carregar notícias:', err);
+      document.getElementById('noticias-container').innerHTML = '<p style="text-align: center; color: #ff4444;">Erro ao carregar notícias.</p>';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', carregarNoticias);
+</script>
 </body>
 </html>
