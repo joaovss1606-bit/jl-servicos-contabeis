@@ -497,11 +497,11 @@
             dados.forEach(cliente => {
                 cliente.pedidos.forEach(pedido => {
                     const statusMatch = !statusFiltro || pedido.status === statusFiltro;
-                    const servicoMatch = !servicoFiltro || pedido.servico === servicoFiltro;
+                    const servicoMatch = !servicoFiltro || pedido.plano_id === servicoFiltro;
                     const buscaMatch = !buscaFiltro || 
                         cliente.nome.toLowerCase().includes(buscaFiltro) ||
                         cliente.email.toLowerCase().includes(buscaFiltro) ||
-                        (cliente.cpf && cliente.cpf.includes(buscaFiltro));
+                        (cliente.cpf_cnpj && cliente.cpf_cnpj.includes(buscaFiltro));
 
                     if (statusMatch && servicoMatch && buscaMatch) {
                         totalExibido++;
@@ -509,7 +509,7 @@
                         html += `
                             <tr>
                                 <td>${cliente.nome}</td>
-                                <td>${nomesServicos[pedido.servico] || pedido.servico}</td>
+                                <td>${nomesServicos[pedido.plano_id] || pedido.plano_id}</td>
                                 <td>
                                     <select onchange="alterarStatus('${pedido.id}', this.value)">
                                         <option value="Pendente" ${pedido.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
@@ -531,7 +531,7 @@
 
         function carregarFiltroServicos() {
             const select = document.getElementById('filter-servico');
-            const servicosUnicos = [...new Set(todosDados.flatMap(c => c.pedidos.map(p => p.servico)))].filter(s => s);
+            const servicosUnicos = [...new Set(todosDados.flatMap(c => c.pedidos.map(p => p.plano_id)))].filter(s => s);
             
             let options = '<option value="">Todos os Serviços</option>';
             servicosUnicos.sort().forEach(s => {
@@ -587,10 +587,10 @@
             const client = initSupabase();
             if (!client) return;
             
-            const nome = document.getElementById('novo-pedido-nome').value;
-            const email = document.getElementById('novo-pedido-email').value;
-            const whatsapp = document.getElementById('novo-pedido-whatsapp').value;
-            const cpf = document.getElementById('novo-pedido-cpf').value;
+            const nome = document.getElementById('novo-pedido-nome').value.trim();
+            const email = document.getElementById('novo-pedido-email').value.trim().toLowerCase();
+            const whatsapp = document.getElementById('novo-pedido-whatsapp').value.trim();
+            const cpf = document.getElementById('novo-pedido-cpf').value.trim();
             const servico = document.getElementById('novo-pedido-servico').value;
 
             if (!nome || !email || !servico) {
@@ -599,13 +599,31 @@
             }
 
             try {
-                const { error } = await client.from('assinaturas').insert([{
-                    nome, email, whatsapp, cpf, servico,
+                // 1. Verificar se o perfil já existe ou criar um novo
+                // Usamos upsert baseado no email para garantir que o perfil exista
+                const { data: profile, error: profileError } = await client
+                    .from('profiles')
+                    .upsert({ 
+                        nome, 
+                        email, 
+                        whatsapp, 
+                        cpf_cnpj: cpf,
+                        role: 'cliente'
+                    }, { onConflict: 'email' })
+                    .select()
+                    .single();
+
+                if (profileError) throw profileError;
+
+                // 2. Inserir o pedido na tabela 'assinaturas' usando o ID do perfil
+                const { error: insertError } = await client.from('assinaturas').insert([{
+                    cliente_id: profile.id,
+                    plano_id: servico,
                     status: 'Pendente',
                     created_at: new Date().toISOString()
                 }]);
 
-                if (error) throw error;
+                if (insertError) throw insertError;
 
                 alert('Pedido criado com sucesso!');
                 fecharModais();
@@ -613,7 +631,7 @@
                 carregarDadosAdmin();
             } catch (err) {
                 console.error("Erro ao criar pedido:", err);
-                alert('Erro ao criar pedido: ' + err.message);
+                alert('Erro ao criar pedido: ' + (err.message || 'Erro desconhecido'));
             }
         }
 
