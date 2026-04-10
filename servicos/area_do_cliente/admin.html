@@ -599,23 +599,49 @@
             }
 
             try {
-                // 1. Verificar se o perfil já existe ou criar um novo
-                // Usamos upsert baseado no email para garantir que o perfil exista
-                const { data: profile, error: profileError } = await client
+                // 1. Verificar se o perfil já existe pelo e-mail
+                let { data: profile, error: fetchError } = await client
                     .from('profiles')
-                    .upsert({ 
-                        nome, 
-                        email, 
-                        whatsapp, 
-                        cpf_cnpj: cpf,
-                        role: 'cliente'
-                    }, { onConflict: 'email' })
-                    .select()
-                    .single();
+                    .select('id')
+                    .eq('email', email)
+                    .maybeSingle();
 
-                if (profileError) throw profileError;
+                if (fetchError) throw fetchError;
 
-                // 2. Inserir o pedido na tabela 'assinaturas' usando o ID do perfil
+                if (!profile) {
+                    // 2. Se não existir, criar um novo perfil
+                    const { data: newProfile, error: createError } = await client
+                        .from('profiles')
+                        .insert([{ 
+                            nome, 
+                            email, 
+                            whatsapp, 
+                            cpf_cnpj: cpf,
+                            role: 'cliente'
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (createError) throw createError;
+                    profile = newProfile;
+                } else {
+                    // 3. Se existir, atualizar os dados (opcional, mas recomendado para manter atualizado)
+                    const { data: updatedProfile, error: updateError } = await client
+                        .from('profiles')
+                        .update({ 
+                            nome, 
+                            whatsapp, 
+                            cpf_cnpj: cpf 
+                        })
+                        .eq('id', profile.id)
+                        .select()
+                        .single();
+                    
+                    if (updateError) throw updateError;
+                    profile = updatedProfile;
+                }
+
+                // 4. Inserir o pedido na tabela 'assinaturas' usando o ID do perfil
                 const { error: insertError } = await client.from('assinaturas').insert([{
                     cliente_id: profile.id,
                     plano_id: servico,
