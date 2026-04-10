@@ -261,6 +261,10 @@
             color: white;
             outline: none;
         }
+        .form-group select option {
+            background-color: #0d1b2a;
+            color: white;
+        }
 
         .btn-submit {
             width: 100%;
@@ -352,6 +356,10 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
+            color: white;
+        }
+        .filter-item select option {
+            background-color: #0d1b2a;
             color: white;
         }
     </style>
@@ -500,7 +508,7 @@
         <div class="modal-content">
             <span class="modal-close" onclick="fecharModais()">&times;</span>
             <h3 style="margin-bottom: 25px; font-family: 'Playfair Display', serif; color: var(--primary);">Cadastrar Novo Pedido</h3>
-            <form onsubmit="salvarNovoPedido(e)">
+            <form onsubmit="salvarNovoPedido(event)">
                 <div class="form-group">
                     <label>Nome do Cliente *</label>
                     <input type="text" id="novo-pedido-nome" required>
@@ -838,7 +846,10 @@
         }
 
         async function salvarNovoPedido(e) {
-            if (e) e.preventDefault();
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             const client = initSupabase();
             if (!client) return;
             
