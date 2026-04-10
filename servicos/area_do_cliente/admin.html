@@ -875,7 +875,8 @@
                 if (fetchError) throw fetchError;
 
                 if (!profile) {
-                    // 2. Se não existir, criar um novo perfil
+                    // 2. Se não existir, tentar criar um novo perfil
+                    // Usamos uma abordagem de "tentativa e erro" para lidar com condições de corrida
                     const { data: newProfile, error: createError } = await client
                         .from('profiles')
                         .insert([{ 
@@ -886,10 +887,25 @@
                             role: 'cliente'
                         }])
                         .select('id')
-                        .single();
+                        .maybeSingle();
                     
-                    if (createError) throw createError;
-                    profile = newProfile;
+                    if (createError) {
+                        // Se falhar por duplicidade (ex: alguém criou entre o select e o insert)
+                        // tentamos buscar novamente
+                        if (createError.code === '23505') {
+                            const { data: retryProfile, error: retryError } = await client
+                                .from('profiles')
+                                .select('id')
+                                .eq('email', email)
+                                .single();
+                            if (retryError) throw retryError;
+                            profile = retryProfile;
+                        } else {
+                            throw createError;
+                        }
+                    } else {
+                        profile = newProfile;
+                    }
                 } else {
                     // 3. Se existir, atualizar os dados
                     const { error: updateError } = await client
