@@ -6,357 +6,606 @@
     <title>Gestão Administrativa | JL Serviços</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --gold: #bd9617; --dark-blue: #0a192f; --glass: rgba(255, 255, 255, 0.05); --success: #25d366; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--dark-blue); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; }
-        
-        /* Header & Nav */
-        header {
-            background: rgba(0, 0, 0, 0.4);
-            border-bottom: 1px solid rgba(189, 150, 23, 0.2);
-            padding: 15px 30px;
+        :root {
+            --primary: #bd9617;
+            --primary-dark: #8e7112;
+            --bg-dark: #0a192f;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --text-light: #e6f1ff;
+            --text-gray: #8892b0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(189, 150, 23, 0.2);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: 0.3s;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            padding: 0 10px;
+        }
+
+        .logo-area h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--bg-card);
+            color: var(--primary);
+        }
+
+        .nav-link i { font-size: 1.2rem; }
+
+        .logout-btn {
+            margin-top: auto;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            margin-left: 280px;
+            padding: 40px;
+            width: calc(100% - 280px);
+        }
+
+        .header-area {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
         }
-        .logo-area h2 { color: var(--gold); font-family: 'Playfair Display'; font-size: 1.5rem; }
-        
-        /* Menu Hambúrguer */
-        .menu-toggle {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            z-index: 1001;
-            background: none;
-            border: none;
-            padding: 0;
-        }
-        .menu-toggle span {
-            width: 30px;
-            height: 3px;
-            background: var(--gold);
-            border-radius: 2px;
-            transition: 0.3s;
-        }
-        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
-        .menu-toggle.active span:nth-child(2) { opacity: 0; }
-        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
 
-        .nav-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 280px;
-            height: 100vh;
-            background: rgba(10, 25, 47, 0.98);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(189, 150, 23, 0.3);
-            padding: 80px 30px;
-            transition: 0.4s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            z-index: 1000;
+        .welcome-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 5px;
         }
-        .nav-menu.active { right: 0; }
-        .nav-menu a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
+
+        .welcome-text p { color: var(--text-gray); }
+
+        /* Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            border-radius: 10px;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(189, 150, 23, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .stat-info h3 { font-size: 1.8rem; margin-bottom: 2px; }
+        .stat-info p { color: var(--text-gray); font-size: 0.9rem; }
+
+        /* Tables */
+        .content-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-header h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+
+        .table-container { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 15px;
+            color: var(--primary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pendente { background: rgba(255, 187, 0, 0.1); color: #ffbb00; }
+        .status-ativo { background: rgba(0, 200, 81, 0.1); color: #00c851; }
+        .status-cancelado { background: rgba(255, 68, 68, 0.1); color: #ff4444; }
+
+        .btn-action {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            font-size: 1.1rem;
             transition: 0.3s;
+            padding: 5px;
+        }
+
+        .btn-action:hover { color: var(--primary); }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-content {
+            background: #0d1b2a;
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 25px;
+            border: 1px solid var(--primary);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--text-gray);
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--primary); font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        /* Blog Management */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .blog-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .blog-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .blog-img { width: 100%; height: 150px; object-fit: cover; }
+        .blog-info { padding: 20px; }
+        .blog-info h4 { margin-bottom: 10px; font-size: 1.1rem; }
+        .blog-actions { display: flex; gap: 10px; margin-top: 15px; }
+
+        /* Mobile Toggle */
+        #menuToggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: var(--primary);
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
         }
-        .nav-menu a:hover { background: rgba(189, 150, 23, 0.1); color: var(--gold); }
-        .nav-menu a.active { background: rgba(189, 150, 23, 0.2); color: var(--gold); }
-        .logout-btn { color: #ff4444 !important; margin-top: auto; border: 1px solid rgba(255, 68, 68, 0.2); cursor: pointer; }
-        .logout-btn:hover { background: rgba(255, 68, 68, 0.1) !important; }
 
-        /* Main Content */
-        .main-content { padding: 40px 30px; max-width: 1400px; margin: 0 auto; }
-        h1, h2 { font-family: 'Playfair Display', serif; color: var(--gold); }
-        .admin-card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 25px; margin-bottom: 30px; overflow-x: auto; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; min-width: 800px; }
-        th { text-align: left; color: var(--gold); border-bottom: 1px solid rgba(189, 150, 23, 0.3); padding: 15px 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        td { padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
-        
-        select, input, textarea { 
-            background: #0a192f !important; 
-            color: var(--gold) !important; 
-            border: 1px solid var(--gold) !important; 
-            padding: 8px; 
-            border-radius: 5px;
-            font-family: inherit;
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; width: 100%; padding: 20px; }
+            #menuToggle { display: flex; }
         }
-        
-        .btn-upload, .btn-clear { 
-            background: var(--gold); 
-            color: var(--dark-blue); 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: 600; 
+
+        .btn-upload {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
             transition: 0.3s;
         }
-        .btn-upload:hover { opacity: 0.8; }
-        .btn-clear { background: #555; color: white; }
-        
-        .filters-container { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
-        .filter-group { flex: 1; min-width: 200px; }
-        .filter-group label { display: block; margin-bottom: 8px; color: var(--gold); font-weight: 600; font-size: 0.85rem; }
-        
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1999; }
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0a192f; padding: 35px; border-radius: 20px; border: 2px solid var(--gold); z-index: 2000; box-shadow: 0 20px 60px rgba(0,0,0,0.6); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        .modal.active { display: block; }
-        .modal-overlay.active { display: block; }
-        
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: var(--gold); font-weight: 600; }
-        
-        @media (max-width: 768px) {
-            .main-content { padding: 20px 15px; }
-            .filters-container { flex-direction: column; }
-            table { font-size: 0.8rem; }
-            td, th { padding: 10px 8px; }
+
+        .btn-upload:hover { background: var(--primary-dark); }
+
+        .filters-area {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-item select, .filter-item input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
         }
     </style>
 </head>
 <body>
 
-    <header>
+    <div id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <aside class="sidebar" id="navMenu">
         <div class="logo-area">
-            <h2>JL Admin</h2>
+            <img src="../../logo.png" alt="Logo" style="width: 40px;">
+            <h1>JL Admin</h1>
         </div>
-        <div class="menu-toggle" id="menuToggle">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </header>
 
-    <nav class="nav-menu" id="navMenu">
-        <a href="../../index.html"><i class="fas fa-home"></i> Início</a>
-        <a id="link-clientes" onclick="mostrarSecao('clientes'); return false;"><i class="fas fa-users"></i> Gerenciar Clientes</a>
-        <a id="link-blog" onclick="mostrarSecao('blog'); return false;"><i class="fas fa-newspaper"></i> Gerenciar Blog</a>
-        <a id="link-perfil" onclick="abrirModalPerfil(); return false;"><i class="fas fa-user-circle"></i> Meu Perfil</a>
-        <a onclick="logout()" class="logout-btn"><i class="fas fa-power-off"></i> Sair do Painel</a>
-    </nav>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <a href="#" class="nav-link active" id="link-clientes">
+                    <i class="fas fa-users"></i> Gerenciar Clientes
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link" id="link-blog">
+                    <i class="fas fa-newspaper"></i> Gerenciar Blog
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link" id="link-perfil">
+                    <i class="fas fa-user-circle"></i> Meu Perfil
+                </a>
+            </div>
+        </nav>
 
-    <div class="modal-overlay" id="modalOverlay"></div>
-
-    <!-- Modal de Perfil -->
-    <div id="perfilModal" class="modal">
-        <h3 style="color: var(--gold); margin-bottom: 20px; font-family: 'Playfair Display';">Editar Perfil</h3>
-        <div style="text-align: center; margin-bottom: 20px;">
-            <div id="perfil-foto-container" style="width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--gold); margin: 0 auto 15px; overflow: hidden; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;">
-                <img id="perfil-foto-preview" src="" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                <i id="perfil-foto-placeholder" class="fas fa-user" style="font-size: 3rem; color: rgba(189, 150, 23, 0.3);"></i>
-            </div>
-            <button class="btn-upload" onclick="document.getElementById('perfil-foto-input').click()" style="font-size: 0.75rem; padding: 8px 12px;">
-                <i class="fas fa-camera"></i> Alterar Foto
-            </button>
-            <input type="file" id="perfil-foto-input" accept="image/*" style="display: none;" onchange="previewFotoPerfil(this)">
-        </div>
-        <div class="form-group">
-            <label>Nome de Exibição</label>
-            <input type="text" id="perfil-nome-input" placeholder="Seu nome">
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 25px;">
-            <button class="btn-upload" id="btn-salvar-perfil" onclick="salvarPerfil()" style="flex: 1;">Salvar</button>
-            <button class="btn-clear" onclick="fecharModais()" style="flex: 1;">Cancelar</button>
-        </div>
-    </div>
-
-    <!-- Modal de Novo Pedido -->
-    <div id="novoPedidoModal" class="modal">
-        <h3 style="color: var(--gold); margin-bottom: 20px; font-family: 'Playfair Display';">Novo Pedido</h3>
-        <form onsubmit="salvarNovoPedido(event)">
-            <div class="form-group">
-                <label>Nome do Cliente</label>
-                <input type="text" id="novo-pedido-nome" required>
-            </div>
-            <div class="form-group">
-                <label>E-mail</label>
-                <input type="email" id="novo-pedido-email" required>
-            </div>
-            <div class="form-group">
-                <label>WhatsApp</label>
-                <input type="text" id="novo-pedido-whatsapp">
-            </div>
-            <div class="form-group">
-                <label>CPF</label>
-                <input type="text" id="novo-pedido-cpf">
-            </div>
-            <div class="form-group">
-                <label>Serviço</label>
-                <select id="novo-pedido-servico" required>
-                    <option value="">Selecione um serviço</option>
-                </select>
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 25px;">
-                <button type="submit" class="btn-upload" style="flex: 1;">Criar Pedido</button>
-                <button type="button" class="btn-clear" onclick="fecharModais()" style="flex: 1;">Cancelar</button>
-            </div>
-        </form>
-    </div>
+        <a href="#" class="nav-link logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Sair do Painel
+        </a>
+    </aside>
 
     <main class="main-content">
-        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Painel Administrativo</h1>
-        <p style="color: #888; margin-bottom: 40px;">Olá, <span id="admin-name" style="color: var(--gold); font-weight: 600;">JL Serviços Contábeis Online</span>. Gerencie seus clientes e pedidos.</p>
+        <div class="header-area">
+            <div class="welcome-text">
+                <h2>Painel Administrativo</h2>
+                <p>Olá, <span id="admin-name">JL Serviços Contábeis Online</span>. Gerencie seus clientes e pedidos.</p>
+            </div>
+        </div>
 
-        <!-- Seção de Clientes -->
-        <div id="secao-clientes">
-            <div class="admin-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
-                    <h3 style="margin: 0; font-family: 'Playfair Display'; font-size: 1.5rem;">Clientes e Assinaturas</h3>
-                    <button class="btn-upload" onclick="abrirModalNovoPedido()" style="background: #25d366; padding: 12px 20px;"><i class="fas fa-plus"></i> Novo Pedido</button>
+        <!-- Seção Clientes -->
+        <section id="section-clientes">
+            <div class="content-card">
+                <div class="card-header">
+                    <h3>Clientes e Assinaturas</h3>
+                    <button class="btn-upload" onclick="abrirModalNovoPedido()">+ Novo Pedido</button>
                 </div>
 
-                <!-- Filtros -->
-                <div class="filters-container">
-                    <div class="filter-group">
-                        <label>Status</label>
-                        <select id="filter-status" onchange="filtrarDados()">
+                <div class="filters-area">
+                    <div class="filter-item">
+                        <label style="font-size: 0.7rem; color: var(--primary); display: block; margin-bottom: 5px;">Status</label>
+                        <select id="filter-status" onchange="renderizarTabela(todosDados)">
                             <option value="">Todos os Status</option>
                             <option value="Pendente">Pendente</option>
                             <option value="Ativo">Ativo</option>
                             <option value="Cancelado">Cancelado</option>
                         </select>
                     </div>
-                    <div class="filter-group">
-                        <label>Serviço</label>
-                        <select id="filter-servico" onchange="filtrarDados()">
+                    <div class="filter-item">
+                        <label style="font-size: 0.7rem; color: var(--primary); display: block; margin-bottom: 5px;">Serviço</label>
+                        <select id="filter-servico" onchange="renderizarTabela(todosDados)">
                             <option value="">Todos os Serviços</option>
                         </select>
                     </div>
-                    <div class="filter-group" style="flex: 2;">
-                        <label>Buscar Cliente</label>
-                        <input type="text" id="search-client" placeholder="Nome, E-mail ou CPF..." onkeyup="filtrarDados()">
+                    <div class="filter-item">
+                        <label style="font-size: 0.7rem; color: var(--primary); display: block; margin-bottom: 5px;">Buscar Cliente</label>
+                        <input type="text" id="search-client" placeholder="Nome, E-mail ou CPF..." oninput="renderizarTabela(todosDados)">
                     </div>
-                    <div class="filter-group" style="flex: 0; display: flex; align-items: flex-end;">
-                        <button class="btn-clear" onclick="limparFiltros()" style="width: 100%;">Limpar</button>
+                    <div class="filter-item" style="display: flex; align-items: flex-end;">
+                        <button class="btn-submit" onclick="limparFiltros()" style="padding: 10px;">Limpar</button>
                     </div>
                 </div>
 
-                <div id="counter-info" style="font-size: 0.85rem; color: #888; margin-bottom: 15px; font-weight: 600;"></div>
+                <p id="counter-info" style="font-size: 0.8rem; color: var(--text-gray); margin-bottom: 15px;">0 registro(s) exibido(s)</p>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Serviço</th>
-                            <th>Status</th>
-                            <th>Data</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-clientes">
-                        <tr><td colspan="5" style="text-align:center; padding:40px; color:#888;">Carregando...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Seção de Blog -->
-        <div id="secao-blog" style="display: none;">
-            <div class="admin-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                    <h3 style="margin: 0; font-family: 'Playfair Display'; font-size: 1.5rem;">Gerenciar Notícias</h3>
-                    <button class="btn-upload" onclick="abrirModalNovaNoticia()" style="background: #25d366; padding: 12px 20px;"><i class="fas fa-plus"></i> Nova Notícia</button>
-                </div>
-                <div id="blog-list" style="display: grid; gap: 20px;"></div>
-            </div>
-        </div>
-
-        <!-- Modal de Nova Notícia -->
-        <div id="modalNovaNoticia" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
-            <div style="background: #0a192f; border: 1px solid rgba(189,150,23,0.3); border-radius: 15px; padding: 30px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 id="modalNoticiaTitulo" style="color: var(--gold); margin: 0; font-family: 'Playfair Display';">Nova Notícia</h3>
-                    <button onclick="fecharModalNovaNoticia()" style="background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer;">&times;</button>
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="color: var(--gold); display: block; margin-bottom: 5px; font-weight: 600;">Título</label>
-                    <input type="text" id="tituloNovaNoticia" placeholder="Digite o título da notícia" style="width: 100%; padding: 10px; background: #0a192f; border: 1px solid var(--gold); color: white; border-radius: 5px;">
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="color: var(--gold); display: block; margin-bottom: 5px; font-weight: 600;">Categoria</label>
-                    <select id="categoriaNovaNoticia" style="width: 100%; padding: 10px; background: #0a192f; border: 1px solid var(--gold); color: white; border-radius: 5px;">
-                        <option value="contabilidade">Contabilidade</option>
-                        <option value="fiscal">Fiscal</option>
-                        <option value="mei">MEI</option>
-                        <option value="irpf">IRPF</option>
-                        <option value="departamento-pessoal">Departamento Pessoal</option>
-                        <option value="legislacao">Legislação</option>
-                    </select>
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="color: var(--gold); display: block; margin-bottom: 5px; font-weight: 600;">Imagem</label>
-                    <div id="imagemPreviewContainer" style="margin-bottom: 10px; display: none; position: relative;">
-                        <img id="imagemPreview" src="" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid var(--gold);">
-                        <button onclick="removerImagemNoticia()" style="position: absolute; top: 5px; right: 5px; background: #ff4444; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
-                    </div>
-                    <input type="file" id="imagemNovaNoticia" accept="image/*" onchange="previewImagemNoticia(this.files[0])" style="width: 100%; padding: 10px; background: #0a192f; border: 1px solid var(--gold); color: white; border-radius: 5px;">
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="color: var(--gold); display: block; margin-bottom: 5px; font-weight: 600;">Conteúdo</label>
-                    <textarea id="conteudoNovaNoticia" placeholder="Digite o conteúdo da notícia. Use [SUBTITLE]Seu subtítulo aqui para adicionar subtítulos." style="width: 100%; padding: 10px; background: #0a192f; border: 1px solid var(--gold); color: white; border-radius: 5px; min-height: 150px; font-family: monospace;"></textarea>
-                </div>
-
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button onclick="fecharModalNovaNoticia()" style="background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Cancelar</button>
-                    <button id="btnSalvarNoticia" onclick="salvarNovaNoticia()" style="background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 600;">+ Publicar Notícia</button>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Serviço</th>
+                                <th>Status</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-clientes">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Seção Blog -->
+        <section id="section-blog" style="display: none;">
+            <div class="content-card">
+                <div class="card-header">
+                    <h3>Gerenciamento de Blog</h3>
+                    <button class="btn-upload" onclick="abrirModalNoticia()">+ Nova Notícia</button>
+                </div>
+                
+                <div id="blog-list" class="blog-grid">
+                    <!-- Preenchido via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Perfil -->
+        <section id="section-perfil" style="display: none;">
+            <div class="content-card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-header">
+                    <h3>Meu Perfil</h3>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div id="perfil-foto-container" style="width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.1); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--primary); cursor: pointer;" onclick="document.getElementById('perfil-foto-input').click()">
+                        <i class="fas fa-camera" id="perfil-foto-placeholder" style="font-size: 2rem; color: var(--primary);"></i>
+                        <img id="perfil-foto-preview" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                    <input type="file" id="perfil-foto-input" style="display: none;" accept="image/*" onchange="previewFoto(this)">
+                    <p style="font-size: 0.8rem; color: var(--text-gray);">Clique para alterar a foto</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Nome de Exibição</label>
+                    <input type="text" id="perfil-nome-input" placeholder="Seu nome">
+                </div>
+                <button class="btn-submit" id="btn-salvar-perfil" onclick="salvarPerfil()">Salvar Alterações</button>
+            </div>
+        </section>
     </main>
 
+    <!-- Modais -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Modal Novo Pedido -->
+    <div class="modal-overlay" id="novoPedidoModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="fecharModais()">&times;</span>
+            <h3 style="margin-bottom: 25px; font-family: 'Playfair Display', serif; color: var(--primary);">Cadastrar Novo Pedido</h3>
+            <form onsubmit="salvarNovoPedido(e)">
+                <div class="form-group">
+                    <label>Nome do Cliente *</label>
+                    <input type="text" id="novo-pedido-nome" required>
+                </div>
+                <div class="form-group">
+                    <label>E-mail *</label>
+                    <input type="email" id="novo-pedido-email" required>
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp</label>
+                    <input type="text" id="novo-pedido-whatsapp" placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group">
+                    <label>CPF/CNPJ</label>
+                    <input type="text" id="novo-pedido-cpf" placeholder="000.000.000-00">
+                </div>
+                <div class="form-group">
+                    <label>Serviço *</label>
+                    <select id="novo-pedido-servico" required>
+                        <!-- Preenchido via JS -->
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Criar Pedido</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Notícia -->
+    <div class="modal-overlay" id="noticiaModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="modal-close" onclick="fecharModais()">&times;</span>
+            <h3 id="modalNoticiaTitulo" style="margin-bottom: 25px; font-family: 'Playfair Display', serif; color: var(--primary);">Nova Notícia</h3>
+            
+            <div class="form-group">
+                <label>Título da Notícia</label>
+                <input type="text" id="tituloNovaNoticia" placeholder="Ex: Novas regras do MEI 2026">
+            </div>
+            
+            <div class="form-group">
+                <label>Categoria</label>
+                <select id="categoriaNovaNoticia">
+                    <option value="MEI">MEI</option>
+                    <option value="Imposto de Renda">Imposto de Renda</option>
+                    <option value="Contabilidade">Contabilidade</option>
+                    <option value="Legislação">Legislação</option>
+                    <option value="Dicas">Dicas</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Imagem de Capa</label>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <input type="file" id="imagemNovaNoticia" accept="image/*" style="flex: 1;">
+                    <button id="btnRemoverImagem" class="btn-action" style="color: #ff4444; display: none;" onclick="removerImagemNoticia()"><i class="fas fa-trash"></i></button>
+                </div>
+                <div id="imagemPreviewContainer" style="margin-top: 10px; display: none;">
+                    <img id="imagemNoticiaPreview" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px;">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Conteúdo (Use [SUBTITLE] para subtítulos)</label>
+                <textarea id="conteudoNovaNoticia" rows="10" placeholder="Escreva o conteúdo aqui..."></textarea>
+            </div>
+            
+            <button class="btn-submit" id="btnSalvarNoticia" onclick="salvarNovaNoticia()">Publicar Notícia</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const nomesServicos = {
-            'mei': 'MEI',
-            'pj': 'PJ',
-            'mei-para-pj': 'Transformação MEI para PJ',
-            'irpf': 'Imposto de Renda (IRPF)',
-            'regularizacao-cpf': 'Regularização de CPF',
-            'darf-emissao': 'Emissão de DARF',
-            'carne-leao': 'Carnê-Leão',
-            'consultoria': 'Consultoria Contábil',
-            'abertura-empresa': 'Abertura de Empresa',
-            'alteracao-empresa': 'Alteração Contratual',
-            'encerramento-empresa': 'Encerramento de Empresa',
-            'cnd-federal': 'Certidão Negativa Federal',
-            'cnd-estadual': 'Certidão Negativa Estadual',
-            'cnd-municipal': 'Certidão Negativa Municipal',
-            'fgts': 'Certificado de Regularidade FGTS',
-            'trabalhista': 'Certidão Negativa Trabalhista',
-            'e-cpf': 'e-CPF (A1 - 1 Ano)',
-            'e-cnpj': 'e-CNPJ (A1 - 1 Ano)',
-            'renovacao': 'Renovação de Certificado',
-            'planejamento-tributario': 'Planejamento Tributário',
-            'emissao-notas': 'Emissão de Notas Fiscais'
+            "mei-plano-basico": "Plano MEI Básico",
+            "mei-plano-premium": "Plano MEI Premium",
+            "abertura-mei": "Abertura de MEI",
+            "regularizacao-mei": "Regularização de MEI",
+            "baixa-mei": "Baixa de MEI",
+            "encerramento-mei": "Encerramento de MEI",
+            "emissao-das": "Emissão de DAS",
+            "dasn": "Declaração Anual (DASN)",
+            "parcelamento": "Parcelamento de Débitos",
+            "alteracao-mei": "Alteração de Dados MEI",
+            "irpf": "Imposto de Renda (IRPF)",
+            "cpf-regularizacao": "Regularização de CPF",
+            "carne-leao": "Carnê-Leão",
+            "consultoria-contabil": "Consultoria Contábil",
+            "regularizacao-empresa": "Regularização de Empresa",
+            "alteracao-contratual": "Alteração Contratual",
+            "abertura-empresa": "Abertura de Empresa",
+            "encerramento-empresa": "Encerramento de Empresa",
+            "certidao-negativa": "Certidão Negativa",
+            "certidao-fgts": "Certidão de FGTS",
+            "certidao-trabalhista": "Certidão Trabalhista",
+            "certidao-debitos": "Certidão Previdenciária",
+            "certificado-cpf": "Certificado e-CPF",
+            "certificado-cnpj": "Certificado e-CNPJ",
+            "renovacao-certificado": "Renovação Certificado",
+            "regularizacao-pendencias": "Regularização Pendências",
+            "emissao-notas": "Emissão de Notas"
         };
 
         let todosDados = [];
         let adminProfile = null;
         let fotoFile = null;
+        let noticiaEmEdicao = null;
 
         const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
@@ -373,7 +622,7 @@
             return supabaseClient;
         }
 
-        // MENU HAMBÚRGUER
+        // INICIALIZAÇÃO E MÁSCARAS
         document.addEventListener('DOMContentLoaded', async function() {
             const client = initSupabase();
             if (client) {
@@ -384,40 +633,67 @@
                 }
             }
 
+            // MÁSCARAS PARA O FORMULÁRIO DE NOVO PEDIDO
+            const inputWhatsapp = document.getElementById('novo-pedido-whatsapp');
+            const inputCpf = document.getElementById('novo-pedido-cpf');
+
+            if (inputWhatsapp) {
+                inputWhatsapp.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, "");
+                    if (v.length > 11) v = v.slice(0, 11);
+                    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+                    v = v.replace(/(\d{5})(\d)/, "$1-$2");
+                    e.target.value = v;
+                });
+            }
+
+            if (inputCpf) {
+                inputCpf.addEventListener('input', (e) => {
+                    let v = e.target.value.replace(/\D/g, "");
+                    if (v.length > 11) v = v.slice(0, 11);
+                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                    v = v.replace(/(\d{3})(\d)/, "$1.$2");
+                    v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+                    e.target.value = v;
+                });
+            }
+
             const menuToggle = document.getElementById('menuToggle');
             const navMenu = document.getElementById('navMenu');
             const modalOverlay = document.getElementById('modalOverlay');
 
             if (menuToggle && navMenu) {
                 menuToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    menuToggle.classList.toggle('active');
                     navMenu.classList.toggle('active');
                 });
-
-                // Fechar menu ao clicar em um link
-                navMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', function() {
-                        menuToggle.classList.remove('active');
-                        navMenu.classList.remove('active');
-                    });
-                });
-
-                // Fechar menu ao clicar fora
-                document.addEventListener('click', function(e) {
-                    if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-                        menuToggle.classList.remove('active');
-                        navMenu.classList.remove('active');
-                    }
-                });
             }
+
+            // Navegação entre seções
+            document.getElementById('link-clientes').onclick = () => showSection('clientes');
+            document.getElementById('link-blog').onclick = () => showSection('blog');
+            document.getElementById('link-perfil').onclick = () => showSection('perfil');
 
             // Modal overlay
             modalOverlay.addEventListener('click', fecharModais);
 
             // Carregar dados
             carregarDadosAdmin();
+            preencherSelectServicos();
         });
+
+        function showSection(name) {
+            document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(`section-${name}`).style.display = 'block';
+            document.getElementById(`link-${name}`).classList.add('active');
+            
+            if (window.innerWidth <= 992) {
+                document.getElementById('navMenu').classList.remove('active');
+            }
+
+            if (name === 'blog') carregarNoticias();
+        }
 
         async function carregarDadosAdmin() {
             const client = initSupabase();
@@ -430,7 +706,7 @@
                     .from('profiles')
                     .select('*')
                     .eq('email', EMAIL_ADMIN)
-                    .single();
+                    .maybeSingle();
                 
                 if (adminData) {
                     adminProfile = adminData;
@@ -456,29 +732,12 @@
 
                 // Cruzar dados
                 todosDados = (profiles || []).map(p => {
-                    const pedidos = (assinaturas || []).filter(a => a.user_id === p.id || a.email === p.email);
+                    const pedidos = (assinaturas || []).filter(a => a.cliente_id === p.id || a.email === p.email);
                     return { ...p, pedidos };
-                });
-
-                // Adicionar assinaturas sem perfil
-                (assinaturas || []).forEach(a => {
-                    const jaExiste = todosDados.some(d => d.id === a.user_id || d.email === a.email);
-                    if (!jaExiste) {
-                        todosDados.push({
-                            id: a.user_id,
-                            nome: a.nome || 'Cliente Direto',
-                            email: a.email,
-                            whatsapp: a.whatsapp || '-',
-                            cpf: a.cpf || '-',
-                            pedidos: [a]
-                        });
-                    }
                 });
 
                 renderizarTabela(todosDados);
                 carregarFiltroServicos();
-                preencherSelectServicos();
-                carregarNoticias();
 
             } catch (err) {
                 console.error("Erro ao carregar dados:", err);
@@ -518,7 +777,7 @@
                                     </select>
                                 </td>
                                 <td>${data}</td>
-                                <td><button class="btn-upload" onclick="abrirUpload('${pedido.id}', '${cliente.nome}')" style="padding: 8px 12px; font-size: 0.8rem;"><i class="fas fa-file-upload"></i> Enviar Doc</button></td>
+                                <td><button class="btn-action" onclick="alert('Funcionalidade de documentos em breve')"><i class="fas fa-file-upload"></i></button></td>
                             </tr>
                         `;
                     }
@@ -547,10 +806,6 @@
                 options += `<option value="${key}">${value}</option>`;
             });
             select.innerHTML = options;
-        }
-
-        function filtrarDados() {
-            renderizarTabela(todosDados);
         }
 
         function limparFiltros() {
@@ -583,7 +838,7 @@
         }
 
         async function salvarNovoPedido(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
             const client = initSupabase();
             if (!client) return;
             
@@ -619,29 +874,26 @@
                             cpf_cnpj: cpf,
                             role: 'cliente'
                         }])
-                        .select()
+                        .select('id')
                         .single();
                     
                     if (createError) throw createError;
                     profile = newProfile;
                 } else {
-                    // 3. Se existir, atualizar os dados (opcional, mas recomendado para manter atualizado)
-                    const { data: updatedProfile, error: updateError } = await client
+                    // 3. Se existir, atualizar os dados
+                    const { error: updateError } = await client
                         .from('profiles')
                         .update({ 
                             nome, 
                             whatsapp, 
                             cpf_cnpj: cpf 
                         })
-                        .eq('id', profile.id)
-                        .select()
-                        .single();
+                        .eq('id', profile.id);
                     
                     if (updateError) throw updateError;
-                    profile = updatedProfile;
                 }
 
-                // 4. Inserir o pedido na tabela 'assinaturas' usando o ID do perfil
+                // 4. Inserir o pedido na tabela 'assinaturas'
                 const { error: insertError } = await client.from('assinaturas').insert([{
                     cliente_id: profile.id,
                     plano_id: servico,
@@ -661,15 +913,13 @@
             }
         }
 
-        function abrirModalPerfil() {
-            document.getElementById('perfilModal').classList.add('active');
-            document.getElementById('modalOverlay').classList.add('active');
-            if (adminProfile) {
-                document.getElementById('perfil-nome-input').value = adminProfile.nome || '';
-            }
+        function fecharModais() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+            noticiaEmEdicao = null;
         }
 
-        function previewFotoPerfil(input) {
+        // FUNÇÕES DE PERFIL
+        function previewFoto(input) {
             if (input.files && input.files[0]) {
                 fotoFile = input.files[0];
                 const reader = new FileReader();
@@ -677,7 +927,7 @@
                     document.getElementById('perfil-foto-preview').src = e.target.result;
                     document.getElementById('perfil-foto-preview').style.display = 'block';
                     document.getElementById('perfil-foto-placeholder').style.display = 'none';
-                };
+                }
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -689,99 +939,60 @@
             const btn = document.getElementById('btn-salvar-perfil');
 
             if (!nome) {
-                alert('Digite um nome');
+                alert('Preencha o nome');
                 return;
             }
 
             btn.disabled = true;
-            btn.innerText = 'SALVANDO...';
+            btn.innerText = 'Salvando...';
 
             try {
-                let avatarUrl = adminProfile.avatar_url;
+                let avatar_url = adminProfile?.avatar_url;
 
                 if (fotoFile) {
-                    const fileName = `avatar_${adminProfile.id}_${Date.now()}`;
+                    const fileExt = fotoFile.name.split('.').pop();
+                    const fileName = `admin-avatar-${Date.now()}.${fileExt}`;
                     const { error: uploadError } = await client.storage
                         .from('avatars')
                         .upload(fileName, fotoFile);
                     
-                    if (uploadError) throw uploadError;
-
-                    const { data: { publicUrl } } = client.storage
-                        .from('avatars')
-                        .getPublicUrl(fileName);
-                    
-                    avatarUrl = publicUrl;
+                    if (!uploadError) {
+                        const { data: { publicUrl } } = client.storage.from('avatars').getPublicUrl(fileName);
+                        avatar_url = publicUrl;
+                    }
                 }
 
-                const { error } = await client.from('profiles')
-                    .update({ nome, avatar_url: avatarUrl })
-                    .eq('id', adminProfile.id);
+                const { error } = await client
+                    .from('profiles')
+                    .update({ nome, avatar_url })
+                    .eq('email', "jlservicoscontabeis0@gmail.com");
 
                 if (error) throw error;
-
-                adminProfile.nome = nome;
-                adminProfile.avatar_url = avatarUrl;
-                document.getElementById('admin-name').innerText = nome;
-
-                alert('Perfil atualizado com sucesso!');
-                fecharModais();
-                fotoFile = null;
+                alert('Perfil atualizado!');
+                location.reload();
             } catch (err) {
-                console.error("Erro ao salvar perfil:", err);
-                alert('Erro ao salvar: ' + err.message);
+                console.error(err);
+                alert('Erro ao salvar perfil');
             } finally {
                 btn.disabled = false;
-                btn.innerText = 'Salvar';
+                btn.innerText = 'Salvar Alterações';
             }
         }
 
-        function mostrarSecao(secao) {
-            document.getElementById('secao-clientes').style.display = secao === 'clientes' ? 'block' : 'none';
-            document.getElementById('secao-blog').style.display = secao === 'blog' ? 'block' : 'none';
-
-            document.getElementById('link-clientes').classList.toggle('active', secao === 'clientes');
-            document.getElementById('link-blog').classList.toggle('active', secao === 'blog');
-        }
-
-        let noticiaEmEdicao = null;
-        let imagemRemovida = false;
-
-        async function abrirModalNovaNoticia() {
+        // FUNÇÕES DE BLOG
+        function abrirModalNoticia() {
             noticiaEmEdicao = null;
-            imagemRemovida = false;
             document.getElementById('modalNoticiaTitulo').textContent = 'Nova Notícia';
             document.getElementById('tituloNovaNoticia').value = '';
-            document.getElementById('categoriaNovaNoticia').value = 'contabilidade';
+            document.getElementById('categoriaNovaNoticia').value = 'MEI';
             document.getElementById('conteudoNovaNoticia').value = '';
             document.getElementById('imagemNovaNoticia').value = '';
             document.getElementById('imagemPreviewContainer').style.display = 'none';
-            document.getElementById('btnSalvarNoticia').textContent = '+ Publicar Notícia';
-            document.getElementById('modalNovaNoticia').style.display = 'flex';
-        }
-
-        function fecharModalNovaNoticia() {
-            document.getElementById('modalNovaNoticia').style.display = 'none';
-            noticiaEmEdicao = null;
-            imagemRemovida = false;
-        }
-
-        function previewImagemNoticia(file) {
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('imagemPreview').src = e.target.result;
-                    document.getElementById('imagemPreviewContainer').style.display = 'block';
-                    imagemRemovida = false;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removerImagemNoticia() {
-            imagemRemovida = true;
-            document.getElementById('imagemNovaNoticia').value = '';
-            document.getElementById('imagemPreviewContainer').style.display = 'none';
+            document.getElementById('btnRemoverImagem').style.display = 'none';
+            document.getElementById('btnSalvarNoticia').textContent = 'Publicar Notícia';
+            
+            document.getElementById('noticiaModal').classList.add('active');
+            document.getElementById('modalOverlay').classList.add('active');
         }
 
         async function salvarNovaNoticia() {
@@ -804,14 +1015,7 @@
             let imageUrl = noticiaEmEdicao ? noticiaEmEdicao.image_url : null;
 
             try {
-                // Se a imagem foi removida explicitamente
-                if (imagemRemovida) {
-                    imageUrl = null;
-                }
-
-                // Upload da nova imagem se fornecida
                 if (imagemFile) {
-                    // Se já existia uma imagem, tentar remover do storage (opcional, mas boa prática)
                     if (noticiaEmEdicao && noticiaEmEdicao.image_url) {
                         try {
                             const oldFileName = noticiaEmEdicao.image_url.split('/').pop();
@@ -820,68 +1024,38 @@
                     }
 
                     const fileName = `noticia-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${imagemFile.name.split('.').pop()}`;
-                    const { data: uploadData, error: uploadError } = await client.storage
-                        .from('blog-images')
-                        .upload(fileName, imagemFile);
-
+                    const { error: uploadError } = await client.storage.from('blog-images').upload(fileName, imagemFile);
                     if (uploadError) throw uploadError;
-
-                    const { data: publicUrlData } = client.storage
-                        .from('blog-images')
-                        .getPublicUrl(fileName);
-                    imageUrl = publicUrlData.publicUrl;
+                    const { data: { publicUrl } } = client.storage.from('blog-images').getPublicUrl(fileName);
+                    imageUrl = publicUrl;
                 }
+
+                const payload = {
+                    title: titulo,
+                    category: categoria,
+                    content: conteudo,
+                    image_url: imageUrl,
+                    updated_at: new Date().toISOString()
+                };
 
                 if (noticiaEmEdicao) {
-                    // Editar notícia existente
-                    const { error } = await client
-                        .from('blog_posts')
-                        .update({
-                            title: titulo,
-                            category: categoria,
-                            content: conteudo,
-                            image_url: imageUrl,
-                            updated_at: new Date().toISOString()
-                        })
-                        .eq('id', noticiaEmEdicao.id);
-
+                    const { error } = await client.from('blog_posts').update(payload).eq('id', noticiaEmEdicao.id);
                     if (error) throw error;
                 } else {
-                    // Gerar slug a partir do título
-                    const slug = titulo
-                        .toLowerCase()
-                        .normalize('NFD')
-                        .replace(/[\u0300-\u036f]/g, '')
-                        .replace(/[^\w\s-]/g, '')
-                        .trim()
-                        .replace(/\s+/g, '-')
-                        .replace(/-+/g, '-');
-
-                    // Criar nova notícia
-                    const { error } = await client
-                        .from('blog_posts')
-                        .insert([{
-                            title: titulo,
-                            slug: slug,
-                            category: categoria,
-                            content: conteudo,
-                            image_url: imageUrl,
-                            published: true,
-                            created_at: new Date().toISOString()
-                        }]);
-
+                    payload.created_at = new Date().toISOString();
+                    const { error } = await client.from('blog_posts').insert([payload]);
                     if (error) throw error;
                 }
 
-                alert(noticiaEmEdicao ? 'Notícia atualizada com sucesso!' : 'Notícia publicada com sucesso!');
-                fecharModalNovaNoticia();
+                alert(noticiaEmEdicao ? 'Notícia atualizada!' : 'Notícia publicada!');
+                fecharModais();
                 carregarNoticias();
             } catch (err) {
-                console.error('Erro ao salvar notícia:', err);
+                console.error(err);
                 alert('Erro ao salvar notícia: ' + err.message);
             } finally {
                 btn.disabled = false;
-                btn.textContent = noticiaEmEdicao ? 'Salvar Alterações' : '+ Publicar Notícia';
+                btn.textContent = noticiaEmEdicao ? 'Salvar Alterações' : 'Publicar Notícia';
             }
         }
 
@@ -897,29 +1071,31 @@
                 if (error) throw error;
 
                 const blogList = document.getElementById('blog-list');
-                if (!noticias || noticias.length === 0) {
-                    blogList.innerHTML = '<p style="color: #888; text-align: center; padding: 40px;">Nenhuma notícia publicada ainda.</p>';
-                    return;
-                }
+                let html = '';
 
-                blogList.innerHTML = noticias.map(noticia => `
-                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(189,150,23,0.2); border-radius: 10px; padding: 15px; display: flex; gap: 15px; align-items: flex-start;">
-                        ${noticia.image_url ? `<img src="${noticia.image_url}" alt="${noticia.title}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(189,150,23,0.3);">` : `<div style="width: 100px; height: 100px; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #444;"><i class="fas fa-image fa-2x"></i></div>`}
-                        <div style="flex: 1;">
-                            <h4 style="color: var(--gold); margin-bottom: 5px; font-family: 'Playfair Display';">${noticia.title}</h4>
-                            <p style="font-size: 0.8rem; color: #888; margin-bottom: 8px;"><i class="fas fa-tag"></i> ${noticia.category} • <i class="fas fa-calendar-alt"></i> ${new Date(noticia.created_at).toLocaleDateString('pt-BR')}</p>
-                            <p style="color: #ccc; font-size: 0.85rem; margin-bottom: 12px; line-height: 1.4;">${noticia.content.substring(0, 120)}...</p>
-                            <div style="display: flex; gap: 10px;">
-                                <button onclick="editarNoticia('${noticia.id}')" style="background: var(--gold); color: #000; border: none; padding: 6px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: 600;"><i class="fas fa-edit"></i> Editar</button>
-                                <button onclick="deletarNoticia('${noticia.id}')" style="background: #ff4444; color: white; border: none; padding: 6px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: 600;"><i class="fas fa-trash"></i> Excluir</button>
+                noticias.forEach(n => {
+                    const data = new Date(n.created_at).toLocaleDateString('pt-BR');
+                    html += `
+                        <div class="blog-card">
+                            <img src="${n.image_url || 'https://via.placeholder.com/400x200?text=Sem+Imagem'}" class="blog-img">
+                            <div class="blog-info">
+                                <span style="color: var(--primary); font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">${n.category}</span>
+                                <h4>${n.title}</h4>
+                                <p style="font-size: 0.8rem; color: var(--text-gray);">${data}</p>
+                                <div class="blog-actions">
+                                    <button class="btn-action" onclick="editarNoticia('${n.id}')"><i class="fas fa-edit"></i> Editar</button>
+                                    <button class="btn-action" style="color: #ff4444;" onclick="deletarNoticia('${n.id}')"><i class="fas fa-trash"></i> Excluir</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `).join('');
+                    `;
+                });
+
+                blogList.innerHTML = html || '<p style="text-align: center; padding: 40px; color: #888; grid-column: 1/-1;">Nenhuma notícia publicada.</p>';
             } catch (err) {
-                console.error('Erro ao carregar notícias:', err);
+                console.error(err);
                 const blogList = document.getElementById('blog-list');
-                blogList.innerHTML = '<p style="color: #ff4444; text-align: center; padding: 40px;">Erro ao carregar notícias. Verifique o console.</p>';
+                blogList.innerHTML = '<p style="color: #ff4444; text-align: center; padding: 40px;">Erro ao carregar notícias.</p>';
             }
         }
 
@@ -927,78 +1103,49 @@
             const client = initSupabase();
             if (!client) return;
             try {
-                const { data: noticia, error } = await client
-                    .from('blog_posts')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-
+                const { data: noticia, error } = await client.from('blog_posts').select('*').eq('id', id).single();
                 if (error) throw error;
 
                 noticiaEmEdicao = noticia;
-                imagemRemovida = false;
-                
                 document.getElementById('modalNoticiaTitulo').textContent = 'Editar Notícia';
                 document.getElementById('tituloNovaNoticia').value = noticia.title;
                 document.getElementById('categoriaNovaNoticia').value = noticia.category;
                 document.getElementById('conteudoNovaNoticia').value = noticia.content;
-                document.getElementById('btnSalvarNoticia').textContent = 'Salvar Alterações';
                 
                 if (noticia.image_url) {
-                    document.getElementById('imagemPreview').src = noticia.image_url;
+                    document.getElementById('imagemNoticiaPreview').src = noticia.image_url;
                     document.getElementById('imagemPreviewContainer').style.display = 'block';
+                    document.getElementById('btnRemoverImagem').style.display = 'inline-block';
                 } else {
                     document.getElementById('imagemPreviewContainer').style.display = 'none';
+                    document.getElementById('btnRemoverImagem').style.display = 'none';
                 }
 
-                document.getElementById('modalNovaNoticia').style.display = 'flex';
+                document.getElementById('btnSalvarNoticia').textContent = 'Salvar Alterações';
+                document.getElementById('noticiaModal').classList.add('active');
+                document.getElementById('modalOverlay').classList.add('active');
             } catch (err) {
-                console.error('Erro ao carregar notícia:', err);
+                console.error(err);
                 alert('Erro ao carregar notícia');
             }
         }
 
         async function deletarNoticia(id) {
             if (!confirm('Tem certeza que deseja excluir esta notícia permanentemente?')) return;
-
             const client = initSupabase();
             if (!client) return;
             try {
-                // Primeiro buscar a notícia para pegar a URL da imagem
                 const { data: noticia } = await client.from('blog_posts').select('image_url').eq('id', id).single();
-                
-                // Deletar do banco
-                const { error } = await client
-                    .from('blog_posts')
-                    .delete()
-                    .eq('id', id);
-
-                if (error) throw error;
-
-                // Se tinha imagem, tentar deletar do storage
                 if (noticia && noticia.image_url) {
-                    try {
-                        const fileName = noticia.image_url.split('/').pop();
-                        await client.storage.from('blog-images').remove([fileName]);
-                    } catch (e) { console.warn("Erro ao remover imagem do storage:", e); }
+                    const fileName = noticia.image_url.split('/').pop();
+                    await client.storage.from('blog-images').remove([fileName]);
                 }
-
-                alert('Notícia excluída com sucesso!');
+                await client.from('blog_posts').delete().eq('id', id);
                 carregarNoticias();
             } catch (err) {
-                console.error('Erro ao deletar notícia:', err);
-                alert('Erro ao excluir notícia: ' + err.message);
+                console.error(err);
+                alert('Erro ao excluir notícia');
             }
-        }
-
-        function fecharModais() {
-            document.getElementById('perfilModal').classList.remove('active');
-            document.getElementById('novoPedidoModal').classList.remove('active');
-            document.getElementById('modalOverlay').classList.remove('active');
-        }
-
-        function abrirUpload(pedidoId, clienteNome) {
-            alert('Funcionalidade de upload em desenvolvimento');
         }
 
         async function logout() {
