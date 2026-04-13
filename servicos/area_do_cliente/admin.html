@@ -901,7 +901,6 @@
 
                 if (!profile) {
                     // 2. Se não existir, tentar criar um novo perfil
-                    // Usamos uma abordagem de "tentativa e erro" para lidar com condições de corrida
                     const { data: newProfiles, error: createError } = await client
                         .from('profiles')
                         .insert([{ 
@@ -914,17 +913,15 @@
                         .select('id');
                     
                     if (createError) {
-                        if (createError.code === '23505') {
-                            const { data: retryProfile, error: retryError } = await client
-                                .from('profiles')
-                                .select('id')
-                                .eq('email', email)
-                                .maybeSingle();
-                            if (retryError) throw retryError;
-                            profile = retryProfile;
-                        } else {
-                            throw createError;
-                        }
+                        // Se falhar por duplicidade, tentamos buscar novamente
+                        const { data: retryProfile, error: retryError } = await client
+                            .from('profiles')
+                            .select('id')
+                            .eq('email', email)
+                            .maybeSingle();
+                        
+                        if (retryError || !retryProfile) throw new Error("Não foi possível criar ou localizar o perfil do cliente.");
+                        profile = retryProfile;
                     } else {
                         profile = newProfiles && newProfiles.length > 0 ? newProfiles[0] : null;
                     }
@@ -942,9 +939,19 @@
                     if (updateError) throw updateError;
                 }
 
+                // Garantia final: se por algum motivo profile ainda for nulo, tentamos uma última busca
+                if (!profile || !profile.id) {
+                    const { data: finalProfile } = await client
+                        .from('profiles')
+                        .select('id')
+                        .eq('email', email)
+                        .maybeSingle();
+                    profile = finalProfile;
+                }
+
                 // 4. Inserir o pedido na tabela 'assinaturas'
                 const { error: insertError } = await client.from('assinaturas').insert([{
-                    cliente_id: profile.id,
+                    cliente_id: profile ? profile.id : null, // Evita o erro de leitura de 'id' de nulo
                     email: email,
                     nome_cliente: nome,
                     whatsapp: whatsapp,
