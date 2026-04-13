@@ -740,9 +740,34 @@
 
                 // Cruzar dados
                 todosDados = (profiles || []).map(p => {
-                    const pedidos = (assinaturas || []).filter(a => a.cliente_id === p.id || a.email === p.email);
+                    const pedidos = (assinaturas || []).filter(a => 
+                        (a.cliente_id && a.cliente_id === p.id) || 
+                        (a.email && a.email.toLowerCase() === p.email.toLowerCase())
+                    );
                     return { ...p, pedidos };
                 });
+
+                // Adicionar pedidos que não têm perfil vinculado (caso existam)
+                const idsClientesComPerfil = new Set(profiles.map(p => p.id));
+                const emailsClientesComPerfil = new Set(profiles.map(p => p.email.toLowerCase()));
+                
+                const pedidosSemPerfil = (assinaturas || []).filter(a => 
+                    (!a.cliente_id || !idsClientesComPerfil.has(a.cliente_id)) && 
+                    (!a.email || !emailsClientesComPerfil.has(a.email.toLowerCase()))
+                );
+
+                if (pedidosSemPerfil.length > 0) {
+                    pedidosSemPerfil.forEach(pedido => {
+                        todosDados.push({
+                            id: pedido.cliente_id || 'sem-id',
+                            nome: pedido.nome_cliente || 'Cliente não identificado',
+                            email: pedido.email || 'Sem e-mail',
+                            whatsapp: pedido.whatsapp || '',
+                            cpf_cnpj: pedido.cpf_cnpj || '',
+                            pedidos: [pedido]
+                        });
+                    });
+                }
 
                 renderizarTabela(todosDados);
                 carregarFiltroServicos();
@@ -877,7 +902,7 @@
                 if (!profile) {
                     // 2. Se não existir, tentar criar um novo perfil
                     // Usamos uma abordagem de "tentativa e erro" para lidar com condições de corrida
-                    const { data: newProfile, error: createError } = await client
+                    const { data: newProfiles, error: createError } = await client
                         .from('profiles')
                         .insert([{ 
                             nome, 
@@ -886,25 +911,22 @@
                             cpf_cnpj: cpf,
                             role: 'cliente'
                         }])
-                        .select('id')
-                        .maybeSingle();
+                        .select('id');
                     
                     if (createError) {
-                        // Se falhar por duplicidade (ex: alguém criou entre o select e o insert)
-                        // tentamos buscar novamente
                         if (createError.code === '23505') {
                             const { data: retryProfile, error: retryError } = await client
                                 .from('profiles')
                                 .select('id')
                                 .eq('email', email)
-                                .single();
+                                .maybeSingle();
                             if (retryError) throw retryError;
                             profile = retryProfile;
                         } else {
                             throw createError;
                         }
                     } else {
-                        profile = newProfile;
+                        profile = newProfiles && newProfiles.length > 0 ? newProfiles[0] : null;
                     }
                 } else {
                     // 3. Se existir, atualizar os dados
@@ -923,6 +945,10 @@
                 // 4. Inserir o pedido na tabela 'assinaturas'
                 const { error: insertError } = await client.from('assinaturas').insert([{
                     cliente_id: profile.id,
+                    email: email,
+                    nome_cliente: nome,
+                    whatsapp: whatsapp,
+                    cpf_cnpj: cpf,
                     plano_id: servico,
                     status: 'Pendente',
                     created_at: new Date().toISOString()
