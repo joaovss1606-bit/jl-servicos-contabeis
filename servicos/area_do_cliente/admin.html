@@ -890,68 +890,54 @@
             }
 
             try {
-                // 1. Verificar se o perfil já existe pelo e-mail
-                let { data: profile, error: fetchError } = await client
-                    .from('profiles')
-                    .select('id')
-                    .eq('email', email)
-                    .maybeSingle();
-
-                if (fetchError) throw fetchError;
-
-                if (!profile) {
-                    // 2. Se não existir, tentar criar um novo perfil
-                    const { data: newProfiles, error: createError } = await client
-                        .from('profiles')
-                        .insert([{ 
-                            nome, 
-                            email, 
-                            whatsapp, 
-                            cpf_cnpj: cpf,
-                            role: 'cliente'
-                        }])
-                        .select('id');
-                    
-                    if (createError) {
-                        // Se falhar por duplicidade, tentamos buscar novamente
-                        const { data: retryProfile, error: retryError } = await client
-                            .from('profiles')
-                            .select('id')
-                            .eq('email', email)
-                            .maybeSingle();
-                        
-                        if (retryError || !retryProfile) throw new Error("Não foi possível criar ou localizar o perfil do cliente.");
-                        profile = retryProfile;
-                    } else {
-                        profile = newProfiles && newProfiles.length > 0 ? newProfiles[0] : null;
-                    }
-                } else {
-                    // 3. Se existir, atualizar os dados
-                    const { error: updateError } = await client
-                        .from('profiles')
-                        .update({ 
-                            nome, 
-                            whatsapp, 
-                            cpf_cnpj: cpf 
-                        })
-                        .eq('id', profile.id);
-                    
-                    if (updateError) throw updateError;
-                }
-
-                // Garantia final: se por algum motivo profile ainda for nulo, tentamos uma última busca
-                if (!profile || !profile.id) {
-                    const { data: finalProfile } = await client
+                // 1. Tentar criar ou atualizar o perfil (operação secundária)
+                let profileId = null;
+                try {
+                    let { data: profile } = await client
                         .from('profiles')
                         .select('id')
                         .eq('email', email)
                         .maybeSingle();
-                    profile = finalProfile;
+
+                    if (!profile) {
+                        const { data: newProfiles } = await client
+                            .from('profiles')
+                            .insert([{ 
+                                nome, 
+                                email, 
+                                whatsapp, 
+                                cpf_cnpj: cpf,
+                                role: 'cliente'
+                            }])
+                            .select('id');
+                        
+                        if (newProfiles && newProfiles.length > 0) {
+                            profileId = newProfiles[0].id;
+                        } else {
+                            // Se falhar a inserção, tenta buscar novamente (pode ter sido criado por outro processo)
+                            const { data: retryProfile } = await client
+                                .from('profiles')
+                                .select('id')
+                                .eq('email', email)
+                                .maybeSingle();
+                            if (retryProfile) profileId = retryProfile.id;
+                        }
+                    } else {
+                        profileId = profile.id;
+                        // Atualiza dados do perfil existente
+                        await client
+                            .from('profiles')
+                            .update({ nome, whatsapp, cpf_cnpj: cpf })
+                            .eq('id', profileId);
+                    }
+                } catch (profileErr) {
+                    console.warn("Aviso: Falha ao processar perfil do cliente, mas o pedido continuará:", profileErr);
                 }
 
-                // 4. Inserir o pedido na tabela 'assinaturas'
+                // 2. Inserir o pedido na tabela 'assinaturas' (operação principal)
+                // Salvamos todos os dados diretamente na tabela de assinaturas para garantir visibilidade
                 const { error: insertError } = await client.from('assinaturas').insert([{
-                    cliente_id: profile ? profile.id : null, // Evita o erro de leitura de 'id' de nulo
+                    cliente_id: profileId,
                     email: email,
                     nome_cliente: nome,
                     whatsapp: whatsapp,
