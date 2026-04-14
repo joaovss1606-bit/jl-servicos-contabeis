@@ -935,16 +935,11 @@
                 }
 
                 // 2. Inserir o pedido na tabela 'assinaturas' (operação principal)
-                // Salvamos todos os dados diretamente na tabela de assinaturas para garantir visibilidade
+                // Usamos apenas as colunas que temos certeza que existem: cliente_id, plano_id, status
                 const { error: insertError } = await client.from('assinaturas').insert([{
                     cliente_id: profileId,
-                    email: email,
-                    nome_cliente: nome,
-                    whatsapp: whatsapp,
-                    cpf_cnpj: cpf,
                     plano_id: servico,
-                    status: 'Pendente',
-                    created_at: new Date().toISOString()
+                    status: 'Pendente'
                 }]);
 
                 if (insertError) throw insertError;
