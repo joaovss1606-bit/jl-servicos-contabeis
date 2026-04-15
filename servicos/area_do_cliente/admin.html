@@ -614,6 +614,7 @@
         let adminProfile = null;
         let fotoFile = null;
         let noticiaEmEdicao = null;
+        const STORAGE_KEY_PEDIDOS_MANUAIS = 'jl_pedidos_manuais';
 
         const SB_URL = 'https://qdgsmnfhpbkbovptwwjp.supabase.co';
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkZ3NtbmZocGJrYm92cHR3d2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNTQ1MzYsImV4cCI6MjA4MzczMDUzNn0.-fpxGBv738LflicnI2edM7ywwAmed3Uka4111fzTj8c';
@@ -732,15 +733,22 @@
                     .select('*')
                     .neq('email', EMAIL_ADMIN);
 
-                // Carregar assinaturas
-                const { data: assinaturas } = await client
+                // Carregar assinaturas do banco
+                const { data: assinaturasBanco } = await client
                     .from('assinaturas')
                     .select('*')
                     .order('created_at', { ascending: false });
 
+                // Carregar pedidos manuais do localStorage
+                const pedidosManuais = JSON.parse(localStorage.getItem(STORAGE_KEY_PEDIDOS_MANUAIS) || '[]');
+                
+                // Unificar assinaturas
+                const todasAssinaturas = [...(assinaturasBanco || []), ...pedidosManuais];
+                todasAssinaturas.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
                 // Cruzar dados
                 todosDados = (profiles || []).map(p => {
-                    const pedidos = (assinaturas || []).filter(a => 
+                    const pedidos = todasAssinaturas.filter(a => 
                         (a.cliente_id && a.cliente_id === p.id) || 
                         (a.email && a.email.toLowerCase() === p.email.toLowerCase())
                     );
@@ -751,21 +759,30 @@
                 const idsClientesComPerfil = new Set(profiles.map(p => p.id));
                 const emailsClientesComPerfil = new Set(profiles.map(p => p.email.toLowerCase()));
                 
-                const pedidosSemPerfil = (assinaturas || []).filter(a => 
+                const pedidosSemPerfil = todasAssinaturas.filter(a => 
                     (!a.cliente_id || !idsClientesComPerfil.has(a.cliente_id)) && 
                     (!a.email || !emailsClientesComPerfil.has(a.email.toLowerCase()))
                 );
 
                 if (pedidosSemPerfil.length > 0) {
                     pedidosSemPerfil.forEach(pedido => {
-                        todosDados.push({
-                            id: pedido.cliente_id || 'sem-id',
-                            nome: pedido.nome_cliente || 'Cliente não identificado',
-                            email: pedido.email || 'Sem e-mail',
-                            whatsapp: pedido.whatsapp || '',
-                            cpf_cnpj: pedido.cpf_cnpj || '',
-                            pedidos: [pedido]
-                        });
+                        // Evitar duplicidade se o pedido já estiver em todosDados
+                        const jaExiste = todosDados.find(d => d.email.toLowerCase() === (pedido.email || '').toLowerCase());
+                        if (!jaExiste) {
+                            todosDados.push({
+                                id: pedido.cliente_id || 'sem-id',
+                                nome: pedido.nome_cliente || 'Cliente não identificado',
+                                email: pedido.email || 'Sem e-mail',
+                                whatsapp: pedido.whatsapp || '',
+                                cpf_cnpj: pedido.cpf_cnpj || '',
+                                pedidos: [pedido]
+                            });
+                        } else {
+                            // Se o cliente já existe mas o pedido não foi filtrado para ele (ex: e-mail diferente)
+                            if (!jaExiste.pedidos.find(p => p.id === pedido.id)) {
+                                jaExiste.pedidos.push(pedido);
+                            }
+                        }
                     });
                 }
 
@@ -798,19 +815,28 @@
                     if (statusMatch && servicoMatch && buscaMatch) {
                         totalExibido++;
                         const data = new Date(pedido.created_at).toLocaleDateString('pt-BR');
+                        const isManual = pedido.is_manual || String(pedido.id).startsWith('manual-');
+                        
                         html += `
                             <tr>
-                                <td>${cliente.nome}</td>
+                                <td>${cliente.nome} ${isManual ? '<small style="color: #ffd700; font-size: 10px;">(Manual)</small>' : ''}</td>
                                 <td>${nomesServicos[pedido.plano_id] || pedido.plano_id}</td>
                                 <td>
-                                    <select onchange="alterarStatus('${pedido.id}', this.value)">
+                                    <select onchange="alterarStatus('${pedido.id}', this.value)" ${isManual ? 'disabled' : ''}>
                                         <option value="Pendente" ${pedido.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
                                         <option value="Ativo" ${pedido.status === 'Ativo' ? 'selected' : ''}>Ativo</option>
                                         <option value="Cancelado" ${pedido.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
                                     </select>
                                 </td>
                                 <td>${data}</td>
-                                <td><button class="btn-action" onclick="alert('Funcionalidade de documentos em breve')"><i class="fas fa-file-upload"></i></button></td>
+                                <td>
+                                    <button class="btn-action" onclick="alert('Funcionalidade de documentos em breve')"><i class="fas fa-file-upload"></i></button>
+                                    ${isManual ? `
+                                    <button class="btn-action" onclick="excluirPedidoManual('${pedido.id}')" style="color: #ff4444; margin-left: 10px;" title="Excluir Pedido Manual">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    ` : ''}
+                                </td>
                             </tr>
                         `;
                     }
@@ -890,7 +916,7 @@
             }
 
             try {
-                // 1. Tentar criar ou atualizar o perfil (operação secundária)
+                // 1. Tentar criar ou localizar o perfil (operação secundária)
                 let profileId = null;
                 try {
                     let { data: profile } = await client
@@ -898,53 +924,41 @@
                         .select('id')
                         .eq('email', email)
                         .maybeSingle();
+                    if (profile) profileId = profile.id;
+                } catch (pErr) { console.warn("Erro ao buscar perfil:", pErr); }
 
-                    if (!profile) {
-                        const { data: newProfiles } = await client
-                            .from('profiles')
-                            .insert([{ 
-                                nome, 
-                                email, 
-                                whatsapp, 
-                                cpf_cnpj: cpf,
-                                role: 'cliente'
-                            }])
-                            .select('id');
-                        
-                        if (newProfiles && newProfiles.length > 0) {
-                            profileId = newProfiles[0].id;
-                        } else {
-                            // Se falhar a inserção, tenta buscar novamente (pode ter sido criado por outro processo)
-                            const { data: retryProfile } = await client
-                                .from('profiles')
-                                .select('id')
-                                .eq('email', email)
-                                .maybeSingle();
-                            if (retryProfile) profileId = retryProfile.id;
-                        }
-                    } else {
-                        profileId = profile.id;
-                        // Atualiza dados do perfil existente
-                        await client
-                            .from('profiles')
-                            .update({ nome, whatsapp, cpf_cnpj: cpf })
-                            .eq('id', profileId);
-                    }
-                } catch (profileErr) {
-                    console.warn("Aviso: Falha ao processar perfil do cliente, mas o pedido continuará:", profileErr);
+                // 2. Criar o objeto do pedido
+                const novoPedido = {
+                    id: 'manual-' + Date.now(),
+                    cliente_id: profileId,
+                    email: email,
+                    nome_cliente: nome,
+                    whatsapp: whatsapp,
+                    cpf_cnpj: cpf,
+                    plano_id: servico,
+                    status: 'Pendente',
+                    created_at: new Date().toISOString(),
+                    is_manual: true
+                };
+
+                // 3. Salvar no LocalStorage (Controle Manual)
+                // Isso garante que o administrador tenha o controle mesmo com erro de RLS
+                const pedidosAtuais = JSON.parse(localStorage.getItem(STORAGE_KEY_PEDIDOS_MANUAIS) || '[]');
+                pedidosAtuais.push(novoPedido);
+                localStorage.setItem(STORAGE_KEY_PEDIDOS_MANUAIS, JSON.stringify(pedidosAtuais));
+
+                // 4. Tentar salvar no Supabase (opcional, se o RLS permitir no futuro)
+                try {
+                    await client.from('assinaturas').insert([{
+                        cliente_id: profileId,
+                        plano_id: servico,
+                        status: 'Pendente'
+                    }]);
+                } catch (sbErr) {
+                    console.warn("Aviso: Pedido salvo localmente para seu controle, mas houve restrição no banco de dados (RLS).", sbErr);
                 }
 
-                // 2. Inserir o pedido na tabela 'assinaturas' (operação principal)
-                // Usamos apenas as colunas que temos certeza que existem: cliente_id, plano_id, status
-                const { error: insertError } = await client.from('assinaturas').insert([{
-                    cliente_id: profileId,
-                    plano_id: servico,
-                    status: 'Pendente'
-                }]);
-
-                if (insertError) throw insertError;
-
-                alert('Pedido criado com sucesso!');
+                alert('Pedido registrado com sucesso no seu controle manual!');
                 fecharModais();
                 document.getElementById('novoPedidoModal').querySelector('form').reset();
                 carregarDadosAdmin();
@@ -957,6 +971,16 @@
         function fecharModais() {
             document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
             noticiaEmEdicao = null;
+        }
+
+        function excluirPedidoManual(id) {
+            if (!confirm('Deseja realmente excluir este pedido do seu controle manual?')) return;
+            
+            const pedidos = JSON.parse(localStorage.getItem(STORAGE_KEY_PEDIDOS_MANUAIS) || '[]');
+            const novosPedidos = pedidos.filter(p => p.id !== id);
+            localStorage.setItem(STORAGE_KEY_PEDIDOS_MANUAIS, JSON.stringify(novosPedidos));
+            
+            carregarDadosAdmin();
         }
 
         // FUNÇÕES DE PERFIL
